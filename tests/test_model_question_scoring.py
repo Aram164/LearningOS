@@ -510,3 +510,16 @@ def test_real_heldout_set_scores_end_to_end(tmp_path):
          "--answers", str(bad_file), "--out", str(tmp_path / "x.json")],
         capture_output=True, text=True, timeout=120)
     assert refused.returncode == 2
+
+
+def test_prepare_refuses_protected_out(tmp_path, capsys):
+    trials = _synthetic_trials(tmp_path)
+    repo = tmp_path / "repo"
+    contracts = repo / "system" / "contracts"
+    contracts.mkdir(parents=True)
+    (contracts / "capabilities.yaml").touch()
+    target = repo / "records" / "evaluation.json"
+
+    assert evalq.main(["prepare", "--trials", str(trials), "--out", str(target)]) == 2
+    assert "protected root records/" in capsys.readouterr().err
+    assert not target.exists()

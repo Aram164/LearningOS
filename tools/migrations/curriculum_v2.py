@@ -25,6 +25,7 @@ from learning_os.store.contracts.migration_lifecycle import (  # noqa: E402
     refuse_retired_apply,
     retired_migration,
 )
+from learning_os.store.contracts.write_scopes import scoped_write_target  # noqa: E402
 from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 from learning_os.store.loader import load_repo, parse_frontmatter  # noqa: E402
 
@@ -440,6 +441,15 @@ def source_maps(source_ids: set[str]) -> dict[str, list[dict]]:
     return maps
 
 
+_MIGRATION_DESTINATIONS = (
+    "curriculum/**",
+    "work/active/*/CONTEXT.md",
+    "work/active/workspace-degree-planning",
+    "sources/collections/degree-module-anchors.yaml",
+    "migration/curriculum-v2/**",
+)
+
+
 class Migration:
     def __init__(self, root: Path, apply: bool):
         self.root = root
@@ -448,7 +458,7 @@ class Migration:
         self.mappings: list[dict] = []
 
     def write(self, rel: str, content: str) -> None:
-        path = self.root / rel
+        path = scoped_write_target(self.root, rel, _MIGRATION_DESTINATIONS)
         current = path.read_text(encoding="utf-8") if path.is_file() else None
         if current == content:
             return
@@ -465,7 +475,8 @@ class Migration:
             )
 
     def move(self, old: str, new: str) -> None:
-        src, dst = self.root / old, self.root / new
+        src = scoped_write_target(self.root, old, _MIGRATION_DESTINATIONS)
+        dst = scoped_write_target(self.root, new, _MIGRATION_DESTINATIONS)
         mapping = {"old": old, "new": new, "kind": "move"}
         if mapping not in self.mappings:
             self.mappings.append(mapping)

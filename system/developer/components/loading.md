@@ -21,7 +21,7 @@ Load authored records and expand declared references into repository read models
 ## Depends on and used by
 
 <!-- system-map:begin name=edges -->
-Depends on: `domain`.
+Depends on: `contracts`, `domain`.
 
 Used by: `ai-action-store`, `ai-delivery`, `backup`, `cli-adapter`, `contracts`, `derived-store`, `diagnostics`, `evidence`, `learner-derivations`, `masters-planning`, `materials`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `practice`, `projection`, `semantics`, `session-ledger`, `transactions`, `validation`.
 <!-- system-map:end -->

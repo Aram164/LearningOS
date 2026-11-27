@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import cast
 
 from learning_os.domain.codes import STEP_FAILED
+from learning_os.store.contracts.write_scopes import guard_tool_output_path
 from learning_os.store.transactions import atomic_write_bytes
 
 
@@ -41,11 +42,12 @@ def minimum_ledger_bytes(step_ids: list[str], artifact_path: str = "") -> int:
 
 
 def write_full_report(artifact_dir: Path, report: dict[str, object]) -> Path:
-    artifact_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+    guarded_dir = guard_tool_output_path(artifact_dir, allow_existing_dir=True)
+    guarded_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
     body = encode(report).encode("utf-8")
-    target = artifact_dir / "full-report.json"
+    target = guarded_dir / "full-report.json"
     atomic_write_bytes(target, body)
-    atomic_write_bytes(artifact_dir / "full-report.sha256",
+    atomic_write_bytes(guarded_dir / "full-report.sha256",
                        (hashlib.sha256(body).hexdigest() + "\n").encode())
     return target
 
@@ -82,8 +84,9 @@ class ReportStore:
                     break
                 if component.is_symlink():
                     raise ValueError("report scratch must not traverse symlinks")
-        resolved.mkdir(parents=True, exist_ok=True, mode=0o700)
-        self.path = Path(tempfile.mkdtemp(prefix="los-agent-plan-", dir=resolved))
+        guarded_parent = guard_tool_output_path(parent, repo_root=root, allow_existing_dir=True)
+        guarded_parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        self.path = Path(tempfile.mkdtemp(prefix="los-agent-plan-", dir=guarded_parent))
         os.chmod(self.path, 0o700)
         self.full_path = self.path / "full-report.json"
         self.rows: list[dict[str, object]] = []

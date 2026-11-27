@@ -24,6 +24,12 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    normalize_relative_path,
+    scoped_write_target,
+)
+
 FORBIDDEN_PREFIXES = (
     "tests/scenarios/recorded/",
     "curriculum/",
@@ -37,6 +43,7 @@ FORBIDDEN_PREFIXES = (
 )
 TEXT_ROOTS = ("tools/", "tests/", "system/")
 TEXT_FILES = ("pyproject.toml", "Makefile")
+_MAINTENANCE_TARGETS = ("tools/**", "tests/**", "system/**", *TEXT_FILES)
 #: A move whose text would change a recording is not mechanical (A12): refuse it.
 RECORDING_PREFIX = "tests/scenarios/recorded/"
 #: Contract text is part of the canonical fingerprint (``fingerprint.CONTRACT_ROOTS``)
@@ -99,6 +106,30 @@ def _repo_root() -> Path:
     return Path(proc.stdout.strip())
 
 
+def _maintenance_target(root: Path, relative: str) -> Path:
+    if any(relative == prefix.rstrip("/") or relative.startswith(prefix)
+           for prefix in (*FORBIDDEN_PREFIXES, *FROZEN_TEXT_PREFIXES)):
+        raise MoveError(f"write target is under a forbidden tree: {relative}")
+    try:
+        return scoped_write_target(root, relative, _MAINTENANCE_TARGETS)
+    except WriteScopeError as exc:
+        raise MoveError(f"unsafe maintenance target {relative}: {exc}") from exc
+
+
+def _git_move(root: Path, source: str, destination: str) -> None:
+    src = _maintenance_target(root, source)
+    dst = _maintenance_target(root, destination)
+    try:
+        proc = subprocess.run(
+            ["git", "mv", "--", str(src), str(dst)], cwd=root, capture_output=True,
+            text=True, check=False, timeout=60, env=_clean_git_env(),
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise MoveError(f"git mv failed: {exc}") from exc
+    if proc.returncode != 0:
+        raise MoveError(f"git mv failed: {proc.stderr.strip() or proc.returncode}")
+
+
 def _tracked_files(root: Path) -> list[str]:
     out = _git(root, "ls-files", "-z")
     return sorted(p for p in out.split("\0") if p)
@@ -136,9 +167,12 @@ def _moves_from_entries(entries: list) -> list[Move]:
         if not from_norm or not to_norm:
             raise MoveError(f"move {index}: empty 'from' or 'to'")
         for label, value in (("from", from_norm), ("to", to_norm)):
-            if value.startswith("/") or ".." in Path(value).parts:
+            try:
+                normalize_relative_path(value)
+            except WriteScopeError as exc:
                 raise MoveError(
-                    f"move {index}: {label} {value!r} is not repo-relative")
+                    f"move {index}: {label} {value!r} is not repo-relative"
+                ) from exc
         moves.append(Move(
             from_raw=from_raw, to_raw=to_raw, from_norm=from_norm,
             to_norm=to_norm, is_dir=is_dir,
@@ -669,22 +703,6 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _check_target_no_symlinks(target: Path, root_real: Path) -> None:
-    """Refuse any symlink at or above ``target`` inside ``root_real`` before mutating."""
-    try:
-        rel = target.relative_to(root_real)
-    except ValueError:
-        try:
-            rel = target.resolve(strict=False).relative_to(root_real)
-        except ValueError as exc:
-            raise MoveError(f"write target escapes repository: {target}") from exc
-    cursor = root_real
-    for part in rel.parts:
-        cursor = cursor / part
-        if cursor.is_symlink():
-            raise MoveError(f"refusing symlink target or component: {cursor.relative_to(root_real)}")
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -698,6 +716,12 @@ def main(argv: list[str] | None = None) -> int:
         _validate(root, moves, tracked)
         lines, writes, files_moved, imports_rewritten, strings_rewritten = (
             _plan(root, moves, tracked))
+        root_real = root.resolve()
+        for move in moves:
+            _maintenance_target(root_real, move.from_norm)
+            _maintenance_target(root_real, move.to_norm)
+        for post in sorted(writes):
+            _maintenance_target(root_real, post)
     except MoveError as exc:
         print(f"move_map: {exc}", file=sys.stderr)
         return 2
@@ -713,23 +737,20 @@ def main(argv: list[str] | None = None) -> int:
         sys.path.insert(0, str(tools_dir))
     from learning_os.store.fs import atomic_write_bytes_exclusive, atomic_write_text_exclusive
 
-    root_real = root.resolve()
     completed_moves: list[Move] = []
     saved_files: list[tuple[Path, bytes | None]] = []
     try:
-        ledger = root_real / MOVE_LEDGER
         for move in moves:
-            _check_target_no_symlinks(root_real / move.to_norm, root_real)
+            _maintenance_target(root_real, move.from_norm)
+            _maintenance_target(root_real, move.to_norm)
         for post in sorted(writes):
-            _check_target_no_symlinks(root_real / post, root_real)
-        _check_target_no_symlinks(ledger, root_real)
+            _maintenance_target(root_real, post)
+        ledger = scoped_write_target(root_real, MOVE_LEDGER, (MOVE_LEDGER,))
         for move in moves:
-            _git(root, "mv", move.from_norm, move.to_norm)
+            _git_move(root_real, move.from_norm, move.to_norm)
             completed_moves.append(move)
         for post, new_text in sorted(writes.items()):
-            target = root / post
-            if target.is_symlink():
-                raise MoveError(f"refusing symlink write target: {post}")
+            target = _maintenance_target(root_real, post)
             prior = target.read_bytes() if target.is_file() else None
             saved_files.append((target, prior))
             atomic_write_text_exclusive(
@@ -758,25 +779,24 @@ def main(argv: list[str] | None = None) -> int:
             ledger, yaml.safe_dump({"moves": entries}, sort_keys=False),
             boundary=root_real, durable=False, error_factory=OSError,
         )
-    except (MoveError, OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
+    except (MoveError, WriteScopeError, OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
         rollback_errors: list[str] = []
-        for target, prior in reversed(saved_files):
+        for saved_target, prior in reversed(saved_files):
             try:
-                if target.is_symlink():
-                    rollback_errors.append(f"refusing symlink rollback target {target}")
-                    continue
+                rollback_target = _maintenance_target(
+                    root_real, saved_target.relative_to(root_real).as_posix(),
+                )
                 if prior is None:
-                    if not target.is_symlink():
-                        target.unlink(missing_ok=True)
+                    rollback_target.unlink(missing_ok=True)
                 else:
                     atomic_write_bytes_exclusive(
-                        target, prior, boundary=root_real, durable=False, error_factory=OSError,
+                        rollback_target, prior, boundary=root_real, durable=False, error_factory=OSError,
                     )
-            except OSError as rb_exc:
-                rollback_errors.append(f"restore {target}: {rb_exc}")
+            except (MoveError, OSError) as rb_exc:
+                rollback_errors.append(f"restore {saved_target}: {rb_exc}")
         for move in reversed(completed_moves):
             try:
-                _git(root, "mv", move.to_norm, move.from_norm)
+                _git_move(root_real, move.to_norm, move.from_norm)
             except MoveError as rb_exc:
                 rollback_errors.append(f"revert git mv {move.to_norm}: {rb_exc}")
         print(f"move_map: {exc}", file=sys.stderr)

@@ -15,7 +15,7 @@ Persist bounded AI request/delivery state and exact artifact bindings.
 ## Depends on and used by
 
 <!-- system-map:begin name=edges -->
-Depends on: `domain`, `loading`, `materials`, `transactions`.
+Depends on: `contracts`, `domain`, `loading`, `materials`, `transactions`.
 
 Used by: `ai-delivery`, `evidence`, `learner-derivations`, `validation`.
 <!-- system-map:end -->

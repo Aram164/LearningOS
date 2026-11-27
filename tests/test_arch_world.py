@@ -359,3 +359,13 @@ def test_broken_current_fingerprint_does_not_fall_back_to_a_legacy_owner(tmp_pat
     (store / "fingerprint.py").write_text(
         "raise ModuleNotFoundError('broken dependency')\n", encoding="utf-8")
     assert _comparison_tool()._side_fingerprint(tmp_path) is None
+
+
+def test_capture_refuses_protected_out(tmp_path):
+    root = tmp_path / "repository"
+    root.mkdir()
+    target = root / "records" / "world"
+    result = _capture(root, target)
+    assert result.returncode != 0
+    assert "protected root records/" in result.stderr
+    assert not target.exists()

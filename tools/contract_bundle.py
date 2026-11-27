@@ -27,10 +27,20 @@ from learning_os.store.contracts.bundle import (  # noqa: E402
     resolve_closure,
 )
 from learning_os.store.contracts.manifest_contract import load_contract  # noqa: E402
+from learning_os.store.contracts.write_scopes import (  # noqa: E402
+    WriteScopeError,
+    guard_tool_output_path,
+)
 from learning_os.store.fs import atomic_write_bytes_exclusive  # noqa: E402
 
 
 def _emit(root: Path, schema_rel: str, schema_dir_rel: str, out_dir: Path) -> list[Path]:
+    try:
+        guarded_out = guard_tool_output_path(
+            out_dir, repo_root=root, allow_existing_dir=True
+        )
+    except WriteScopeError as exc:
+        raise BundleError(str(exc)) from exc
     schema_path = root / schema_rel
     schema_dir = root / schema_dir_rel
     bundle = build_bundle(schema_path, schema_dir)
@@ -41,15 +51,15 @@ def _emit(root: Path, schema_rel: str, schema_dir_rel: str, out_dir: Path) -> li
         closure_digest=digest_of(bundle),
         resources=closure["resources"],
     )
-    out_dir.mkdir(parents=True, exist_ok=True)
+    guarded_out.mkdir(parents=True, exist_ok=True)
     stem = schema_path.stem.replace(".schema", "")
-    bundle_path = out_dir / f"{stem}.bundle.json"
-    meta_path = out_dir / f"{stem}.meta.json"
+    bundle_path = guarded_out / f"{stem}.bundle.json"
+    meta_path = guarded_out / f"{stem}.meta.json"
     atomic_write_bytes_exclusive(
-        bundle_path, bundle, boundary=out_dir, error_factory=OSError
+        bundle_path, bundle, boundary=guarded_out, error_factory=OSError
     )
     atomic_write_bytes_exclusive(
-        meta_path, canonical_bytes(meta), boundary=out_dir, error_factory=OSError
+        meta_path, canonical_bytes(meta), boundary=guarded_out, error_factory=OSError
     )
     return [bundle_path, meta_path]
 

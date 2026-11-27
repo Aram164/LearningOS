@@ -30,6 +30,7 @@ from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.contracts.gateway import current_gateway_request
 from learning_os.store.contracts.json_schema import validate_contract
+from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
 from learning_os.store.diagnostics import conventions
 from learning_os.store.diagnostics.resolver import (
     AuthorityEvidence,
@@ -321,7 +322,11 @@ def backup_manifest(ctx: OpContext, req: dict) -> Result:
                 raise BackupManifestError(
                     f"refusing to write the manifest inside the backed-up "
                     f"{label} root: {req.get('out')}")
-        _atomic_text(target, json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
+        try:
+            guarded_target = guard_tool_output_path(target, repo_root=root)
+        except WriteScopeError as exc:
+            raise BackupManifestError(str(exc)) from exc
+        _atomic_text(guarded_target, json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
         if req.get("stdout"):
             return Result(manifest)
         return Result({

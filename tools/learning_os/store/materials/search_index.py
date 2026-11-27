@@ -39,6 +39,7 @@ from learning_os.domain.validation import (
     SEARCH_TOP_DIR,
     TEXT_CACHE_TOP_DIR,
 )
+from learning_os.store.contracts.write_scopes import WriteScopeError, scoped_write_target
 from learning_os.store.loading import load_repo
 from learning_os.store.materials.resolution import (
     resolve_route_material_files,
@@ -919,7 +920,7 @@ class IndexReader:
         if not self.db_path.is_file():
             raise GenerationError("index_missing", f"Database file missing: {self.db_path}")
 
-        uri = f"file:{self.db_path.resolve()}?mode=ro"
+        uri = self.db_path.resolve().as_uri() + "?mode=ro"
         con: sqlite3.Connection | None = None
         try:
             con = sqlite3.connect(uri, uri=True, timeout=5.0)
@@ -1124,11 +1125,14 @@ def check_index_integrity(
     # Run FTS5's internal virtual-table integrity-check command
     con_fts: sqlite3.Connection | None = None
     try:
-        con_fts = sqlite3.connect(str(db_path), timeout=5.0)
+        checked_path = scoped_write_target(
+            repo_root, db_path.absolute(), ("generated/material-search/**",),
+        )
+        con_fts = sqlite3.connect(checked_path.as_uri() + "?mode=rw", uri=True, timeout=5.0)
         con_fts.execute(
             "INSERT INTO material_fts(material_fts, rank) VALUES('integrity-check', 1);"
         )
-    except sqlite3.DatabaseError as exc:
+    except (sqlite3.DatabaseError, WriteScopeError) as exc:
         raise GenerationError("index_corrupt", f"FTS5 integrity-check failed: {exc}") from exc
     finally:
         if con_fts is not None:

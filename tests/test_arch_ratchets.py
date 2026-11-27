@@ -35,6 +35,8 @@ from arch_schema_deltas import (
 )
 from test_arch_request_schemas import BU4_FILTER_NOT_LOOKUP
 
+from learning_os.store.loading.yamlio import UniqueKeySafeLoader
+
 ROOT = Path(__file__).resolve().parent.parent
 ARCH = ROOT / arch_surface.ARCHITECTURE_DIR
 RATCHETS_PATH = ARCH / arch_surface.RATCHETS_FILENAME
@@ -88,8 +90,12 @@ def _git_show(base: str, relpath: str) -> str | None:
     return proc.stdout
 
 
+def _load_yaml_unique(text: str):
+    return yaml.load(text, Loader=UniqueKeySafeLoader)
+
+
 def _load_ratchets(path: Path) -> dict:
-    return yaml.safe_load(path.read_text(encoding="utf-8"))
+    return _load_yaml_unique(path.read_text(encoding="utf-8"))
 
 
 def _ignore_lists(pyproject_text: str) -> dict[str, list[str]]:
@@ -234,7 +240,7 @@ def test_ratchets_file_is_valid():
 
 def test_surface_approvals_file_is_valid():
     assert APPROVALS_PATH.is_file(), f"missing {APPROVALS_PATH.relative_to(ROOT)}"
-    data = yaml.safe_load(APPROVALS_PATH.read_text(encoding="utf-8"))
+    data = _load_yaml_unique(APPROVALS_PATH.read_text(encoding="utf-8"))
     assert data.get("schema") == 1, "surface-approvals.yaml: schema must be 1"
     assert isinstance(data.get("approvals"), list), (
         "surface-approvals.yaml: approvals must list entries")
@@ -351,7 +357,7 @@ def _ratchet_failures(base_data: dict | None,
 def test_ratchets_are_monotonic_vs_base(base_ref):
     current = _load_ratchets(RATCHETS_PATH)
     base_text = _git_show(base_ref, RATCHETS_PATH.relative_to(ROOT).as_posix())
-    base = yaml.safe_load(base_text) if base_text is not None else None
+    base = _load_yaml_unique(base_text) if base_text is not None else None
     moves = _range_moves(base_ref)
     if base and moves:
         for entries in (base.get("checks") or {}).values():
@@ -706,7 +712,7 @@ def test_surface_diffs_have_approvals(base_ref):
     base_approvals = (
         yaml.safe_load(base_approvals_text)["approvals"]
         if base_approvals_text is not None else [])
-    approvals = yaml.safe_load(APPROVALS_PATH.read_text(encoding="utf-8"))["approvals"]
+    approvals = _load_yaml_unique(APPROVALS_PATH.read_text(encoding="utf-8"))["approvals"]
     uncovered = _unapproved_surface_diffs(
         base_flat, live_flat, base_approvals, approvals)
     if not uncovered:
@@ -783,7 +789,7 @@ def test_converter_change_adds_only_type(base_ref):
     base_approvals = (
         yaml.safe_load(base_approvals_text)["approvals"]
         if base_approvals_text is not None else [])
-    current_approvals = yaml.safe_load(
+    current_approvals = _load_yaml_unique(
         APPROVALS_PATH.read_text(encoding="utf-8"))["approvals"]
     new_converter = [entry for entry in _CONVERTER_APPROVALS
                      if entry in current_approvals
@@ -892,7 +898,7 @@ def test_converted_request_schema_changes_only_the_handler(base_ref):
     base_approvals = (
         yaml.safe_load(base_approvals_text)["approvals"]
         if base_approvals_text is not None else [])
-    current_approvals = yaml.safe_load(
+    current_approvals = _load_yaml_unique(
         APPROVALS_PATH.read_text(encoding="utf-8"))["approvals"]
     new_entries = [entry for entry in current_approvals
                    if _is_d4_conversion_entry(entry)
@@ -1383,3 +1389,15 @@ def test_resolve_base_ref_rejects_head_and_missing_in_ci(tmp_path: Path):
     assert _resolve_base_ref("HEAD", is_ci=False, root=tmp_path) == "HEAD"
     with pytest.raises(pytest.skip.Exception, match="does not resolve"):
         _resolve_base_ref("refs/heads/nonexistent", is_ci=False, root=tmp_path)
+
+
+def test_ratchets_and_approvals_reject_duplicate_yaml_keys():
+    from yaml.constructor import ConstructorError
+
+    dup_ratchets = "checks:\n  A2:\n    - signature: x\n      count: 1\n  A2:\n    - signature: y\n      count: 2\n"
+    with pytest.raises(ConstructorError, match="duplicate key"):
+        _load_yaml_unique(dup_ratchets)
+
+    dup_approvals = "schema: 1\nschema: 2\napprovals: []\n"
+    with pytest.raises(ConstructorError, match="duplicate key"):
+        _load_yaml_unique(dup_approvals)

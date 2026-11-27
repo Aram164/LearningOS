@@ -161,3 +161,11 @@ def test_curation_check_is_scoped_to_requested_units():
     manifest["records"].pop()
     assert any("missing or deprecated concept" in issue
                for issue in assembler.curation_problems(manifest, [unit_id]))
+
+
+def test_out_refuses_protected_fixture_before_assembly(tmp_path, monkeypatch, capsys):
+    target = tmp_path / "knowledge" / "drafts"
+    monkeypatch.setattr("sys.argv", ["assemble", "--root", str(tmp_path), "--out", str(target)])
+    assert assembler.main() == 2
+    assert "protected root knowledge/" in capsys.readouterr().err
+    assert not target.exists()

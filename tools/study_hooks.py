@@ -36,6 +36,10 @@ from learning_os.adapters.study_broker import (  # noqa: E402
     GATE_SOCK_ENV,
     send_broker_request,
 )
+from learning_os.store.contracts.write_scopes import (  # noqa: E402
+    WriteScopeError,
+    guard_tool_output_path,
+)
 from learning_os.store.materials.reading_cards import (  # noqa: E402
     CARD_JSON_TEMPLATE,
     MAX_OPEN_ENTRIES,
@@ -328,7 +332,9 @@ def profile_path(out: Path, *, runtime: str = "claude") -> Path:
 
 def write_profile(out: Path, *, runtime: str = "claude", core: Path = CORE) -> Path:
     """Write a disposable study hook profile without overwriting an existing one."""
-    target = profile_path(out, runtime=runtime)
+    guarded_out = guard_tool_output_path(out, repo_root=core, allow_existing_dir=True)
+    target = profile_path(guarded_out, runtime=runtime)
+    guard_tool_output_path(target, repo_root=core)
     if target.exists():
         raise FileExistsError(f"{target} exists; a profile is never overwritten here")
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -416,7 +422,11 @@ def main(argv: list[str] | None = None) -> int:
     """Run one study UX hook event or generate an opt-in settings profile."""
     args = build_parser().parse_args(argv)
     if args.event == "profile":
-        print(write_profile(args.out, runtime=args.runtime))
+        try:
+            print(write_profile(args.out, runtime=args.runtime))
+        except WriteScopeError as exc:
+            print(f"study_hooks: {exc}", file=sys.stderr)
+            return 2
         return 0
     fmt = str(args.format)
     raw_event = _read_event()

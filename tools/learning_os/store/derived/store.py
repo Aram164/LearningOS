@@ -147,7 +147,7 @@ def invalidate(root: Path, node_id: str) -> None:
         return
     del states[node_id]
     _atomic_write(
-        _checked_store_dir(root, DERIVED_TOP_DIR) / STATE_FILENAME,
+        _checked_store_dir(root) / STATE_FILENAME,
         canonical_bytes(_state_payload(states)))
 
 
@@ -181,7 +181,7 @@ def lookup(root: Path, node_id: str, *,
         return None
 
 
-def _checked_store_dir(root: Path, *parts: str) -> Path:
+def _checked_store_dir(root: Path, *, blobs: bool = False) -> Path:
     gen = root / "generated"
     if gen.is_symlink():
         raise TransactionFailure("generated output root may not be a symbolic link")
@@ -190,19 +190,21 @@ def _checked_store_dir(root: Path, *parts: str) -> Path:
         gen.resolve().relative_to(root.resolve())
     except ValueError as exc:
         raise TransactionFailure("generated output root escapes the repository") from exc
-    current = gen
-    for part in parts:
-        current = current / part
+    state = derived_dir(root)
+    blob_dir = state / BLOBS_DIRNAME
+    required = (state, blob_dir) if blobs else (state,)
+    for current in required:
         if current.is_symlink():
-            raise TransactionFailure(f"derived-state path is a symbolic link: {part}")
+            raise TransactionFailure(f"derived-state path is a symbolic link: {current.name}")
         if current.exists() and not current.is_dir():
-            raise TransactionFailure(f"derived-state parent is not a directory: {part}")
+            raise TransactionFailure(f"derived-state parent is not a directory: {current.name}")
         current.mkdir(exist_ok=True)
+    target = blob_dir if blobs else state
     try:
-        current.resolve().relative_to(gen.resolve())
+        target.resolve().relative_to(gen.resolve())
     except ValueError as exc:
         raise TransactionFailure("derived-state path escapes generated/") from exc
-    return current
+    return target
 
 
 def _atomic_write(target: Path, content: bytes) -> None:
@@ -224,7 +226,7 @@ def stage_node_blob(root: Path, node_id: str, *, node_key: str, value: Any) -> N
         raise DerivedError("derived node id must be nonempty")
     data = canonical_bytes(value)
     digest = hashlib.sha256(data).hexdigest()
-    blobs = _checked_store_dir(root, DERIVED_TOP_DIR, BLOBS_DIRNAME)
+    blobs = _checked_store_dir(root, blobs=True)
     _atomic_write(blobs / digest, data)
     return NodeState(node_key=node_key, output_sha256=digest, blob=f"{BLOBS_DIRNAME}/{digest}")
 
@@ -243,7 +245,7 @@ def publish_staged_states(root: Path, staged: dict[str, NodeState]) -> None:
     states = read_state(root)
     states.update(staged)
     _atomic_write(
-        _checked_store_dir(root, DERIVED_TOP_DIR) / STATE_FILENAME,
+        _checked_store_dir(root) / STATE_FILENAME,
         canonical_bytes(_state_payload(states)))
 
 

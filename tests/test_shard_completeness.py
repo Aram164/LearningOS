@@ -287,3 +287,23 @@ def test_mandatory_paired_prefixes_match_workflows_and_system_check(tmp_path, mo
     )
     assert checker.main() == 0
     assert seen_envs and all("PYTEST_ADDOPTS" not in e for e in seen_envs)
+
+
+def test_copy_audit_logs_refuses_protected_destination(tmp_path):
+    import check_shard_completeness as checker
+
+    from learning_os.store.contracts.write_scopes import WriteScopeError
+
+    repo = tmp_path / "repo"
+    contracts = repo / "system" / "contracts"
+    contracts.mkdir(parents=True)
+    (contracts / "capabilities.yaml").touch()
+    source = tmp_path / "shard"
+    source.mkdir()
+    (source / "test.jsonl").write_text("audit record\n")
+    destination = repo / "records"
+    destination.mkdir()
+
+    with pytest.raises(WriteScopeError, match="protected root records/"):
+        checker.copy_audit_logs(source, destination)
+    assert list(destination.iterdir()) == []

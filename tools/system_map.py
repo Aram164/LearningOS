@@ -18,6 +18,8 @@ from pathlib import Path
 
 from code_reachability import _direct_imports, _module_name
 
+from learning_os.store.contracts.write_scopes import WriteScopeError, scoped_write_target
+
 HEADINGS = ("Purpose", "Owned paths", "Entry points", "Depends on and used by",
             "Invariants", "Pinning tests", "Binding ADRs")
 BLOCK = re.compile(r"<!-- system-map:begin name=([\w-]+) -->\n(.*?)"
@@ -87,7 +89,7 @@ def _page(root: Path, path: Path, errors: list[str]) -> Component:
     return Component(path.stem, path, text, parts)
 
 
-def _rewrite(path: Path, expected: dict[str, str], *, write: bool,
+def _rewrite(base: Path, path: Path, expected: dict[str, str], *, write: bool,
              errors: list[str]) -> None:
     text = path.read_text(encoding="utf-8")
     blocks = list(BLOCK.finditer(text))
@@ -102,7 +104,12 @@ def _rewrite(path: Path, expected: dict[str, str], *, write: bool,
                 errors.append(f"{path.name}: stale {match[1]}; run tools/system_map.py --write")
             text = text[:match.start(2)] + body + text[match.end(2):]
     if write and text != path.read_text(encoding="utf-8"):
-        path.write_text(text, encoding="utf-8")
+        try:
+            target = scoped_write_target(base, path.absolute(), ("**",))
+        except WriteScopeError as exc:
+            errors.append(str(exc))
+            return
+        target.write_text(text, encoding="utf-8")
 
 
 def check(root: Path, *, write: bool = False) -> list[str]:
@@ -166,10 +173,10 @@ def check(root: Path, *, write: bool = False) -> list[str]:
     for page in pages:
         dependencies = ", ".join(f"`{x}`" for x in sorted(edges[page.identifier])) or "none"
         users = ", ".join(f"`{x}`" for x in sorted(edges) if page.identifier in edges[x]) or "none"
-        _rewrite(page.path, {"edges": f"Depends on: {dependencies}.\n\nUsed by: {users}."},
+        _rewrite(base, page.path, {"edges": f"Depends on: {dependencies}.\n\nUsed by: {users}."},
                  write=write, errors=errors)
     index = "\n".join(f"- `{p.identifier}` — {p.sections['Purpose']}" for p in pages)
-    _rewrite(base / "CODEMAP.md", {"index": index}, write=write, errors=errors)
+    _rewrite(base, base / "CODEMAP.md", {"index": index}, write=write, errors=errors)
     diagrams = ["Layer order (from pyproject.toml): " + " → ".join(layers) + "."]
     for layer in layers:
         ids = sorted(p for p, value in component_layers.items() if value == layer)
@@ -184,7 +191,7 @@ def check(root: Path, *, write: bool = False) -> list[str]:
         if len(layer_edges) > 12:
             diagrams += [f"\nComponent roster: {len(layer_edges)} intra-layer imports omitted here "
                          "for readability. Each component page lists its complete dependencies."]
-    _rewrite(base / "C4.md", {"components": "\n".join(diagrams)}, write=write, errors=errors)
+    _rewrite(base, base / "C4.md", {"components": "\n".join(diagrams)}, write=write, errors=errors)
     flows = (base / "FLOWS.md").read_text(encoding="utf-8")
     for reference in re.findall(r"<!-- system-map:symbol (\S+) -->", flows):
         if not symbol_exists(root, reference):

@@ -20,6 +20,7 @@ from pathlib import Path
 
 from learning_os.domain.failures import StudyFenceRefused
 from learning_os.domain.validation import TEXT_CACHE_TOP_DIR
+from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
 
 _DIR_FD_EINVAL_ATTEMPTS = 4
 
@@ -123,10 +124,10 @@ def find_real_ancestor(
     return matched, lex_path.relative_to(matched).parts
 
 
-def open_dir_nofollow(dir_fd: int, part: str, dir_flags: int) -> int:
+def open_dir_nofollow(dir_fd: int, part: str) -> int:
     """Open child directory ``part`` under ``dir_fd``, turning symlinks into ELOOP."""
     try:
-        return os.open(part, dir_flags, dir_fd=dir_fd)
+        return os.open(part, fd_open_flags(directory=True), dir_fd=dir_fd)
     except OSError as exc:
         is_link = False
         if exc.errno in (errno.ELOOP, errno.ENOTDIR):
@@ -172,7 +173,7 @@ def open_dir_chain_nofollow(
 
     for part in dir_parts:
         try:
-            next_fd = open_dir_nofollow(dir_fd, part, dir_flags)
+            next_fd = open_dir_nofollow(dir_fd, part)
         except FileNotFoundError:
             if not create_missing:
                 os.close(dir_fd)
@@ -185,7 +186,7 @@ def open_dir_chain_nofollow(
                 os.close(dir_fd)
                 raise
             try:
-                next_fd = open_dir_nofollow(dir_fd, part, dir_flags)
+                next_fd = open_dir_nofollow(dir_fd, part)
             except OSError:
                 os.close(dir_fd)
                 raise
@@ -699,7 +700,7 @@ class RequestInputStager:
         self.core_root = core_root
         self.scratch_dir = scratch_dir
         self.cwd = cwd
-        self.stage_dir = stage_dir
+        self.stage_dir = guard_tool_output_path(stage_dir, repo_root=core_root, allow_existing_dir=True)
         self.entries: dict[str, str] = {}
 
     def stage_path(self, raw_path: str, *, label: str, allow_core: bool = True) -> Path:
@@ -820,6 +821,11 @@ def write_local_output_file(
         scratch_env = os.environ.get(STUDY_FENCE_SCRATCH_ENV, "").strip()
         if scratch_env:
             effective_scratch = Path(scratch_env)
+    if effective_scratch is None:
+        try:
+            target = guard_tool_output_path(target)
+        except WriteScopeError as exc:
+            raise OSError(errno.EACCES, str(exc), target_text) from exc
     parent_fd = _open_local_parent_dir_fd(
         target.parent,
         mkdir_parents=mkdir_parents,

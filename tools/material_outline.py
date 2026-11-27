@@ -40,6 +40,10 @@ if str(TOOLS) not in sys.path:
 
 from material_toc import outline_rows  # noqa: E402
 
+from learning_os.store.contracts.write_scopes import (  # noqa: E402
+    WriteScopeError,
+    guard_tool_output_path,
+)
 from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 from learning_os.store.materials.pdf_text import PDFTextError, pdf_reader  # noqa: E402
 from learning_os.store.materials.search_index import (  # noqa: E402
@@ -208,10 +212,18 @@ def main(argv: list[str] | None = None) -> int:
     # the report, so keep only its errors.
     logging.getLogger("pypdf").setLevel(logging.ERROR)
     repo = Path(args.repo).resolve()
+    try:
+        outline_dir = (
+            guard_tool_output_path(args.outline_dir, repo_root=repo, allow_existing_dir=True)
+            if args.outline_dir
+            else repo / "generated" / OUTLINE_TOP_DIR
+        )
+    except WriteScopeError as exc:
+        print(f"material_outline: {exc}", file=sys.stderr)
+        return 2
     summary = run(
         text_cache=Path(args.text_cache) if args.text_cache else get_text_cache_dir(repo),
-        outline_dir=(Path(args.outline_dir) if args.outline_dir
-                     else repo / "generated" / OUTLINE_TOP_DIR),
+        outline_dir=outline_dir,
         materials_root=(Path(args.materials_root) if args.materials_root
                         else repo.parent / "materials"),
         refresh=args.refresh,

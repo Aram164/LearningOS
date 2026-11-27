@@ -26,6 +26,10 @@ TOOLS_DIR = Path(__file__).resolve().parent
 if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
+from learning_os.store.contracts.write_scopes import (  # noqa: E402
+    WriteScopeError,
+    guard_tool_output_path,
+)
 from learning_os.store.fingerprint import DATA_ROOTS  # noqa: E402
 from learning_os.store.fs import (  # noqa: E402
     atomic_write_text_exclusive,
@@ -258,10 +262,15 @@ def _capture_materials(root: Path, out: Path) -> tuple[list[dict] | None, str | 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     root = Path(args.root).resolve()
-    out = Path(args.out).resolve()
     if not root.is_dir():
         return _fail(f"root is not a directory: {root}")
-    if out == root or root in out.parents:
+    try:
+        out = guard_tool_output_path(
+            args.out, repo_root=root, allow_existing_dir=True
+        )
+    except WriteScopeError as exc:
+        return _fail(str(exc))
+    if out.resolve().is_relative_to(root):
         return _fail(f"refusing to write the world inside the root: {out}")
     out.mkdir(parents=True, exist_ok=True)
     if any(out.iterdir()):

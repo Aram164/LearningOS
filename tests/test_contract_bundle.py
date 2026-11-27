@@ -184,3 +184,17 @@ def test_root_hash_is_blind_to_resource_change(repo_root: Path, tmp_path: Path) 
     assert f"sha256:{hashlib.sha256(root_path.read_bytes()).hexdigest()}" == root_hash_before
     assert digest_of(build_bundle(repo_root / load_contract(repo_root)["schema_path"], schema_copy)) != digest_of(
         build_bundle(repo_root / load_contract(repo_root)["schema_path"], repo_root / SCHEMA_DIR_REL))
+
+
+def test_build_refuses_protected_out(tmp_path, monkeypatch, capsys):
+    import contract_bundle
+
+    target = tmp_path / "system" / "bundle"
+    monkeypatch.setattr("sys.argv", [
+        "contract_bundle", "--root", str(tmp_path), "build",
+        "--schema", "system/schema/source.schema.json", "--out", str(target),
+    ])
+
+    assert contract_bundle.main() == 1
+    assert "protected root system/" in capsys.readouterr().err
+    assert not target.exists()

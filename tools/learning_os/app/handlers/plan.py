@@ -6,6 +6,7 @@ import copy
 import difflib
 import hashlib
 import json
+import os
 import re
 from pathlib import Path
 
@@ -88,6 +89,7 @@ from learning_os.store.codec import render_frontmatter as _render_frontmatter
 from learning_os.store.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.store.contracts.gateway import current_gateway_request
 from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
+from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
 from learning_os.store.revisions import load_revisions
 from learning_os.store.transactions import parse_expected_revisions
 
@@ -158,54 +160,48 @@ def _drop_unchanged_writes(writes: dict[Path, str]) -> dict[Path, str]:
         kept[path] = content
     return kept
 
-def _report_out_target(target_text: str) -> Path:
-    """Resolve a --report-out target against the filesystem, not the repo."""
-    return Path(target_text).expanduser().resolve()
-
-def _report_out_target_problem(root: Path, target_text: str, *, draft: str | None) -> str | None:
+def _report_out_target(root: Path, target_text: str, *, draft: str | None) -> Path:
     """Refuse a --report-out target that would endanger the review.
 
     The saved report must land outside the repository (writing under the
     guarded roots would move the snapshot it attests), must never replace
     the reviewed draft, and must never overwrite an existing saved report.
-    Returns an error message, or None when the target is acceptable.
+    Returns the checked path or raises a scope refusal.
     """
     root_resolved = root.resolve()
     try:
-        target = _report_out_target(target_text)
+        target = Path(os.path.abspath(Path(target_text).expanduser()))
+        resolved = target.resolve()
     except OSError as exc:
-        return f"cannot resolve --report-out target: {exc}"
-    if target == root_resolved or root_resolved in target.parents:
+        raise WriteScopeError(f"cannot resolve --report-out target: {exc}") from exc
+    if target.is_relative_to(root_resolved) or resolved.is_relative_to(root_resolved):
         # The checkout's gitignored .venv/ scratch is the one in-repo home
         # for a check report: it is excluded from canonical_fingerprint, so
         # the report cannot move the snapshot it attests (same boundary as
         # ReportStore and seal_envelope's _scratch_path_problem). Both the
         # lexical and the resolved path must stay inside it, with no symlink
         # traversal on the way in.
-        lexical = Path(target_text).expanduser().absolute()
         scratch = root_resolved / ".venv"
-        in_scratch = lexical.is_relative_to(scratch) and target.is_relative_to(scratch)
-        traverses_link = False
-        if in_scratch:
-            for component in (lexical.parent, *lexical.parents):
-                if component == root_resolved:
-                    break
-                if component.is_symlink():
-                    traverses_link = True
-                    break
-        if not in_scratch or traverses_link:
-            return f"--report-out target must be outside the repository: {target_text}"
+        if not resolved.is_relative_to(scratch):
+            raise WriteScopeError(f"--report-out target must be outside the repository: {target_text}")
     if draft:
         try:
-            if target == Path(draft).expanduser().resolve():
-                return f"--report-out target must not replace the reviewed draft: {target_text}"
+            if resolved == Path(draft).expanduser().resolve():
+                raise WriteScopeError(f"--report-out target must not replace the reviewed draft: {target_text}")
         except OSError:
             pass
     parent = target.parent
     if not parent.is_dir():
-        return f"--report-out directory does not exist: {parent}"
+        raise WriteScopeError(f"--report-out directory does not exist: {parent}")
     if target.exists() or target.is_symlink():
-        return f"--report-out target already exists; refusing to overwrite: {target_text}"
+        raise WriteScopeError(f"--report-out target already exists; refusing to overwrite: {target_text}")
+    return guard_tool_output_path(target_text, repo_root=root)
+
+def _report_out_target_problem(root: Path, target_text: str, *, draft: str | None) -> str | None:
+    try:
+        _report_out_target(root, target_text, draft=draft)
+    except WriteScopeError as exc:
+        return str(exc)
     return None
 
 def _save_check_report_and_compact(
@@ -220,12 +216,12 @@ def _save_check_report_and_compact(
     No second envelope is ever prepared. Returns (compact, None) on
     success, or (None, (exit_code, message)) on failure.
     """
-    problem = _report_out_target_problem(root, target_text, draft=draft)
-    if problem is not None:
-        return None, (2, problem)
     from learning_os.store.fs import write_file_create_only
 
-    target = _report_out_target(target_text)
+    try:
+        target = _report_out_target(root, target_text, draft=draft)
+    except WriteScopeError as exc:
+        return None, (2, str(exc))
     payload = (json.dumps(result, ensure_ascii=False) + "\n").encode("utf-8")
     try:
         write_file_create_only(target, payload)

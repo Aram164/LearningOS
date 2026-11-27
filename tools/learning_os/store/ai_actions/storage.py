@@ -22,6 +22,7 @@ from learning_os.domain.ai_types import AIActionRequest, DeliveryRecord, Request
 from learning_os.store.ai_actions.support import dump_yaml as _dump_yaml
 from learning_os.store.ai_actions.support import inside as _inside
 from learning_os.store.ai_actions.support import read_yaml as _read_yaml
+from learning_os.store.contracts.write_scopes import WriteScopeError, scoped_write_target
 from learning_os.store.fs import (
     atomic_write_bytes_exclusive,
     atomic_write_text_exclusive,
@@ -51,13 +52,19 @@ class FilesystemAIActionRepository:
         return str(value)
 
     def request_dir(self, request_id: str) -> Path:
-        return self.requests / self._id(request_id)
+        return scoped_write_target(
+            self.root, f"operations/ai-actions/requests/{self._id(request_id)}",
+            ("operations/ai-actions/requests/*",),
+        )
 
     def request_path(self, request_id: str) -> Path:
         return self.request_dir(request_id) / "request.yaml"
 
     def delivery_dir(self, delivery_id: str) -> Path:
-        return self.deliveries / self._id(delivery_id)
+        return scoped_write_target(
+            self.root, f"operations/ai-actions/deliveries/{self._id(delivery_id)}",
+            ("operations/ai-actions/deliveries/*",),
+        )
 
     def state_path(self, target_id: str) -> Path:
         return self.garden_state / f"{self._id(target_id)}.yaml"
@@ -167,8 +174,14 @@ class FilesystemAIActionRepository:
         destination = self.delivery_dir(str(delivery.get("id", "")))
         if destination.exists():
             raise DeliveryValidationError(f"delivery already exists: {delivery.get('id')}")
-        self.quarantine.mkdir(parents=True, exist_ok=True)
-        temp = Path(tempfile.mkdtemp(prefix=f"{destination.name}-", dir=self.quarantine))
+        try:
+            quarantine = scoped_write_target(
+                self.root, self.quarantine.absolute(), ("operations/ai-actions/incoming",),
+            )
+        except WriteScopeError as exc:
+            raise DeliveryValidationError(f"unsafe delivery quarantine: {exc}") from exc
+        quarantine.mkdir(parents=True, exist_ok=True)
+        temp = Path(tempfile.mkdtemp(prefix=f"{destination.name}-", dir=quarantine))
         staged = temp / "bundle"
         try:
             # Preserve links as links so the post-copy admission pass can see
@@ -190,6 +203,14 @@ class FilesystemAIActionRepository:
             raise
         return cast(DeliveryRecord, delivery), staged
 
+    def _checked_staged_delivery(self, staged: Path) -> Path:
+        try:
+            return scoped_write_target(
+                self.root, staged.absolute(), ("operations/ai-actions/incoming/*/bundle",),
+            )
+        except WriteScopeError as exc:
+            raise DeliveryValidationError(f"unsafe staged delivery: {exc}") from exc
+
     def commit_delivery_import(
         self,
         staged: Path,
@@ -197,17 +218,18 @@ class FilesystemAIActionRepository:
         request: AIActionRequest,
     ) -> Path:
         """Publish a delivery and its request-state transition as one unit."""
+        staged_bundle = self._checked_staged_delivery(staged)
         request_path = self.request_path(str(request["id"]))
         try:
             previous_request = request_path.read_text(encoding="utf-8")
         except OSError as exc:
-            shutil.rmtree(staged.parent, ignore_errors=True)
+            shutil.rmtree(staged_bundle.parent, ignore_errors=True)
             raise DeliveryValidationError(
                 f"cannot preserve AI request before delivery import: {exc}"
             ) from exc
         destination: Path | None = None
         try:
-            destination = self.publish_delivery(staged, delivery_id)
+            destination = self.publish_delivery(staged_bundle, delivery_id)
             self.update_request(request)
             return destination
         except Exception as exc:
@@ -222,17 +244,18 @@ class FilesystemAIActionRepository:
             raise exc
 
     def publish_delivery(self, staged: Path, delivery_id: str) -> Path:
+        staged_bundle = self._checked_staged_delivery(staged)
         destination = self.delivery_dir(delivery_id)
         try:
             if destination.exists():
                 raise DeliveryValidationError(f"delivery already exists: {delivery_id}")
             destination.parent.mkdir(parents=True, exist_ok=True)
-            os.replace(staged, destination)
+            os.replace(staged_bundle, destination)
         except Exception:
             # Never leave quarantined bytes behind, whatever went wrong.
-            shutil.rmtree(staged.parent, ignore_errors=True)
+            shutil.rmtree(staged_bundle.parent, ignore_errors=True)
             raise
-        shutil.rmtree(staged.parent, ignore_errors=True)
+        shutil.rmtree(staged_bundle.parent, ignore_errors=True)
         return destination
 
     def delivery_ids(self) -> list[str]:
@@ -282,4 +305,5 @@ class FilesystemAIActionRepository:
         )
 
     def discard_staged_delivery(self, staged: Path) -> None:
-        shutil.rmtree(staged.parent, ignore_errors=True)
+        staged_bundle = self._checked_staged_delivery(staged)
+        shutil.rmtree(staged_bundle.parent, ignore_errors=True)

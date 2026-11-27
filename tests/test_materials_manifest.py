@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import sys
 import textwrap
+from pathlib import Path
 from unittest.mock import patch
 
 import materials_manifest as mm
@@ -230,6 +231,39 @@ def test_main_build_commits_through_gateway_under_operator_lock(
     assert artifact_revision(mini_repo, "file:records/materials-manifest.yaml") == 1
     out, _ = capsys.readouterr()
     assert "wrote " in out
+
+
+def test_materials_manifest_transaction_cleans_temp_on_replace_failure(
+    mini_repo, tmp_path, monkeypatch, capsys,
+):
+    """An interrupted admitted build keeps the prior bytes and emits no receipt."""
+    import os
+
+    source = make_tree(tmp_path / "materials", {"Books/a.pdf": "alpha"})
+    manifest = mini_repo / "records/materials-manifest.yaml"
+    monkeypatch.setattr(mm, "MANIFEST", manifest)
+    monkeypatch.setattr(mm, "materials_root", lambda: source)
+    monkeypatch.setattr(sys, "argv", ["materials_manifest.py", "--build"])
+    assert mm.main() == 0
+    prior = manifest.read_bytes()
+    prior_entries = set(manifest.parent.iterdir())
+    tx_dir = mini_repo / "operations/transactions"
+    prior_receipts = {path.name: path.read_bytes() for path in tx_dir.glob("transaction-*.yaml")}
+    (source / "Books/a.pdf").write_text("changed", encoding="utf-8")
+
+    replace = os.replace
+
+    def interrupt_manifest_replace(src, dst, *args, **kwargs):
+        if Path(dst) == manifest:
+            raise OSError("simulated crash before manifest rename")
+        return replace(src, dst, *args, **kwargs)
+
+    monkeypatch.setattr(os, "replace", interrupt_manifest_replace)
+    assert mm.main() == 2
+    assert "simulated crash before manifest rename" in capsys.readouterr().err
+    assert manifest.read_bytes() == prior
+    assert set(manifest.parent.iterdir()) == prior_entries
+    assert {path.name: path.read_bytes() for path in tx_dir.glob("transaction-*.yaml")} == prior_receipts
 
 
 def test_main_build_refuses_outside_initialized_repository(tmp_path, monkeypatch, capsys):

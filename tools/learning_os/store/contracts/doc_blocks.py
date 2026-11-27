@@ -21,6 +21,7 @@ from learning_os.store.contracts.capability_catalog import (
     CapabilityCatalogError,
     load_capability_catalog,
 )
+from learning_os.store.contracts.write_scopes import WriteScopeError, scoped_write_target
 
 OWNERS = {
     "capability-count": "system/AI-ACTIONS.md",
@@ -28,6 +29,7 @@ OWNERS = {
     "cli-command-list": "README.md",
     "procedure-index": "system/OPERATOR.md",
 }
+_DOCUMENT_TARGETS = (*OWNERS.values(), "system/WORKFLOWS.md")
 INDEX = "system/procedures/INDEX.yaml"
 REQUESTS = "system/schema/requests"
 _OPEN = re.compile(r"<!-- los:generated name=([a-z][a-z0-9-]*) -->")
@@ -285,6 +287,12 @@ def check(root: Path, values: BlockValues) -> list[DocBlockIssue]:
 def write(root: Path, values: BlockValues) -> tuple[Path, ...]:
     """Rewrite interiors only, after all documents pass structural preflight."""
     replacements = _replacements(root, values)
+    targets = []
     for relative, text in replacements.items():
-        (root / relative).write_bytes(text.encode("utf-8"))
-    return tuple(root / relative for relative in replacements)
+        try:
+            targets.append((scoped_write_target(root, relative, _DOCUMENT_TARGETS), text))
+        except WriteScopeError as exc:
+            raise DocBlockError("generated doc block outside allowed documentation roots", relative) from exc
+    for target, text in targets:
+        target.write_bytes(text.encode("utf-8"))
+    return tuple(target for target, _ in targets)

@@ -342,14 +342,14 @@ def test_apply_reports_rollback_errors_instead_of_suppressing(tmp_path, monkeypa
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
 
-    orig_git = module._git
+    original_move = module._git_move
 
-    def flaky_git(repo_root: Path, *args: str) -> str:
-        if args[:1] == ("mv",) and "bar/oldmod.py" in args[1]:
+    def flaky_move(repo_root: Path, source: str, destination: str) -> None:
+        if "bar/oldmod.py" in source:
             raise module.MoveError("simulated git mv rollback failure")
-        return orig_git(repo_root, *args)
+        original_move(repo_root, source, destination)
 
-    monkeypatch.setattr(module, "_git", flaky_git)
+    monkeypatch.setattr(module, "_git_move", flaky_move)
     monkeypatch.chdir(root)
     rc = module.main(["--map", str(map_path), "--apply"])
     assert rc == 2
@@ -402,3 +402,27 @@ def test_apply_non_mapping_ledger_rolls_back_cleanly(tmp_path, bad_ledger):
     assert not (root / "tools/learning_os/bar/oldmod.py").exists()
     assert (root / "tools/learning_os/use.py").read_text(encoding="utf-8") == original_use
     assert (root / "tests/architecture/moves.yaml").read_text(encoding="utf-8") == bad_ledger
+
+
+
+def test_move_refuses_non_normalized_target_in_check_and_apply(tmp_path):
+    root = _repo(tmp_path)
+    source = root / "tools/learning_os/oldmod.py"
+    _write(root, "tools/learning_os/oldmod.py", "VALUE = 1\n")
+    _write(root, "knowledge/sentinel.md", "sentinel\n")
+    _commit(root)
+    mapping = root / "MAP.yaml"
+    mapping.write_text(
+        "moves:\n  - from: tools/learning_os/oldmod.py\n    to: ./knowledge/new.py\n",
+        encoding="utf-8",
+    )
+
+    for mode in ("--check", "--apply"):
+        result = subprocess.run(
+            [sys.executable, str(TOOL), "--map", str(mapping), mode],
+            cwd=root, capture_output=True, text=True, check=False,
+        )
+        assert result.returncode == 2, result.stderr
+        assert "not repo-relative" in result.stderr
+        assert source.read_text(encoding="utf-8") == "VALUE = 1\n"
+        assert not (root / "knowledge/new.py").exists()

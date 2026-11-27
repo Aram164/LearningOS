@@ -35,7 +35,6 @@ from learning_os.adapters.seal_parser import (
 from learning_os.adapters.study_broker import (
     GATE_SOCK_ENV,
     send_broker_request,
-    write_local_output_file,
 )
 from learning_os.adapters.study_policies import (
     REVIEWED_SEALING_CAPABILITIES,
@@ -50,13 +49,15 @@ from learning_os.store.contracts.gateway import (
     GATEWAY_SCHEMA_VERSION,
     intent_sha256,
 )
+from learning_os.store.contracts.write_scopes import guard_tool_output_path
 from learning_os.store.fingerprint import canonical_fingerprint
-from learning_os.store.fs import atomic_write_text_exclusive
+from learning_os.store.fs import atomic_write_text_exclusive, write_file_create_only
 from learning_os.store.study_fence import (
     MAX_STUDY_JSON_BYTES,
     STUDY_FENCE_CORE_ENV,
     STUDY_FENCE_SCRATCH_ENV,
     read_optional_study_or_staged_file,
+    write_local_output_file,
 )
 
 # capability-envelope.schema.json bounds request_id at 128 characters.
@@ -179,10 +180,11 @@ def _scratch_path_problem(root: Path, raw: str, flag: str) -> str | None:
     never move the snapshot or enter the canonical tree.
     """
     try:
-        target = Path(raw).expanduser().resolve()
+        lexical = Path(os.path.abspath(Path(raw).expanduser()))
+        target = lexical.resolve()
     except (RuntimeError, ValueError, OSError) as exc:
         return f"cannot resolve {flag} {raw!r}: {exc}"
-    if not (target == root or root in target.parents):
+    if not (target.is_relative_to(root) or lexical.is_relative_to(root)):
         return None
     venv = root / ".venv"
     if target == venv or venv in target.parents:
@@ -393,11 +395,10 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
                     root, capability, sealing, record["expected_snapshot"],
                     record["expected_revisions"], observed)
     if check_out is not None:
-        Path(check_out).parent.mkdir(parents=True, exist_ok=True)
-        _record_text = json.dumps(record_out, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
-        _fd = os.open(check_out, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
-        with os.fdopen(_fd, "w", encoding="utf-8") as _handle:
-            _handle.write(_record_text)
+        target = guard_tool_output_path(check_out, repo_root=root)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        record_text = json.dumps(record_out, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+        write_file_create_only(target, record_text.encode("utf-8"), mode=0o644)
     if record["ok"] is not True:
         errors = record.get("errors") or ["the check failed"]
         raise ValueError(
@@ -461,7 +462,7 @@ def _settle_attempt(root: Path, key: str, attempt: Path) -> None:
     committed = load_idempotency_entries(root).get(key)
     if committed is not None:
         _committed_request(root, key, committed)
-    discard_sealed_request(attempt)  # a no-op once it was promoted
+    discard_sealed_request(root, attempt)  # a no-op once it was promoted
 
 
 def _same_authored_intent(kept: dict, *, capability: str, channel: str,
@@ -537,7 +538,7 @@ def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
     envelope["approval"] = {"kind": approval_kind,
                             "subject_sha256": intent_sha256(envelope)}
     attempt = sealed_attempt_path(root, key, request_id)
-    save_sealed_request(attempt, json.dumps(envelope, indent=2, sort_keys=True,
+    save_sealed_request(root, attempt, json.dumps(envelope, indent=2, sort_keys=True,
                                             ensure_ascii=False) + "\n")
     return attempt, True
 
@@ -943,9 +944,12 @@ def main(argv: list[str] | None = None) -> int:
     }
     text = json.dumps(envelope, indent=2, sort_keys=True, ensure_ascii=False)
     if args.out:
-        atomic_write_text_exclusive(
-            Path(args.out), text + "\n", error_factory=OSError
-        )
+        try:
+            target = guard_tool_output_path(args.out, repo_root=root)
+            atomic_write_text_exclusive(target, text + "\n", error_factory=OSError)
+        except ValueError as exc:
+            print(f"seal_envelope: {exc}", file=sys.stderr)
+            return 2
     else:
         print(text)
     return 0

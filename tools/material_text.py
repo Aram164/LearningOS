@@ -70,6 +70,11 @@ from materials_manifest import (  # noqa: E402
 
 from learning_os.domain.failures import TransactionFailure  # noqa: E402
 from learning_os.domain.validation import TEXT_CACHE_TOP_DIR  # noqa: E402
+from learning_os.store.contracts.write_scopes import (  # noqa: E402
+    WriteScopeError,
+    guard_tool_output_path,
+    scoped_write_target,
+)
 from learning_os.store.derived.engine import BuildContext, evaluate, evaluate_many  # noqa: E402
 from learning_os.store.derived.model import (  # noqa: E402
     DERIVED_SUBSTRATE_FILES,
@@ -172,8 +177,8 @@ def _stage_extracted_entry(
         )
         if sha256(source_path) != digest:
             return False, "source-changed"
-        target = cache / digest
-        if target.is_symlink() or target.is_file():
+        target = scoped_write_target(cache, digest, ("*",))
+        if target.is_file():
             target.unlink()
         elif target.is_dir():
             shutil.rmtree(target)
@@ -548,8 +553,9 @@ def _heal_index(cache: Path, digest: str, pages: int) -> bool:
     record.setdefault("extractor", EXTRACTOR)
     record.setdefault("pages_sha256", hashes)
     try:
+        target = scoped_write_target(cache, f"{digest}/index.json", ("*/index.json",))
         atomic_write_text_exclusive(
-            path,
+            target,
             json.dumps(record, indent=2, sort_keys=True) + "\n",
             boundary=cache.resolve(),
             durable=False,
@@ -606,7 +612,13 @@ def main(argv: list[str] | None = None) -> int:
               file=sys.stderr)
         return 2
     base = Path(args.materials_root) if args.materials_root else materials_root()
-    cache = Path(args.cache_dir)
+    try:
+        cache = guard_tool_output_path(
+            args.cache_dir, repo_root=REPO, allow_existing_dir=True
+        )
+    except WriteScopeError as exc:
+        print(f"los: {exc}", file=sys.stderr)
+        return 2
     cache.mkdir(parents=True, exist_ok=True)
     default_cache = _is_default_cache(cache)
 

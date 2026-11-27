@@ -31,6 +31,7 @@ from learning_os.store.contracts.batch_notes import (
     BATCH_MIN_NOTES,
 )
 from learning_os.store.contracts.json_schema import load_standalone_validator
+from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.material_analysis import (
     binding_consistent,
@@ -552,12 +553,9 @@ def _prepare_out_dir(root: Path, value: object) -> Path:
     if not isinstance(value, str) or not value or value == "-":
         raise WriteRefused(
             "--out must be a staging directory outside the repository")
-    out = Path(value).expanduser()
-    if not out.is_absolute():
-        out = Path.cwd() / out
     try:
-        resolved = out.resolve()
-    except OSError as exc:
+        resolved = guard_tool_output_path(value, repo_root=root, allow_existing_dir=True)
+    except WriteScopeError as exc:
         raise WriteRefused(f"cannot use staging dir {value}: {exc}") from exc
     try:
         resolved.relative_to(root.resolve())

@@ -1089,3 +1089,12 @@ def test_f2_study_search_compact_pointer_labels_and_card_read(world: Path) -> No
     full = json.loads(read_proc.stdout)
     assert full["card"]["paraphrase"] == long_paraphrase
     assert len(full["card"]["pointers"]) == 4
+
+
+def test_outline_refuses_protected_cache_dir(tmp_path, capsys):
+    target = tmp_path / "records" / "outlines"
+    assert material_outline.main([
+        "--refresh", "--repo", str(tmp_path), "--outline-dir", str(target),
+    ]) == 2
+    assert "protected root records/" in capsys.readouterr().err
+    assert not target.exists()

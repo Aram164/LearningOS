@@ -19,6 +19,7 @@ from pathlib import Path
 from learning_os.domain.failures import WriteRefused
 from learning_os.store import observations
 from learning_os.store.contracts.gateway import current_gateway_request
+from learning_os.store.contracts.write_scopes import WriteScopeError, scoped_write_target
 from learning_os.store.fs import atomic_write_text_exclusive, clean_git_env
 
 #: Positive-only cache of repository roots to their git directories. A root
@@ -90,9 +91,11 @@ def process_state_dir(root: Path) -> Path:
     """
     git_dir = _git_dir(root)
     if git_dir is None:
-        return Path(tempfile.gettempdir())
+        return Path(tempfile.gettempdir()).resolve()
     state = git_dir / "learningos"
     try:
+        if state.is_symlink():
+            raise WriteRefused(f"operator state directory may not be a symbolic link: {state}")
         state.mkdir(parents=True, exist_ok=True)
     except OSError as exc:
         raise WriteRefused(
@@ -114,9 +117,16 @@ def sealed_request_path(root: Path, key: str) -> Path:
     return process_state_dir(root) / "sealed-requests" / f"{name}.json"
 
 
-def save_sealed_request(path: Path, text: str) -> None:
-    """Keep one sealed envelope at ``path`` (see :func:`sealed_request_path`)."""
-    _atomic_text(path, text)
+def _checked_attempt(root: Path, attempt: Path) -> Path:
+    try:
+        return scoped_write_target(process_state_dir(root), attempt.absolute(), ("sealed-requests/*",))
+    except WriteScopeError as exc:
+        raise WriteRefused(f"unsafe sealed request attempt: {exc}") from exc
+
+
+def save_sealed_request(root: Path, attempt: Path, text: str) -> None:
+    """Keep one sealed envelope in the checkout's retry state."""
+    _atomic_text(_checked_attempt(root, attempt), text)
 
 
 def _review_checks_path(root: Path) -> Path:
@@ -187,12 +197,12 @@ def promote_sealed_request(attempt: Path, root: Path, key: str) -> None:
     replaced by another; what this replaces is only a file that does not
     hold the committed request (kept by an earlier version of the tool).
     """
-    os.replace(attempt, sealed_request_path(root, key))
+    os.replace(_checked_attempt(root, attempt), sealed_request_path(root, key))
 
 
-def discard_sealed_request(attempt: Path) -> None:
+def discard_sealed_request(root: Path, attempt: Path) -> None:
     """Drop an attempt that did not commit (refused, conflicting, or replayed)."""
-    attempt.unlink(missing_ok=True)
+    _checked_attempt(root, attempt).unlink(missing_ok=True)
 
 
 def is_anchored(root: Path) -> bool:

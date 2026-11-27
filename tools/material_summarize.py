@@ -41,6 +41,7 @@ import argparse
 import datetime as _dt
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -52,6 +53,12 @@ from material_text import cache_index  # noqa: E402
 from materials_manifest import materials_root, sha256  # noqa: E402
 
 from learning_os.domain.validation import TEXT_CACHE_TOP_DIR  # noqa: E402
+from learning_os.store.contracts.write_scopes import (  # noqa: E402
+    WriteScopeError,
+    guard_tool_output_path,
+    scoped_write_target,
+    write_target,
+)
 from learning_os.store.fs import (  # noqa: E402
     atomic_write_bytes_exclusive,
     atomic_write_text_exclusive,
@@ -357,7 +364,18 @@ def main(argv: list[str] | None = None) -> int:
         return _refuse("cached source range holds no text; compression is unprovable")
     if len(draft) > MAX_SOURCE_FRACTION * source_chars:
         return _refuse("draft exceeds 80% of its source range; compress, do not copy")
-    target = Path(args.cache_dir) / args.digest / f"pages-{start}-{end}"
+    cache_dir = Path(os.path.abspath(args.cache_dir))
+    requested_target = cache_dir / args.digest / f"pages-{start}-{end}"
+    try:
+        if cache_dir == SUMMARY_CACHE:
+            # The tree contract explicitly owns this one generated summary tree.
+            target = scoped_write_target(REPO, requested_target, ("knowledge/summaries/*/*",))
+            write_target(REPO, target / "summary.md")
+            write_target(REPO, target / "meta.json")
+        else:
+            target = guard_tool_output_path(requested_target, repo_root=REPO, allow_existing_dir=True)
+    except WriteScopeError as exc:
+        return _refuse(str(exc))
     if (target / "summary.md").exists():
         return _refuse("a summary for this range already exists; remove it deliberately first")
     target.mkdir(parents=True, exist_ok=True)

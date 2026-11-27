@@ -307,3 +307,15 @@ def test_source_changed_during_extraction_publishes_nothing(
         {"material": "deck-a.pdf", "reason": "source-changed"}]
     assert not (cache / digest).exists()
     assert list(cache.iterdir()) == []
+
+
+def test_text_cache_refuses_protected_override(tmp_path, monkeypatch, capsys):
+    mt = _material_text()
+    monkeypatch.setattr(mt, "REPO", tmp_path)
+    monkeypatch.setattr(mt.shutil, "which", lambda name: name)
+    monkeypatch.setattr(mt, "load_manifest", lambda path: {"files": {}})
+    target = tmp_path / "records" / "text-cache"
+
+    assert mt.main(["--materials-root", str(tmp_path), "--cache-dir", str(target)]) == 2
+    assert "protected root records/" in capsys.readouterr().err
+    assert not target.exists()

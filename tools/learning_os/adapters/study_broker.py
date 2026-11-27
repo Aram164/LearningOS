@@ -43,6 +43,7 @@ from learning_os.adapters.study_policies import (
     STUDY_WRITE_CAPABILITIES,
 )
 from learning_os.domain.failures import WriteRefused
+from learning_os.store.contracts.write_scopes import guard_tool_output_path
 from learning_os.store.materials.reading_cards import valid_session
 from learning_os.store.study_fence import (
     MAX_STUDY_JSON_BYTES,
@@ -367,7 +368,7 @@ class StudyBroker:
             else None
         )
         self.stage_root: Path | None = (
-            Path(os.path.realpath(Path(stage_root).resolve()))
+            guard_tool_output_path(stage_root, repo_root=self.core_root, allow_existing_dir=True).resolve()
             if stage_root is not None
             else None
         )
@@ -412,7 +413,7 @@ class StudyBroker:
         default_tmp = Path(os.path.realpath(tempfile.gettempdir()))
         for base in (self.core_root, self.scratch_dir):
             if base is not None and is_within(default_tmp, base):
-                return str(Path(os.path.realpath("/tmp")))
+                return str(guard_tool_output_path("/tmp", allow_existing_dir=True).resolve())
         return None
 
     def _validate_cwd(self, raw_cwd: object) -> Path:
@@ -976,7 +977,7 @@ class BrokerServer:
         if max_workers < 1:
             raise ValueError(f"max_workers must be >= 1, got {max_workers!r}")
         self.broker = broker
-        self.sock_path = Path(sock_path)
+        self.sock_path = guard_tool_output_path(sock_path)
         self.read_timeout_s = float(read_timeout_s)
         self.write_timeout_s = float(write_timeout_s)
         self.max_request_bytes = int(max_request_bytes)

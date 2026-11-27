@@ -19,6 +19,12 @@ from collections import Counter
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
+_TOOLS_DIR = Path(__file__).resolve().parent
+if str(_TOOLS_DIR) not in sys.path:
+    sys.path.insert(0, str(_TOOLS_DIR))
+
+from learning_os.store.contracts.write_scopes import guard_tool_output_path  # noqa: E402
+
 
 def _fail(message: str) -> SystemExit:
     return SystemExit(f"shard completeness: {message}")
@@ -167,10 +173,11 @@ def check_zero_skip_junit(junit_path: Path) -> str:
 
 def copy_audit_logs(source: Path, destination: Path) -> None:
     """Never overwrite evidence from another suite leg, even if bytes match."""
+    guarded_destination = guard_tool_output_path(destination, allow_existing_dir=True)
     for path in sorted(source.glob("*.jsonl")):
         if path.is_symlink() or not path.is_file():
             raise ValueError(f"audit log must be a regular file: {path}")
-        with path.open("rb") as incoming, (destination / path.name).open("xb") as outgoing:
+        with path.open("rb") as incoming, (guarded_destination / path.name).open("xb") as outgoing:
             shutil.copyfileobj(incoming, outgoing)
 
 

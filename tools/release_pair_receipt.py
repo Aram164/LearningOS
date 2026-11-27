@@ -40,6 +40,9 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator
 
+from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
+from learning_os.store.fs import atomic_write_text_exclusive
+
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMA_PATH = ROOT / "system" / "contracts" / "release-pair-receipt.schema.json"
 SHIPPED_ASSETS = ("main.js", "styles.css", "manifest.json", "build-info.json")
@@ -398,6 +401,7 @@ def verify(receipt: dict, artifact_dir: Path,
 
 def _cli_generate(args: argparse.Namespace) -> int:
     try:
+        out = guard_tool_output_path(args.out, repo_root=Path(args.core_root))
         receipt = generate(
             core_root=Path(args.core_root).resolve(),
             ui_root=Path(args.ui_root).resolve(),
@@ -409,12 +413,12 @@ def _cli_generate(args: argparse.Namespace) -> int:
             seatbelt_scope=args.seatbelt_scope,
             system_check_passed=args.system_check_passed,
         )
-    except ReleasePairReceiptError as exc:
+    except (ReleasePairReceiptError, WriteScopeError) as exc:
         print(f"release-pair-receipt: {exc}", file=sys.stderr)
         return 1
-    out = Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    atomic_write_text_exclusive(
+        out, json.dumps(receipt, indent=2, sort_keys=True) + "\n", error_factory=OSError,
+    )
     print(json.dumps({"ok": True, "action": "generate", "path": str(out)}))
     return 0
 

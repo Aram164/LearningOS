@@ -302,3 +302,32 @@ def test_read_refuses_tampered_durable_body(mini_repo, tmp_path, capsys):
                             mini_repo) == 2
     result = json.loads(capsys.readouterr().out)
     assert result["status"] == "refused" and "summary" not in result
+
+
+def test_promote_refuses_protected_override(tmp_path, monkeypatch, capsys):
+    ms = _material_summarize()
+    monkeypatch.setattr(ms, "REPO", tmp_path)
+    text = _text_cache(tmp_path)
+    draft = tmp_path / "draft.md"
+    draft.write_text("A detailed chapter compression. " * 20, encoding="utf-8")
+    target = tmp_path / "records" / "summaries"
+
+    assert _promote(ms, target, text, draft) == 2
+    assert "protected root records/" in capsys.readouterr().err
+    assert not target.exists()
+
+
+def test_promote_accepts_the_contract_owned_summary_tree(tmp_path, monkeypatch, capsys):
+    ms = _material_summarize()
+    monkeypatch.setattr(ms, "REPO", tmp_path)
+    cache = tmp_path / "knowledge" / "summaries"
+    monkeypatch.setattr(ms, "SUMMARY_CACHE", cache)
+    text = _text_cache(tmp_path)
+    draft = tmp_path / "draft.md"
+    body = "A detailed chapter compression. " * 20
+    draft.write_text(body, encoding="utf-8")
+
+    assert _promote(ms, cache, text, draft) == 0
+    published = cache / DIGEST / "pages-1-3" / "summary.md"
+    assert published.read_text(encoding="utf-8").endswith(body)
+    assert capsys.readouterr().err == ""

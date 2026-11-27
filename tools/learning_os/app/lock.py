@@ -263,7 +263,8 @@ def operator_lock(root: Path, *, shared: bool = False):
     lock_path = _operator_lock_path(root)
     timeout = _lock_timeout_seconds()
     try:
-        handle = lock_path.open("a+", encoding="utf-8")
+        fd = os.open(lock_path, os.O_RDWR | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW, 0o666)
+        handle = os.fdopen(fd, "a+", encoding="utf-8")
     except OSError as exc:
         raise WriteRefused(
             f"operator lock is not writable: {lock_path}: "

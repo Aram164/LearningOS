@@ -50,6 +50,11 @@ REPO_ROOT = TOOLS_ROOT.parent
 if str(TOOLS_ROOT) not in sys.path:
     sys.path.insert(0, str(TOOLS_ROOT))
 
+from learning_os.store.contracts.write_scopes import (  # noqa: E402
+    WriteScopeError,
+    guard_tool_output_path,
+    scoped_write_target,
+)
 from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 
 INPUTS_SCHEMA = "library-reconciliation-inputs/v1"
@@ -58,6 +63,14 @@ DECLARED_INPUTS = "inputs/declared-inputs.yaml"
 DISPOSITIONS_FILE = "outputs/dispositions.yaml"
 REPORT_FILE = "outputs/reconciliation-report.md"
 APPLIED_REPORT_FILE = "outputs/applied-check.json"
+_WORKSPACE_OUTPUTS = (
+    "archive/workspaces/**/outputs/dispositions.yaml",
+    "archive/workspaces/**/outputs/reconciliation-report.md",
+    "archive/workspaces/**/outputs/applied-check.json",
+    "work/active/*/outputs/dispositions.yaml",
+    "work/active/*/outputs/reconciliation-report.md",
+    "work/active/*/outputs/applied-check.json",
+)
 
 # The seven occurrence dispositions named by the plan, in report order.
 DISPOSITIONS = (
@@ -1310,6 +1323,15 @@ def _workspace(args: argparse.Namespace) -> tuple[Declared, Path]:
     return load_declared(workspace, root.parent), workspace
 
 
+def _write_workspace_output(root: Path, workspace: Path, filename: str, content: str) -> Path:
+    try:
+        target = scoped_write_target(root, workspace / filename, _WORKSPACE_OUTPUTS)
+    except WriteScopeError as exc:
+        raise ReconciliationError(str(exc)) from exc
+    atomic_write_text_exclusive(target, content, boundary=workspace, error_factory=OSError)
+    return target
+
+
 def _order(declared: Declared) -> dict[str, int]:
     return {origin.key: index for index, origin in enumerate(declared.origins)}
 
@@ -1352,18 +1374,16 @@ def command_check(args: argparse.Namespace) -> int:
 
 def command_report(args: argparse.Namespace) -> int:
     declared, workspace = _workspace(args)
+    root = Path(args.root).resolve() if args.root else REPO_ROOT
     dispositions = load_dispositions(workspace / DISPOSITIONS_FILE)
     result, targets = evaluate(declared, dispositions, applied=args.applied)
     if args.applied and not result.ok:
         print("refusing applied report: applied check has findings or stale origins")
         return 1
-    target = workspace / (APPLIED_REPORT_FILE if args.applied else REPORT_FILE)
-    atomic_write_text_exclusive(
-        target,
+    target = _write_workspace_output(
+        root, workspace, APPLIED_REPORT_FILE if args.applied else REPORT_FILE,
         render_applied_report(declared, dispositions, result)
         if args.applied else render_report(declared, dispositions, result, targets),
-        boundary=workspace,
-        error_factory=OSError,
     )
     print(f"wrote {target.relative_to(workspace)} "
           f"({len(result.disposition)}/{len(result.occurrences)} dispositioned, "
@@ -1372,15 +1392,21 @@ def command_report(args: argparse.Namespace) -> int:
 
 
 def command_suggest(args: argparse.Namespace) -> int:
+    root = Path(args.root).resolve() if args.root else REPO_ROOT
+    try:
+        out_path = guard_tool_output_path(args.out, repo_root=root)
+        worklist_path = guard_tool_output_path(args.worklist, repo_root=root)
+    except WriteScopeError as exc:
+        raise ReconciliationError(str(exc)) from exc
     declared, workspace = _workspace(args)
     dispositions = load_dispositions(workspace / DISPOSITIONS_FILE)
     result, targets = evaluate(declared, dispositions)
     auto, worklist = suggest(result, targets)
     atomic_write_text_exclusive(
-        Path(args.out), render_dispositions(auto, _order(declared)), error_factory=OSError
+        out_path, render_dispositions(auto, _order(declared)), error_factory=OSError
     )
     atomic_write_text_exclusive(
-        Path(args.worklist), render_worklist(worklist, declared), error_factory=OSError
+        worklist_path, render_worklist(worklist, declared), error_factory=OSError
     )
     claimed = sum(len(o.occurrences) for o in auto.objects)
     print(f"suggested {claimed} mechanical disposition(s); {len(worklist)} left for review")
@@ -1389,15 +1415,12 @@ def command_suggest(args: argparse.Namespace) -> int:
 
 def command_merge(args: argparse.Namespace) -> int:
     declared, workspace = _workspace(args)
-    target = workspace / DISPOSITIONS_FILE
-    base = load_dispositions(target)
+    root = Path(args.root).resolve() if args.root else REPO_ROOT
+    base = load_dispositions(workspace / DISPOSITIONS_FILE)
     others = [parse_dispositions(_load_yaml(Path(p)), p) for p in args.files]
     merged = merge_dispositions(base, others)
-    atomic_write_text_exclusive(
-        target,
-        render_dispositions(merged, _order(declared)),
-        boundary=workspace,
-        error_factory=OSError,
+    target = _write_workspace_output(
+        root, workspace, DISPOSITIONS_FILE, render_dispositions(merged, _order(declared)),
     )
     print(f"merged {len(args.files)} file(s) into {target.relative_to(workspace)}: "
           f"{len(merged.objects)} object(s)")
@@ -1406,18 +1429,15 @@ def command_merge(args: argparse.Namespace) -> int:
 
 def command_freeze(args: argparse.Namespace) -> int:
     declared, workspace = _workspace(args)
-    target = workspace / DISPOSITIONS_FILE
-    dispositions = load_dispositions(target)
+    root = Path(args.root).resolve() if args.root else REPO_ROOT
+    dispositions = load_dispositions(workspace / DISPOSITIONS_FILE)
     result, _ = evaluate(declared, dispositions)
     if result.findings:
         print(f"refusing to freeze: {len(result.findings)} finding(s) remain; run check")
         return 1
     dispositions.reviewed_input_hashes = dict(result.hashes)
-    atomic_write_text_exclusive(
-        target,
-        render_dispositions(dispositions, _order(declared)),
-        boundary=workspace,
-        error_factory=OSError,
+    target = _write_workspace_output(
+        root, workspace, DISPOSITIONS_FILE, render_dispositions(dispositions, _order(declared)),
     )
     print(f"froze {len(result.hashes)} input hash(es) into {target.relative_to(workspace)}")
     return 0

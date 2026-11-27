@@ -480,3 +480,18 @@ def test_release_pair_workflow_declares_full_suite_and_seatbelt_scopes():
     assert "not live_install" not in text
     assert "--live-install-scope ci-fixtures-only" in text
     assert "--seatbelt-scope full" in text
+
+
+def test_generate_refuses_protected_out(tmp_path, monkeypatch, capsys):
+    import release_pair_receipt as tool
+
+    target = tmp_path / "records" / "receipt.json"
+    monkeypatch.setattr("sys.argv", [
+        "release_pair_receipt", "generate", "--core-root", str(tmp_path),
+        "--ui-root", str(tmp_path / "ui"), "--core-sha", "a" * 40, "--ui-sha", "b" * 40,
+        "--workflow-run-id", "1", "--workflow-run-attempt", "1",
+        "--live-install-scope", "full", "--seatbelt-scope", "full", "--out", str(target),
+    ])
+    assert tool.main() == 1
+    assert "protected root records/" in capsys.readouterr().err
+    assert not target.exists()

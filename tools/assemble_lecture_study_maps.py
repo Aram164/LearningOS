@@ -39,6 +39,7 @@ from learning_os.store.contracts import (
     require_current_template,
     validate_contract,
 )
+from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
 from learning_os.store.fs import atomic_write_text_exclusive
 from learning_os.store.loader import load_repo
 
@@ -621,10 +622,9 @@ def unit_routes(source_map: dict, unit_id: str) -> list[dict]:
             if isinstance(route, dict) and route.get("unit_id") == unit_id]
 
 
-def _atomic_draft(path: Path, content: str) -> None:
-    atomic_write_text_exclusive(
-        path, content, boundary=path.parent, error_factory=OSError
-    )
+def _atomic_draft(root: Path, path: Path, content: str) -> None:
+    target = guard_tool_output_path(path, repo_root=root)
+    atomic_write_text_exclusive(target, content, boundary=target.parent, error_factory=OSError)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -643,6 +643,13 @@ def main() -> int:
     args = parser.parse_args()
 
     root = args.root.expanduser().resolve()
+    try:
+        out_dir = guard_tool_output_path(
+            args.out, repo_root=root, allow_existing_dir=True
+        )
+    except WriteScopeError as exc:
+        print(f"assemble-lecture-study-maps: {exc}", file=sys.stderr)
+        return 2
     manifest = _manifest(root)
     units = {u["id"]: u for u in manifest["units"]}
     modules = {m["id"]: m for m in manifest["modules"]}
@@ -689,7 +696,7 @@ def main() -> int:
             continue
         if not args.expanded:
             record, _ = compact_map(record, source_map, module_id, unit_id)
-        path = args.out.expanduser().resolve() / f"{unit_id}.study-map.yaml"
+        path = out_dir / f"{unit_id}.study-map.yaml"
         drafts[path] = yaml.safe_dump(
             record, sort_keys=False, allow_unicode=True, width=100
         )
@@ -702,8 +709,14 @@ def main() -> int:
             print(f"- {problem}", file=sys.stderr)
         return 2
 
-    for path, content in drafts.items():
-        _atomic_draft(path, content)
+    try:
+        targets = [(guard_tool_output_path(path, repo_root=root), content)
+                   for path, content in drafts.items()]
+    except WriteScopeError as exc:
+        print(f"assembly preflight refused: {exc}", file=sys.stderr)
+        return 2
+    for path, content in targets:
+        _atomic_draft(root, path, content)
     print(f"\n{len(drafts)} study map(s) written to {args.out}")
     return 0
 

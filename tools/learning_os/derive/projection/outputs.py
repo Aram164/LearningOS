@@ -35,6 +35,7 @@ from learning_os.derive.projection.study_plan import build_study_plan_view
 from learning_os.domain.failures import TransactionFailure
 from learning_os.domain.snapshot import Repo
 from learning_os.store.contracts.tree_contract import generated_keep_directories
+from learning_os.store.contracts.write_scopes import scoped_write_target
 from learning_os.store.manifest_identity import (
     IDENTITY_FILENAME,
     build_identity,
@@ -190,7 +191,7 @@ def _recover_output_dir(gen: Path, relative: PurePosixPath) -> None:
     delete — refuse with the manual recovery instead of a traceback.
     """
     try:
-        (gen / relative).rmdir()
+        scoped_write_target(gen, relative, ("**",)).rmdir()
     except OSError as exc:
         raise TransactionFailure(
             f"generated/{relative.as_posix()} is a non-empty directory, not the "
@@ -301,12 +302,13 @@ def _is_declared_output_temp(rel: PurePosixPath, expected: set[PurePosixPath]) -
 def _remove_stale(gen: Path, outputs: dict[str, str]) -> None:
     expected = {PurePosixPath(rel) for rel in outputs}
     stale_dirs: list[Path] = []
-    for f in _publisher_entries(gen):
-        if f.is_symlink():
-            rel = PurePosixPath(f.relative_to(gen).as_posix())
+    for entry in _publisher_entries(gen):
+        if entry.is_symlink():
+            rel = PurePosixPath(entry.relative_to(gen).as_posix())
             raise TransactionFailure(
                 f"generated output path is a symbolic link: {rel}"
             )
+        f = scoped_write_target(gen, entry.absolute(), ("**",))
         if f.is_dir():
             stale_dirs.append(f)
             continue

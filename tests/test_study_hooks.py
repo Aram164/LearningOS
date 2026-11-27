@@ -509,3 +509,12 @@ def test_agy_profile_and_protojson_hook_dialect(world: Path, tmp_path: Path) -> 
     assert "No session id arrived" not in unfenced_msg
     assert "- This session holds no overdue entries." in unfenced_msg
     assert (ReadingStore(world).root / "sessions" / f"{OTHER}.json").is_file()
+
+
+def test_profile_refuses_protected_output(tmp_path):
+    from learning_os.store.contracts.write_scopes import WriteScopeError
+
+    target = tmp_path / "records" / "profile"
+    with pytest.raises(WriteScopeError, match="protected root records/"):
+        study_hooks.write_profile(target, core=tmp_path)
+    assert not target.exists()

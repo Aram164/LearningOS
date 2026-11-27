@@ -10,6 +10,7 @@ from pathlib import Path
 import yaml
 
 from learning_os.store import observations
+from learning_os.store.contracts.write_scopes import scoped_write_target
 from learning_os.store.fs import atomic_write_text_exclusive, clean_git_env
 
 ROOT = Path(__file__).resolve().parents[4]
@@ -79,9 +80,12 @@ def load_contract(path: Path = CONTRACT) -> dict | None:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
-def write_contract(data: dict, path: Path = CONTRACT) -> None:
+def _write_contract(data: dict, root: Path, path: Path) -> None:
+    target = scoped_write_target(
+        root, path.absolute(), ("system/contracts/data-contract.yaml",),
+    )
     atomic_write_text_exclusive(
-        path,
+        target,
         _HEADER + yaml.safe_dump(data, sort_keys=False, allow_unicode=True),
         error_factory=OSError,
     )
@@ -151,7 +155,7 @@ def bump(
         "record_schemas": len(record_schemas(schema_dir)),
         "history": list(contract.get("history") or []) + [entry],
     }
-    write_contract(updated, path)
+    _write_contract(updated, schema_dir.resolve().parents[1], path)
     return updated
 
 
@@ -228,5 +232,5 @@ def rebump(
         "record_schemas": len(record_schemas(schema_dir)),
         "history": history,
     }
-    write_contract(updated, path)
+    _write_contract(updated, schema_dir.resolve().parents[1], path)
     return updated

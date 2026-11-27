@@ -65,6 +65,8 @@ from pathlib import Path
 import yaml
 
 from learning_os.derive.semantics import PREDICATES, evaluate
+from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
+from learning_os.store.fs import atomic_write_text_exclusive
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TRIALS = ROOT / "tests/fixtures/verified_operator_questions"
@@ -390,9 +392,14 @@ def score_trials(records: list[dict], submissions: dict) -> dict:
 
 
 def _write_json(path: Path, payload: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True,
-                               ensure_ascii=False) + "\n", encoding="utf-8")
+    try:
+        safe_path = guard_tool_output_path(path)
+    except WriteScopeError as exc:
+        raise EvalError(str(exc)) from exc
+    atomic_write_text_exclusive(
+        safe_path, json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        error_factory=OSError,
+    )
 
 
 def cmd_prepare(args: argparse.Namespace) -> int:

@@ -393,3 +393,18 @@ def test_declared_paths_and_workspaces_stay_inside_their_roots(tmp_path, capsys)
     _write(root / WS / lr.DECLARED_INPUTS, yaml.safe_dump(climbing, sort_keys=False))
     with pytest.raises(lr.ReconciliationError, match="must not climb"):
         declared(root)
+
+
+@pytest.mark.parametrize("protected_option", ["--out", "--worklist"])
+def test_suggest_refuses_protected_outputs(tmp_path, capsys, protected_option):
+    repo = tmp_path / "repository"
+    repo.mkdir()
+    protected = repo / "records" / "suggestion.yaml"
+    destinations = {"--out": tmp_path / "out.yaml", "--worklist": tmp_path / "worklist.yaml"}
+    destinations[protected_option] = protected
+    assert lr.main([
+        "--root", str(repo), "suggest", "--workspace", WS,
+        "--out", str(destinations["--out"]), "--worklist", str(destinations["--worklist"]),
+    ]) == 2
+    assert "protected root records/" in capsys.readouterr().err
+    assert not any(path.exists() for path in destinations.values())

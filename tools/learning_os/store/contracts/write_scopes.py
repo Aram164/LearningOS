@@ -145,3 +145,125 @@ def require_write_scope(
             f"capability {capability} may not write {normalized}"
         )
     return normalized
+
+
+def scoped_write_target(
+    root: Path,
+    raw_path: os.PathLike[str] | str,
+    scopes: tuple[str, ...],
+) -> Path:
+    """Validate the actual path before passing it to a write primitive."""
+    target, relative = write_target(root, raw_path)
+    require_write_scope("filesystem writer", relative, scopes)
+    return target
+
+
+_REPO_MARKER_PATHS: tuple[tuple[str, ...], ...] = (
+    ("system", "contracts", "capabilities.yaml"),
+    ("system", "contracts", "tree-contract.yaml"),
+    ("system", "contracts", "data-contract.yaml"),
+)
+_OS_TOP_SYMLINKS = frozenset({"var", "tmp", "etc"})
+
+
+def _protected_repo_output_roots() -> frozenset[str]:
+    from learning_os.store.fingerprint import DATA_ROOTS
+
+    return frozenset((*DATA_ROOTS, "system", "operations"))
+
+
+def _is_repo_root(path: Path) -> bool:
+    try:
+        return any((path / parts[0] / parts[1] / parts[2]).is_file() for parts in _REPO_MARKER_PATHS)
+    except OSError:
+        return False
+
+
+def guard_tool_output_path(
+    raw_path: os.PathLike[str] | str,
+    *,
+    repo_root: Path | None = None,
+    allow_existing_dir: bool = False,
+) -> Path:
+    """Refuse caller-supplied output targets inside protected repository roots or symlinks.
+
+    Rejects symlink components (including dangling target symlinks) and refuses
+    targets that lexically or after resolution land inside ``DATA_ROOTS``,
+    ``system/``, or ``operations/`` of any discovered or specified LearningOS
+    repository, while permitting external scratch/temp/sibling destinations.
+    """
+    try:
+        raw_os = os.fspath(raw_path)
+    except TypeError as exc:
+        raise WriteScopeError(f"tool output target must be a path: {raw_path!r}") from exc
+    raw = raw_os if isinstance(raw_os, str) else os.fsdecode(raw_os)
+    if not raw.strip() or "\x00" in raw:
+        raise WriteScopeError(f"tool output target is malformed: {raw_path!r}")
+
+    expanded = Path(os.path.expanduser(raw))
+    lexical = Path(os.path.abspath(expanded))
+    if lexical == lexical.parent:
+        raise WriteScopeError(f"refusing filesystem root as tool output target: {raw_path!r}")
+
+    if lexical.is_symlink():
+        raise WriteScopeError(f"refusing symlink tool output target: {raw_path}")
+    for ancestor in (lexical, *lexical.parents):
+        if ancestor == ancestor.parent:
+            break
+        if len(ancestor.parts) == 2 and ancestor.parts[1] in _OS_TOP_SYMLINKS:
+            continue
+        if ancestor.is_symlink():
+            raise WriteScopeError(
+                f"refusing symlink component in tool output path: {ancestor}"
+            )
+
+    if not allow_existing_dir and lexical.exists() and lexical.is_dir():
+        raise WriteScopeError(f"tool output target is an existing directory: {raw_path}")
+
+    try:
+        resolved = lexical.resolve(strict=False)
+    except (OSError, RuntimeError) as exc:
+        raise WriteScopeError(f"cannot resolve tool output target {raw_path}: {exc}") from exc
+
+    candidate_roots: list[Path] = []
+    seen_roots: set[Path] = set()
+
+    def _add_root(cand: Path) -> None:
+        for view in (Path(os.path.abspath(cand.expanduser())),):
+            if view not in seen_roots:
+                seen_roots.add(view)
+                candidate_roots.append(view)
+            try:
+                res = view.resolve(strict=False)
+            except OSError:
+                continue
+            if res not in seen_roots:
+                seen_roots.add(res)
+                candidate_roots.append(res)
+
+    if repo_root is not None:
+        _add_root(repo_root)
+    package_root = Path(__file__).resolve().parents[4]
+    if _is_repo_root(package_root):
+        _add_root(package_root)
+    for probe in (lexical, *lexical.parents, resolved, *resolved.parents, Path.cwd(), *Path.cwd().parents):
+        if _is_repo_root(probe):
+            _add_root(probe)
+
+    protected = _protected_repo_output_roots()
+    for root_cand in candidate_roots:
+        for target_view in (lexical, resolved):
+            try:
+                rel = target_view.relative_to(root_cand)
+            except ValueError:
+                continue
+            if not rel.parts:
+                raise WriteScopeError(
+                    f"refusing tool output at repository root: {raw_path}"
+                )
+            if rel.parts[0] in protected:
+                raise WriteScopeError(
+                    f"refusing tool output inside protected root {rel.parts[0]}/: {raw_path}"
+                )
+
+    return lexical

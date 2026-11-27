@@ -4,8 +4,8 @@
 
 "tools/agent_run.py":
   effect: operational
-  destinations: ["<PRIVATE_REPORT_DIR>/**"]
-  reason: "Seals batch request envelopes in the operator's explicit private report directory."
+  destinations: ["<TMPDIR>/**"]
+  reason: "Stages immutable session-bound envelope temp copies in TemporaryDirectory; delegates report files to agent_reporting.py."
 
 "tools/assemble_lecture_study_maps.py":
   effect: operational
@@ -44,8 +44,8 @@
 
 "tools/diagnostics_prune.py":
   effect: cache
-  destinations: ["operations/diagnostics/**", "generated/derived-state/**"]
-  reason: "Prunes the disposable diagnostics trace store and unreferenced derived-state blobs."
+  destinations: ["operations/diagnostics/**", "generated/derived-state/**", "generated/reports/validation-report.cache.json", "generated/reports/validation-report-receipts.cache.json"]
+  reason: "Prunes the disposable diagnostics trace store, unreferenced derived-state blobs, and retired report cache sidecars."
 
 "tools/evaluate_operator_questions.py":
   effect: tooling
@@ -54,8 +54,8 @@
 
 "tools/generate_capability_schemas.py":
   effect: projection
-  destinations: ["system/schema/capabilities/**", "system/schema/envelope-error-details.fragment.json"]
-  reason: "Generates capability payload schemas from request schemas and the CLI parser (CONTRACT_ROOTS)."
+  destinations: ["system/schema/capabilities/**", "system/schema/capability-envelope.schema.json", "system/schema/envelope-error-details.fragment.json"]
+  reason: "Generates capability payload schemas and the envelope error-details fragment from request schemas and the CLI parser (CONTRACT_ROOTS)."
 
 "tools/ingest_transcript.py":
   effect: operational
@@ -64,24 +64,32 @@
 
 "tools/library_reconciliation.py":
   effect: tooling
-  destinations: ["<EXPLICIT_OUT_DIR>/**"]
-  reason: "Writes source-reconciliation audit reports/drafts to explicit non-canonical --out destinations."
+  destinations:
+    - "<EXPLICIT_OUT_DIR>/**"
+    - "archive/workspaces/**/outputs/dispositions.yaml"
+    - "archive/workspaces/**/outputs/reconciliation-report.md"
+    - "archive/workspaces/**/outputs/applied-check.json"
+    - "work/active/*/outputs/dispositions.yaml"
+    - "work/active/*/outputs/reconciliation-report.md"
+    - "work/active/*/outputs/applied-check.json"
+  reason: "Maintains three reconciliation artifacts in an active or archived reconciliation workspace, plus guarded explicit drafts."
+  contract: "tree-contract.yaml (workspace output bundles); tools/README.md (library reconciliation)"
 
 "tools/material_outline.py":
   effect: cache
-  destinations: ["generated/material-outlines/**"]
-  reason: "Caches extracted PDF outline structures under generated/material-outlines/."
+  destinations: ["generated/material-outlines/**", "<EXPLICIT_OUT_DIR>/**"]
+  reason: "Caches extracted PDF outline structures under generated/material-outlines/ or an explicit guarded --outline-dir."
 
 "tools/material_summarize.py":
   effect: cache
-  destinations: ["knowledge/summaries/**"]
-  reason: "Publishes source-bound digest-keyed chapter summaries into knowledge/summaries/ only via --promote."
+  destinations: ["knowledge/summaries/**", "<EXPLICIT_OUT_DIR>/**"]
+  reason: "Publishes source-bound digest-keyed chapter summaries into knowledge/summaries/ (or a guarded test --cache-dir) only via --promote."
   contract: "system/contracts/tree-contract.yaml#knowledge/summaries (tools/material_summarize.py --promote)"
 
 "tools/material_text.py":
   effect: cache
-  destinations: ["generated/.text-cache/**"]
-  reason: "Digest-keyed PDF page-text extraction cache under generated/.text-cache/."
+  destinations: ["generated/.text-cache/**", "<EXPLICIT_OUT_DIR>/**"]
+  reason: "Digest-keyed PDF page-text extraction cache under generated/.text-cache/ or an explicit guarded --cache-dir."
 
 "tools/materials_index/cli.py":
   effect: projection
@@ -90,7 +98,7 @@
 
 "tools/migrations/curriculum_v2.py":
   effect: migration
-  destinations: ["records/**", "curriculum/**", "migration/curriculum-v2/**"]
+  destinations: ["curriculum/**", "work/active/*/CONTEXT.md", "work/active/workspace-degree-planning", "sources/collections/degree-module-anchors.yaml", "migration/curriculum-v2/**"]
   reason: "Retired idempotent v1->v2 curriculum migration preserving originals in migration/curriculum-v2/."
   contract: "tools/migrations/README.md (retired v1->v2 curriculum migration)"
 
@@ -212,7 +220,7 @@
 
 "tools/learning_os/store/contracts/doc_blocks.py":
   effect: projection
-  destinations: ["system/OPERATOR.md", "system/WORKFLOWS.md"]
+  destinations: ["README.md", "system/AI-ACTIONS.md", "system/OPERATOR.md", "system/SEMANTIC-CONTRACT.md", "system/WORKFLOWS.md"]
   reason: "Updates generated command-reference documentation blocks in normative prose."
 
 "tools/learning_os/store/contracts/manifest_contract.py":
@@ -227,8 +235,8 @@
 
 "tools/learning_os/store/diagnostics/context.py":
   effect: cache
-  destinations: ["operations/diagnostics/**"]
-  reason: "Appends best-effort trace debug lines to the disposable diagnostics store."
+  destinations: ["<TRACE_DEBUG_FILE>"]
+  reason: "Appends best-effort trace debug lines to the opt-in LOS_TRACE_DEBUG_FILE sink."
 
 "tools/learning_os/store/diagnostics/store.py":
   effect: cache
@@ -237,8 +245,8 @@
 
 "tools/learning_os/store/diagnostics/tracer.py":
   effect: cache
-  destinations: ["operations/diagnostics/**"]
-  reason: "Appends span events to the disposable diagnostics trace sink."
+  destinations: ["<TRACE_DEBUG_FILE>"]
+  reason: "Appends span debug lines to LOS_TRACE_DEBUG_FILE and delegates store persistence to diagnostics/store.py."
 
 "tools/learning_os/store/fs.py":
   effect: operational

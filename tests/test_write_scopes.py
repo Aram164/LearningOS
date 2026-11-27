@@ -118,3 +118,37 @@ def test_module_import_authority_includes_the_source_registry(mini_repo: Path):
 
     assert target.is_file()
     assert result.receipt_path.is_file()
+
+
+def test_guard_tool_output_path_refuses_protected_roots_and_symlinks(tmp_path: Path):
+    from learning_os.store.contracts.write_scopes import guard_tool_output_path
+    from learning_os.store.fingerprint import DATA_ROOTS
+
+    repo = tmp_path / "repo"
+    (repo / "system/contracts").mkdir(parents=True)
+    (repo / "system/contracts/capabilities.yaml").write_text("schema: 1\n", encoding="utf-8")
+    (repo / "knowledge/notes").mkdir(parents=True)
+    (repo / "generated/reports").mkdir(parents=True)
+
+    for root_name in (*DATA_ROOTS, "system", "operations"):
+        with pytest.raises(WriteScopeError, match=f"protected root {root_name}/"):
+            guard_tool_output_path(repo / root_name / "rogue.json", repo_root=repo)
+        with pytest.raises(WriteScopeError, match=f"protected root {root_name}/"):
+            guard_tool_output_path(
+                repo / "generated" / ".." / root_name / "rogue.json", repo_root=repo,
+            )
+
+    link_dir = tmp_path / "evil-link"
+    link_dir.symlink_to(repo / "knowledge/notes")
+    with pytest.raises(WriteScopeError, match="symlink"):
+        guard_tool_output_path(link_dir / "out.json", repo_root=repo)
+
+    dangling = tmp_path / "dangling-out.json"
+    dangling.symlink_to(repo / "knowledge/notes/missing.json")
+    with pytest.raises(WriteScopeError, match="symlink"):
+        guard_tool_output_path(dangling, repo_root=repo)
+
+    ext = tmp_path / "outside" / "report.json"
+    assert guard_tool_output_path(ext, repo_root=repo) == ext
+    gen = repo / "generated/reports/eval.json"
+    assert guard_tool_output_path(gen, repo_root=repo) == gen
