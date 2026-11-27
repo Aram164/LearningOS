@@ -25,6 +25,7 @@ import os
 import re
 import shutil
 import stat
+import sys
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -91,6 +92,7 @@ from learning_os.store.fs import (
     create_ancestors_and_track as _create_ancestors_and_track,
 )
 from learning_os.store.fs import exclusive_temp_path as _exclusive_temp_path
+from learning_os.store.fs import prune_empty_dirs as _prune_empty_dirs
 from learning_os.store.fs import sync_directory as _fs_sync_directory
 from learning_os.store.fs import sync_fd as _fs_sync_fd
 from learning_os.store.layout import PathBoundaryError, read_text_inside
@@ -1512,6 +1514,19 @@ class _CommitRun:
     staged_publication: StagedPublication | None = None
 
 
+_TOOLS_ROOT = Path(__file__).resolve().parents[2]
+
+
+def prune_committed_inbox_dirs(root: Path, inbox: Path, target: Path) -> None:
+    """Remove directories emptied by a committed work/inbox/ move."""
+    expected_inbox = root / "work" / "inbox"
+    if inbox.resolve() != expected_inbox.resolve():
+        raise TransactionFailure(
+            f"inbox completion boundary must be {expected_inbox}, got {inbox}"
+        )
+    _prune_empty_dirs(expected_inbox, target)
+
+
 class TransactionService:
     """Commit one validated set of authored writes and one append-only receipt."""
 
@@ -1524,6 +1539,12 @@ class TransactionService:
         scope_prefix: str | None = None,
         _unmediated_test_only: bool = False,
     ):
+        if _unmediated_test_only:
+            caller_file = Path(sys._getframe(1).f_code.co_filename).resolve()
+            if caller_file.is_relative_to(_TOOLS_ROOT):
+                raise TransactionFailure(
+                    "TransactionService _unmediated_test_only is forbidden in tools/"
+                )
         self.root = root.resolve()
         self.clock = clock or observations.now
         implicit_catalogue = self.root / "system" / "contracts" / "capabilities.yaml"

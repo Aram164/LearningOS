@@ -209,8 +209,8 @@ def _commit_with_gesture(ctx, operation: str, result):
                 record_touched(ctx.root, touched)
             confirmation = {**confirmation, "delivery_receipt": receipt}
         elif isinstance(completion, InboxCompletion):
-            from learning_os.store.fs import prune_empty_dirs
-            prune_empty_dirs(completion.inbox, completion.target)
+            from learning_os.store.transactions import prune_committed_inbox_dirs
+            prune_committed_inbox_dirs(ctx.root, completion.inbox, completion.target)
         elif completion is not None:
             raise TypeError(f"unknown application completion: {completion!r}")
     except PostCommitFailure:

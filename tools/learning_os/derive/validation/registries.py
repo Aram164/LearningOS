@@ -219,7 +219,7 @@ class ChecksRegistries:
                          "generated files are never inputs",
                          self._rel(f))
         # No file under generated/ tracked by git (except .gitkeep)
-        tracked = self._git(["ls-files", "generated/"])
+        tracked = self._git_ls_files("generated/")
         for line in tracked.splitlines():
             if line.strip() and not line.strip().endswith(".gitkeep"):
                 self.err("GEN-TRACKED", f"file under generated/ is tracked by Git: {line.strip()}")

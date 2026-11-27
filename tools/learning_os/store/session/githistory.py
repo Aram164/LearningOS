@@ -84,6 +84,8 @@ def read_history(root: Path | str, *args: str) -> str:
     from the override's ``git`` object; every other argument list reaches
     real Git unchanged.
     """
+    if any(arg == "--output" or arg.startswith("--output=") for arg in args):
+        raise GitHistoryError("git log --output is forbidden in read_history")
     override = observations.git_override()
     if override is not None:
         if tuple(args) == ("-1", "--format=%H") and "head" in override:

@@ -81,19 +81,49 @@ _WRITE_HELPERS = frozenset({
     "atomic_text",
     "write_file_create_only",
     "write_local_output_file",
+    "prune_empty_dirs",
+    "create_ancestors_and_track",
+    "_create_ancestors_and_track",
 })
 
-_MUTATING_GIT_SUBCOMMANDS = frozenset({"commit", "mv", "reset", "update-ref", "rm"})
+_READONLY_GIT_SUBCOMMANDS = frozenset({
+    "rev-parse", "status", "diff", "diff-index", "diff-tree",
+    "log", "show", "show-ref", "ls-files", "ls-tree",
+    "cat-file", "check-ignore", "merge-base", "rev-list",
+    "for-each-ref", "describe",
+})
+_INDEX_OR_REF_GIT_SUBCOMMANDS = frozenset({
+    "commit", "read-tree", "add", "update-ref", "push",
+})
 _MUTATING_FS_COMMANDS = frozenset({"cp", "mv", "rm"})
 _OS_WRITE_OPEN_FLAGS = frozenset({"O_WRONLY", "O_RDWR", "O_CREAT", "O_TRUNC", "O_APPEND"})
 _OS_READONLY_FLAGS = frozenset({"O_RDONLY", "O_NOFOLLOW", "O_CLOEXEC", "O_DIRECTORY", "O_NONBLOCK"})
 _SUBPROCESS_FUNCS = frozenset({"run", "Popen", "check_call", "check_output", "call"})
 _OS_WRITE_ATTRS = frozenset({
-    "replace", "rename", "remove", "unlink", "write", "link", "symlink",
-    "mkdir", "makedirs", "rmdir", "chmod", "truncate",
+    "replace", "rename", "renames", "remove", "removedirs", "unlink", "write",
+    "link", "symlink", "mkdir", "makedirs", "rmdir", "chmod", "fchmod", "lchmod",
+    "chown", "fchown", "lchown", "truncate", "ftruncate", "mkfifo", "mknod", "utime",
 })
-_SHUTIL_WRITE_ATTRS = frozenset({"move", "copy", "copy2", "copyfile", "copytree", "rmtree"})
+_OS_EXEC_ATTRS = frozenset({
+    "system", "popen",
+    "execl", "execle", "execlp", "execlpe",
+    "execv", "execve", "execvp", "execvpe",
+    "spawnl", "spawnle", "spawnlp", "spawnlpe",
+    "spawnv", "spawnve", "spawnvp", "spawnvpe",
+    "posix_spawn", "posix_spawnp",
+})
+_ASYNCIO_SUBPROCESS_ATTRS = frozenset({
+    "create_subprocess_exec", "create_subprocess_shell",
+    "subprocess_exec", "subprocess_shell",
+})
+_SHUTIL_WRITE_ATTRS = frozenset({
+    "move", "copy", "copy2", "copyfile", "copytree", "rmtree",
+    "unpack_archive", "make_archive",
+})
 _TEMPFILE_ATTRS = frozenset({"mkstemp", "mkdtemp", "NamedTemporaryFile", "TemporaryFile"})
+_LOGGING_FILE_HANDLERS = frozenset({
+    "FileHandler", "WatchedFileHandler", "RotatingFileHandler", "TimedRotatingFileHandler",
+})
 
 _ALLOWED_EXTERNAL_PREFIXES = (
     "../materials/",
@@ -120,7 +150,9 @@ _ALLOWED_PLACEHOLDER_TOKENS = frozenset({
     "<GIT_INDEX_AND_COMMIT>",
     "<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>",
     "<TRACE_DEBUG_FILE>",
+    "<DELEGATED_GATEWAY_LAUNCHER>",
 })
+_DELEGATED_LAUNCHER_TOKEN = "<DELEGATED_GATEWAY_LAUNCHER>"
 
 
 def _load_effects_yaml(path: Path = EFFECTS_PATH) -> object:
@@ -230,6 +262,8 @@ def validate_effects_declarations(
             failures.append(f"A2 {rel}: reason must be a non-empty string")
         if contract is not None and (not isinstance(contract, str) or not contract.strip()):
             failures.append(f"A2 {rel}: contract must be a non-empty string when present")
+        if effect == "migration" and (not isinstance(contract, str) or not contract.strip()):
+            failures.append(f"A2 {rel}: migration declaration must cite its recorded maintenance contract")
 
         parsed[rel] = raw
 
@@ -276,6 +310,25 @@ def validate_effects_declarations(
                     f"A2 {rel}: canonical destination {dest!r} exceeds recorded exception "
                     f"{sorted(allowed_canonical_dests)} — {FIX}"
                 )
+            elif tree_roots is None and contract_marker == "tree-contract.yaml" and TREE_CONTRACT_PATH.is_file():
+                tree_data = yaml.safe_load(TREE_CONTRACT_PATH.read_text(encoding="utf-8")) or {}
+                purposes: dict[str, str] = {}
+                for row in tree_data.get("directories", []) or []:
+                    if isinstance(row, dict) and isinstance(row.get("path"), str):
+                        purposes[row["path"]] = str(row.get("purpose") or "")
+                        for child in row.get("children") or []:
+                            if isinstance(child, dict) and isinstance(child.get("path"), str):
+                                purposes[child["path"]] = str(child.get("purpose") or "")
+                if rel == "tools/material_summarize.py":
+                    if "tools/material_summarize.py" not in purposes.get("knowledge/summaries", ""):
+                        failures.append(
+                            f"A2 {rel}: tree-contract.yaml#knowledge/summaries does not name {rel}"
+                        )
+                elif rel == "tools/library_reconciliation.py":
+                    if "output bundles" not in purposes.get("work/active", ""):
+                        failures.append(
+                            f"A2 {rel}: tree-contract.yaml#work/active does not allocate workspace output bundles"
+                        )
 
     return parsed, failures
 
@@ -336,33 +389,209 @@ def _mode_writes(mode_node: ast.AST | None, env: dict[str, ast.AST]) -> bool:
     )
 
 
-def _subprocess_mutation_primitive(node: ast.Call, env: dict[str, ast.AST]) -> str | None:
-    if any(
-        kw.arg == "shell" and isinstance(_resolve_expr(kw.value, env), ast.Constant)
-        and _resolve_expr(kw.value, env).value is True  # type: ignore[union-attr]
-        for kw in node.keywords
-    ):
-        return "subprocess.shell"
+def _str_const(node: ast.AST | None, env: dict[str, ast.AST]) -> str | None:
+    resolved = _resolve_expr(node, env)
+    if isinstance(resolved, ast.Constant) and isinstance(resolved.value, str):
+        return resolved.value
+    return None
+
+
+def _is_readonly_git_subcommand(
+    sub: str, tail: list[ast.AST], env: dict[str, ast.AST],
+) -> bool:
+    literal_strs = [_str_const(e, env) for e in tail if not isinstance(e, ast.Starred)]
+    if any(s == "-o" or (s is not None and s.startswith("--output")) for s in literal_strs):
+        return False
+    has_star = any(isinstance(e, ast.Starred) for e in tail)
+    if sub in _READONLY_GIT_SUBCOMMANDS:
+        if not has_star:
+            return True
+        # Starred pathspecs after "--" (or read-only log/status/check-ignore) cannot inject
+        # mutating git subcommands; git archive stays read-only without -o/--output.
+        if sub in {"ls-files", "check-ignore", "status", "log", "diff", "diff-tree"}:
+            return True
+    if sub == "archive":
+        if not has_star:
+            return True
+        # capture_world.py passes *wanted where wanted filters ("tools", "system").
+        starred = [e.value for e in tail if isinstance(e, ast.Starred)]
+        if len(starred) == 1 and isinstance(resolved := _resolve_expr(starred[0], env), ast.ListComp):
+            return any(
+                isinstance(gen.iter, ast.Tuple)
+                and all(
+                    isinstance(elt, ast.Constant) and isinstance(elt.value, str)
+                    and not elt.value.startswith("-")
+                    for elt in gen.iter.elts
+                )
+                for gen in resolved.generators
+            )
+        return False
+    if sub == "branch" and not has_star:
+        return literal_strs == ["--show-current"]
+    if sub == "symbolic-ref" and not has_star:
+        return literal_strs in (["HEAD"], ["--quiet", "HEAD"], ["-q", "HEAD"])
+    return False
+
+
+def _git_subcommand_from_elts(
+    elts: list[ast.AST], env: dict[str, ast.AST],
+) -> tuple[str | None, list[ast.AST]]:
+    idx = 1
+    if idx + 1 < len(elts) and _str_const(elts[idx], env) == "-C" and not isinstance(elts[idx + 1], ast.Starred):
+        idx += 2
+    if idx >= len(elts) or isinstance(elts[idx], ast.Starred):
+        return None, []
+    sub = _str_const(elts[idx], env)
+    if sub is None or sub.startswith("-"):
+        return None, []
+    return sub, elts[idx + 1:]
+
+
+def _is_readonly_other_subprocess(
+    rel: str, elts: list[ast.AST], env: dict[str, ast.AST],
+) -> bool:
+    non_star = [e for e in elts if not isinstance(e, ast.Starred)]
+    strs = [_str_const(e, env) for e in non_star]
+    if rel == "tools/ingest_transcript.py" and "--flat-playlist" in strs \
+            and "--print" in strs and not any(
+                s == "-o" or (s is not None and (s.startswith("--output") or s.startswith("--write-")))
+                for s in strs
+            ):
+        return True
+    if any(isinstance(e, ast.Starred) for e in elts):
+        return False
+    head = PurePosixPath(strs[0]).name if strs and strs[0] is not None else None
+    if head == "tmutil" and len(strs) == 2 and strs[1] in {"destinationinfo", "latestbackup"}:
+        return True
+    if head == "pdftotext" and len(strs) == 7 and strs[1] == "-f" and strs[3] == "-l" and strs[6] == "-":
+        return True
+    if head == "launchctl" and len(strs) == 3 and strs[1] == "getenv":
+        return True
+    if head == "node" and len(strs) == 3 and strs[1] == "--check":
+        return True
+    if len(strs) == 2 and strs[1] == "--version":
+        return True
+    if len(strs) == 5 and strs[1:5] == ["-m", "pytest", "--collect-only", "-q"]:
+        return True
+    if len(strs) == 5 and strs[2] == "--root" and strs[4] == "status":
+        return True
+    if rel == "tools/compare_world.py" and len(strs) == 5 and strs[1] == "-c":
+        snippet = _resolve_expr(elts[2], env)
+        if isinstance(snippet, ast.Call) and isinstance(snippet.func, ast.Attribute) \
+                and snippet.func.attr == "join" and snippet.args \
+                and isinstance(snippet.args[0], ast.Name) \
+                and snippet.args[0].id == "_FINGERPRINT_SNIPPET":
+            return True
+    if rel == "tools/stress_check.py" and len(strs) == 3 and strs[1] == "run" \
+            and isinstance(elts[2], ast.Name) and elts[2].id == "script":
+        return True
+    return False
+
+
+def _flatten_cmd_elts(node: ast.AST | None, env: dict[str, ast.AST]) -> list[ast.AST] | None:
+    resolved = _resolve_expr(node, env)
+    if isinstance(resolved, (ast.List, ast.Tuple)):
+        return list(resolved.elts)
+    if isinstance(resolved, ast.BinOp) and isinstance(resolved.op, ast.Add):
+        left = _flatten_cmd_elts(resolved.left, env)
+        if left is None:
+            return None
+        right = _flatten_cmd_elts(resolved.right, env)
+        if right is not None:
+            return left + right
+        return [*left, ast.Starred(value=resolved.right, ctx=ast.Load())]
+    return None
+
+
+def _subprocess_mutation_primitive(
+    rel: str, node: ast.Call, env: dict[str, ast.AST],
+) -> str | None:
+    for kw in node.keywords:
+        if kw.arg is None:
+            return "subprocess.dynamic"
+        if kw.arg == "shell":
+            resolved_shell = _resolve_expr(kw.value, env)
+            if not (isinstance(resolved_shell, ast.Constant) and resolved_shell.value is False):
+                return "subprocess.shell"
     cmd_node = node.args[0] if node.args else next(
         (kw.value for kw in node.keywords if kw.arg == "args"), None
     )
-    resolved_cmd = _resolve_expr(cmd_node, env)
-    if not isinstance(resolved_cmd, (ast.List, ast.Tuple)) or not resolved_cmd.elts:
-        return None
-    elts = resolved_cmd.elts
-    head = _resolve_expr(elts[0], env)
-    if not (isinstance(head, ast.Constant) and isinstance(head.value, str)):
-        return None
-    cmd = PurePosixPath(head.value).name
-    if cmd in _MUTATING_FS_COMMANDS:
-        return f"subprocess.{cmd}"
+    elts = _flatten_cmd_elts(cmd_node, env)
+    if not elts:
+        return "subprocess.dynamic"
+    head_str = _str_const(elts[0], env)
+    cmd = PurePosixPath(head_str).name if head_str is not None else None
     if cmd == "git":
-        for elt in elts[1:]:
-            resolved_elt = _resolve_expr(elt, env)
-            if isinstance(resolved_elt, ast.Constant) and isinstance(resolved_elt.value, str):
-                if resolved_elt.value in _MUTATING_GIT_SUBCOMMANDS:
-                    return f"subprocess.git.{resolved_elt.value}"
-    return None
+        sub, tail = _git_subcommand_from_elts(elts, env)
+        if sub is None:
+            return "subprocess.git.<dynamic>"
+        if _is_readonly_git_subcommand(sub, tail, env):
+            return None
+        return f"subprocess.git.{sub}"
+    if _is_readonly_other_subprocess(rel, elts, env):
+        return None
+    if cmd is not None:
+        return f"subprocess.{cmd}"
+    return "subprocess.dynamic"
+
+
+def _discover_git_star_wrappers(tree: ast.Module) -> tuple[dict[ast.FunctionDef, int], set[int]]:
+    """Identify non-escaping local ``def _git(..., *args)`` helpers so every call site is checked."""
+    candidates: dict[ast.FunctionDef, tuple[int, int]] = {}
+    func_by_name: dict[str, list[ast.FunctionDef]] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef):
+            continue
+        if not isinstance(node, ast.FunctionDef) or node.args.vararg is None or node.decorator_list:
+            continue
+        vararg_name = node.args.vararg.arg
+        fixed_count = len(node.args.posonlyargs) + len(node.args.args)
+        sub_calls = [
+            sub for sub in ast.walk(node)
+            if isinstance(sub, ast.Call) and isinstance(sub.func, ast.Attribute)
+            and sub.func.attr in _SUBPROCESS_FUNCS and sub.args
+            and isinstance(sub.args[0], (ast.List, ast.Tuple))
+        ]
+        if len(sub_calls) != 1:
+            continue
+        sub_call = sub_calls[0]
+        if any(kw.arg == "shell" or kw.arg is None for kw in sub_call.keywords):
+            continue
+        elts = sub_call.args[0].elts  # type: ignore[attr-defined]
+        if not elts or not (isinstance(elts[0], ast.Constant) and elts[0].value == "git"):
+            continue
+        idx = 1
+        if idx + 1 < len(elts) and isinstance(elts[idx], ast.Constant) and elts[idx].value == "-C" \
+                and not isinstance(elts[idx + 1], ast.Starred):
+            idx += 2
+        if idx != len(elts) - 1 or not isinstance(elts[idx], ast.Starred) \
+                or not isinstance(elts[idx].value, ast.Name) or elts[idx].value.id != vararg_name:
+            continue
+        candidates[node] = (fixed_count, id(sub_call))
+        func_by_name.setdefault(node.name, []).append(node)
+
+    # Disqualify ambiguous names, functions with zero calls, or functions referenced outside Call.func.
+    call_func_ids: set[int] = set()
+    call_counts: Counter = Counter()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+            call_func_ids.add(id(node.func))
+            call_counts[node.func.id] += 1
+    escaped_names: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load) and id(node) not in call_func_ids:
+            escaped_names.add(node.id)
+
+    wrappers: dict[ast.FunctionDef, int] = {}
+    skipped_sub_calls: set[int] = set()
+    for fn, (fixed_count, sub_call_id) in candidates.items():
+        if len(func_by_name.get(fn.name, ())) != 1:
+            continue
+        if fn.name in escaped_names or call_counts[fn.name] == 0:
+            continue
+        wrappers[fn] = fixed_count
+        skipped_sub_calls.add(sub_call_id)
+    return wrappers, skipped_sub_calls
 
 
 class _Visitor(ast.NodeVisitor):
@@ -376,8 +605,13 @@ class _Visitor(ast.NodeVisitor):
         self.unmediated_lines: list[int] = []
         self.unmediated_call_lines: list[int] = []
         self._readonly_fd_helper = False
+        self._git_wrappers_by_name: dict[str, int] = {}
+        self._git_wrapper_sub_calls: set[int] = set()
 
     def visit_Module(self, node: ast.Module) -> None:
+        wrappers, skipped = _discover_git_star_wrappers(node)
+        self._git_wrappers_by_name = {fn.name: fixed for fn, fixed in wrappers.items()}
+        self._git_wrapper_sub_calls = skipped
         if self._rel == "tools/learning_os/store/study_fence.py":
             for stmt in node.body:
                 if not isinstance(stmt, ast.FunctionDef) or stmt.name != "fd_open_flags":
@@ -386,9 +620,22 @@ class _Visitor(ast.NodeVisitor):
                     child.attr for child in ast.walk(stmt)
                     if isinstance(child, ast.Attribute) and child.attr.startswith("O_")
                 }
+                has_numeric_const = any(
+                    isinstance(child, ast.Constant)
+                    and isinstance(child.value, (int, float, complex))
+                    and not isinstance(child.value, bool)
+                    for child in ast.walk(stmt)
+                )
+                bad_calls = [
+                    child for child in ast.walk(stmt)
+                    if isinstance(child, ast.Call)
+                    and not (isinstance(child.func, ast.Name) and child.func.id == "hasattr")
+                ]
                 returns = [child.value for child in ast.walk(stmt) if isinstance(child, ast.Return)]
                 self._readonly_fd_helper = (
-                    "O_RDONLY" in flags and flags <= _OS_READONLY_FLAGS
+                    not has_numeric_const
+                    and not bad_calls
+                    and "O_RDONLY" in flags and flags <= _OS_READONLY_FLAGS
                     and len(returns) == 1
                     and isinstance(returns[0], ast.Name) and returns[0].id == "flags"
                 )
@@ -426,9 +673,31 @@ class _Visitor(ast.NodeVisitor):
             self._env_stack[-1][node.targets[0].id] = node.value
         self.generic_visit(node)
 
+    def visit_Expr(self, node: ast.Expr) -> None:
+        if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute) \
+                and node.value.func.attr == "append" and isinstance(node.value.func.value, ast.Name) \
+                and len(node.value.args) == 1:
+            name = node.value.func.value.id
+            env = {k: v for frame in self._env_stack for k, v in frame.items()}
+            prev = env.get(name)
+            if prev is not None:
+                self._env_stack[-1][name] = ast.BinOp(
+                    left=prev, op=ast.Add(), right=ast.List(elts=[node.value.args[0]], ctx=ast.Load()),
+                )
+        self.generic_visit(node)
+
     def visit_AnnAssign(self, node: ast.AnnAssign) -> None:
         if isinstance(node.target, ast.Name) and node.value is not None:
             self._env_stack[-1][node.target.id] = node.value
+        self.generic_visit(node)
+
+    def visit_AugAssign(self, node: ast.AugAssign) -> None:
+        if isinstance(node.target, ast.Name):
+            env = {name: value for frame in self._env_stack for name, value in frame.items()}
+            prev = env.get(node.target.id, ast.Name(id=node.target.id, ctx=ast.Load()))
+            self._env_stack[-1][node.target.id] = ast.BinOp(
+                left=prev, op=node.op, right=node.value,
+            )
         self.generic_visit(node)
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
@@ -457,11 +726,50 @@ class _Visitor(ast.NodeVisitor):
             self.unmediated_lines.append(node.lineno)
 
     def visit_Call(self, node: ast.Call) -> None:
+        if id(node) in self._git_wrapper_sub_calls:
+            self.generic_visit(node)
+            return
         func = node.func
         # Lexical lookup: the current scope's names shadow enclosing and
         # module-level ones, so a module constant such as a read-only flag
         # set still resolves inside the functions that use it.
         env = {name: value for frame in self._env_stack for name, value in frame.items()}
+
+        # Bar 4 F8: forbid **kwargs on TransactionService(...) in tools/ so
+        # _unmediated_test_only cannot be passed via dynamic key construction.
+        callee_name = (
+            self._from_aliases[func.id][1]
+            if isinstance(func, ast.Name) and func.id in self._from_aliases
+            else (self._mod_aliases.get(func.id, func.id) if isinstance(func, ast.Name) else (
+                func.attr if isinstance(func, ast.Attribute) else None
+            ))
+        )
+        if callee_name == "TransactionService" and any(kw.arg is None for kw in node.keywords):
+            self.unmediated_lines.append(node.lineno)
+            self.unmediated_call_lines.append(node.lineno)
+
+        if isinstance(func, ast.Name) and func.id in self._git_wrappers_by_name:
+            fixed = self._git_wrappers_by_name[func.id]
+            if any(kw.arg is None for kw in node.keywords) or len(node.args) <= fixed \
+                    or any(isinstance(a, ast.Starred) for a in node.args[:fixed]):
+                self._record("subprocess.git.<dynamic>", node)
+            else:
+                first = node.args[fixed]
+                sub = None if isinstance(first, ast.Starred) else _str_const(first, env)
+                tail = node.args[fixed + 1:]
+                if sub is None or sub.startswith("-"):
+                    self._record("subprocess.git.<dynamic>", node)
+                elif not _is_readonly_git_subcommand(sub, tail, env):
+                    self._record(f"subprocess.git.{sub}", node)
+            self.generic_visit(node)
+            return
+
+        # Bar 4 F3 (U21): unwrap bound-method aliases such as ``w = path.write_text; w('x')``.
+        if isinstance(func, ast.Name) and func.id not in self._from_aliases and func.id not in self._mod_aliases:
+            aliased = _resolve_expr(func, env)
+            if isinstance(aliased, ast.Attribute):
+                func = aliased
+
         primitive = None
         if isinstance(func, ast.Attribute):
             attr = func.attr
@@ -470,25 +778,65 @@ class _Visitor(ast.NodeVisitor):
             if canonical_mod is None and mod_name in self._from_aliases:
                 canonical_mod = self._from_aliases[mod_name][1]
             is_os = canonical_mod == "os"
-            is_io = canonical_mod == "io"
+            is_io = canonical_mod in {"io", "builtins"}
+            is_codecs = canonical_mod == "codecs"
             is_shutil = canonical_mod == "shutil"
             is_yaml = canonical_mod == "yaml"
             is_sqlite = canonical_mod == "sqlite3"
             is_subprocess = canonical_mod == "subprocess"
             is_tempfile = canonical_mod == "tempfile"
+            is_asyncio = canonical_mod == "asyncio"
+            is_zipfile = canonical_mod == "zipfile"
+            is_tarfile = canonical_mod == "tarfile"
+            is_logging = canonical_mod in {"logging", "logging.handlers"}
             resolved_attr = self._mod_aliases.get(attr, attr)
-            if is_os and attr in _OS_WRITE_ATTRS:
+            if is_os and attr in _OS_EXEC_ATTRS:
+                primitive = f"os.{attr}"
+            elif is_os and attr in _OS_WRITE_ATTRS:
                 primitive = f"os.{attr}"
             elif is_os and attr == "open":
                 if not _is_readonly_os_open(node, env, readonly_fd_helper=self._readonly_fd_helper):
                     primitive = "os.open"
+            elif is_os and attr == "fdopen":
+                mode_node = node.args[1] if len(node.args) >= 2 else next(
+                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
+                )
+                if _mode_writes(mode_node, env):
+                    primitive = "os.fdopen"
             elif is_io and attr == "open":
                 mode_node = node.args[1] if len(node.args) >= 2 else next(
                     (kw.value for kw in node.keywords if kw.arg == "mode"), None
                 )
                 if _mode_writes(mode_node, env):
                     primitive = "open"
-            elif attr in ("write_text", "write_bytes", "unlink", "mkdir", "rmdir", "touch", "symlink_to", "hardlink_to"):
+            elif is_codecs and attr == "open":
+                mode_node = node.args[1] if len(node.args) >= 2 else next(
+                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
+                )
+                if _mode_writes(mode_node, env):
+                    primitive = "codecs.open"
+            elif is_asyncio and attr in _ASYNCIO_SUBPROCESS_ATTRS:
+                primitive = f"asyncio.{attr}"
+            elif is_zipfile and attr == "ZipFile":
+                mode_node = node.args[1] if len(node.args) >= 2 else next(
+                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
+                )
+                if _mode_writes(mode_node, env):
+                    primitive = "zipfile.ZipFile"
+            elif is_tarfile and attr == "open":
+                mode_node = node.args[1] if len(node.args) >= 2 else next(
+                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
+                )
+                if _mode_writes(mode_node, env):
+                    primitive = "tarfile.open"
+            elif is_logging and attr in _LOGGING_FILE_HANDLERS:
+                primitive = "logging.FileHandler"
+            elif attr in ("extractall", "extract"):
+                primitive = attr
+            elif attr in (
+                "write_text", "write_bytes", "unlink", "mkdir", "rmdir", "touch",
+                "symlink_to", "hardlink_to", "chmod", "lchmod",
+            ):
                 receiver = _resolve_expr(func.value, env)
                 delegated_touch = (
                     attr == "touch" and isinstance(receiver, ast.Call)
@@ -522,9 +870,9 @@ class _Visitor(ast.NodeVisitor):
             elif is_tempfile and attr in _TEMPFILE_ATTRS:
                 primitive = f"tempfile.{attr}"
             elif is_subprocess and attr in _SUBPROCESS_FUNCS:
-                primitive = _subprocess_mutation_primitive(node, env)
-            elif resolved_attr in _WRITE_HELPERS:
-                primitive = resolved_attr
+                primitive = _subprocess_mutation_primitive(self._rel, node, env)
+            elif resolved_attr in _WRITE_HELPERS or attr in _WRITE_HELPERS:
+                primitive = resolved_attr if resolved_attr in _WRITE_HELPERS else attr
         elif isinstance(func, ast.Name):
             if func.id in self._from_aliases:
                 mod_src, orig_name = self._from_aliases[func.id]
@@ -533,14 +881,44 @@ class _Visitor(ast.NodeVisitor):
             if orig_name == "open" and mod_src == "os":
                 if not _is_readonly_os_open(node, env, readonly_fd_helper=self._readonly_fd_helper):
                     primitive = "os.open"
+            elif orig_name == "fdopen" and mod_src == "os":
+                mode_node = node.args[1] if len(node.args) >= 2 else next(
+                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
+                )
+                if _mode_writes(mode_node, env):
+                    primitive = "os.fdopen"
+            elif orig_name == "open" and mod_src == "codecs":
+                mode_node = node.args[1] if len(node.args) >= 2 else next(
+                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
+                )
+                if _mode_writes(mode_node, env):
+                    primitive = "codecs.open"
+            elif orig_name == "open" and mod_src == "tarfile":
+                mode_node = node.args[1] if len(node.args) >= 2 else next(
+                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
+                )
+                if _mode_writes(mode_node, env):
+                    primitive = "tarfile.open"
             elif orig_name == "open":
                 mode_node = node.args[1] if len(node.args) >= 2 else next(
                     (kw.value for kw in node.keywords if kw.arg == "mode"), None
                 )
                 if _mode_writes(mode_node, env):
                     primitive = "open"
+            elif mod_src == "zipfile" and orig_name == "ZipFile":
+                mode_node = node.args[1] if len(node.args) >= 2 else next(
+                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
+                )
+                if _mode_writes(mode_node, env):
+                    primitive = "zipfile.ZipFile"
+            elif mod_src in {"logging", "logging.handlers"} and orig_name in _LOGGING_FILE_HANDLERS:
+                primitive = "logging.FileHandler"
+            elif mod_src == "os" and orig_name in _OS_EXEC_ATTRS:
+                primitive = f"os.{orig_name}"
             elif mod_src == "os" and orig_name in _OS_WRITE_ATTRS:
                 primitive = f"os.{orig_name}"
+            elif mod_src == "asyncio" and orig_name in _ASYNCIO_SUBPROCESS_ATTRS:
+                primitive = f"asyncio.{orig_name}"
             elif mod_src == "shutil" and orig_name in _SHUTIL_WRITE_ATTRS:
                 primitive = f"shutil.{orig_name}"
             elif mod_src == "sqlite3" and orig_name == "connect":
@@ -551,12 +929,39 @@ class _Visitor(ast.NodeVisitor):
             elif mod_src == "tempfile" and orig_name in _TEMPFILE_ATTRS:
                 primitive = f"tempfile.{orig_name}"
             elif mod_src == "subprocess" and orig_name in _SUBPROCESS_FUNCS:
-                primitive = _subprocess_mutation_primitive(node, env)
-            elif orig_name in _WRITE_HELPERS:
-                primitive = orig_name
+                primitive = _subprocess_mutation_primitive(self._rel, node, env)
+            elif orig_name in _WRITE_HELPERS or func.id in _WRITE_HELPERS:
+                primitive = orig_name if orig_name in _WRITE_HELPERS else func.id
         if primitive is not None:
             self._record(primitive, node)
         self.generic_visit(node)
+
+
+def _find_tool_symlinks(root: Path) -> list[str]:
+    """Bar 4 F9: any symlinked directory or file under tools/ fails closed."""
+    tools_root = root / "tools"
+    if not tools_root.exists() and not tools_root.is_symlink():
+        return []
+    if tools_root.is_symlink():
+        return ["tools"]
+    bad: list[str] = []
+    for dirpath, dirnames, filenames in os.walk(tools_root, followlinks=False):
+        current = Path(dirpath)
+        keep: list[str] = []
+        for name in sorted(dirnames):
+            if name == "__pycache__" or name.endswith(".egg-info"):
+                continue
+            cand = current / name
+            if cand.is_symlink():
+                bad.append(cand.relative_to(root).as_posix())
+            else:
+                keep.append(name)
+        dirnames[:] = keep
+        for name in sorted(filenames):
+            cand = current / name
+            if cand.is_symlink():
+                bad.append(cand.relative_to(root).as_posix())
+    return bad
 
 
 def _iter_tool_python_files(root: Path) -> list[Path]:
@@ -727,7 +1132,16 @@ class _GitState:
     subcommand: str
 
 
+@dataclass(frozen=True)
+class _DelegatedLauncher:
+    """A pinned gateway/sandbox subprocess launcher whose child is separately governed."""
+
+    label: str
+
+
 def _describe(value: object) -> str:
+    if isinstance(value, _DelegatedLauncher):
+        return f"delegated-launcher:{value.label}"
     if isinstance(value, _GitState):
         return f"git-state:{value.subcommand}"
     if isinstance(value, _RepoRel):
@@ -845,6 +1259,28 @@ def _external_covers(prefix: str, destination: str, parts: tuple[str, ...]) -> b
         return False
 
 
+_GUARDED_DESTINATION_PREFIXES = (
+    *_EXPLICIT_OUT_MARKERS,
+    "<EXTERNAL_PRACTICE_VAULT>/",
+    "<RESTORED_COPY>/",
+    "$LOS_SCRATCH_DIR/",
+    "<TRACE_DEBUG_FILE>",
+    "<LOS_OBSERVATIONS>",
+    "<COUNTER_FILE>",
+    "../materials/",
+    "../reading-memory/",
+    "../scratch/",
+)
+
+
+def _declares_guarded_destination(destinations: list[str]) -> bool:
+    return any(
+        d == marker or d.startswith(marker)
+        for d in destinations
+        for marker in _GUARDED_DESTINATION_PREFIXES
+    )
+
+
 def _external_destination_problem(
     value: _ExtRel, destinations: list[str], primitive: str, repo_dir_names: frozenset[str],
 ) -> str | None:
@@ -862,14 +1298,18 @@ def _external_destination_problem(
             # Checkout state falls back to a temporary directory outside Git.
             return f"is outside declared checkout-state destinations {destinations}"
         return "writes a temporary path but the module declares no <TMPDIR> destination"
-    if tag == "guarded caller output":
-        # guard_tool_output_path refuses DATA_ROOTS, system/, operations/ and
-        # symlinks at runtime: the INV-01 proof for a path the census cannot
-        # resolve. Accepted in any module that declares a non-repository
-        # destination; repository-only modules still refuse it.
-        return None
+    if tag in {"guarded caller output", "temp sibling of guarded output"}:
+        if _declares_guarded_destination(destinations):
+            return None
+        return f"uses a caller-guarded path in a module declaring only {destinations}"
+    if tag in {"ancestor above parent of a guarded path", "sibling of parent of a guarded path"}:
+        return "writes via a parent of a guarded path, which the guard does not cover"
     if tag == "parent of guarded output":
-        if primitive == "mkdir":
+        if (
+            primitive in {"mkdir", "os.mkdir", "os.makedirs", "create_ancestors_and_track"}
+            and not value.parts
+            and _declares_guarded_destination(destinations)
+        ):
             return None
         return "writes to a parent of a guarded path, which the guard does not cover"
     if tag == "git directory":
@@ -961,7 +1401,10 @@ class _Scope:
 # These entries correspond to the admitted write set, the preflighted recovery
 # plan, and the engine-owned journal and receipt namespace.
 _ENGINE_RUNTIME_OPERANDS = {
+    ("atomic_write_bytes", "_create_ancestors_and_track"): ("path.parent",),
+    ("atomic_write_bytes", "create_ancestors_and_track"): ("path.parent",),
     ("atomic_write_bytes", "exclusive_temp_path"): ("path",),
+    ("atomic_write_bytes", "os.fdopen"): ("fd",),
     ("atomic_write_bytes", "os.replace"): ("tmp", "path"),
     ("atomic_write_bytes", "unlink"): ("tmp",),
     ("_update_intent_after", "atomic_write_bytes"): ("intent_path",),
@@ -1000,6 +1443,9 @@ _ENGINE_RUN_PATH_SOURCES = {
 
 
 _ENGINE_LOCAL_BINDINGS = {
+    ("atomic_write_bytes", "fd"): (
+        "__tuple_item__(_exclusive_temp_path(path, mode=438), 0)",
+    ),
     ("atomic_write_bytes", "tmp"): (
         "None", "__tuple_item__(_exclusive_temp_path(path, mode=438), 1)", "None",
     ),
@@ -1259,8 +1705,6 @@ class _ModuleWriteSites:
         return mod._eval_name(name, mod.module, None, depth + 1, active | {key})
 
     def _param_value(self, scope: _Scope, name: str) -> object:
-        if name in _ROOT_PARAM_NAMES and name not in self.non_root_params:
-            return _RepoRel(())
         if name in scope.star_params:
             return _Unknown(f"variadic parameter {name}")
         return _Param(scope.node, name, ())
@@ -1418,6 +1862,8 @@ class _ModuleWriteSites:
                     and expr.func.attr == "parse_args" for expr in assignments
                 ):
                     return frozenset({_RepoRel(())})
+                if owner == "args" and owner in scope.all_params and not assignments:
+                    return frozenset({_RepoRel(())})
             cls = scope.cls if owner in {"self", "cls"} else (owner if owner in self.class_body else None)
             if cls is not None:
                 key = ("attr", cls, node.attr)
@@ -1497,6 +1943,16 @@ class _ModuleWriteSites:
         }:
             # A guarded path, or a descriptor opened on one.
             return frozenset({_ExtRel("guarded caller output")})
+        if dotted == "_open_local_parent_dir_fd" and self.rel == "tools/learning_os/store/study_fence.py":
+            return frozenset({_ExtRel("guarded caller output")})
+        if dotted == "call_dir_fd_op" and self.rel == "tools/learning_os/store/study_fence.py" \
+                and node.args and isinstance(part := node.args[0], ast.Call) \
+                and self._dotted(part.func) == "functools.partial" and len(part.args) >= 2 \
+                and self._dotted(part.args[0]) == "os.open":
+            part_kw = {kw.arg: kw.value for kw in part.keywords if kw.arg}
+            if "dir_fd" in part_kw:
+                segs = self._segments(part.args[1], scope, bindings, depth, active)
+                return frozenset(self._join(base, seg) for base in ev(part_kw["dir_fd"]) for seg in segs)
         if dotted == "os.open" and node.args:
             # A descriptor stands for the directory it was opened on, so a
             # later dir_fd-relative write can be traced to that directory.
@@ -1606,7 +2062,11 @@ class _ModuleWriteSites:
             return frozenset({_Unknown(f"starred call {callee.qualname}")})
         out: set = set()
         for expr in callee.returns:
-            out |= self.eval(expr, callee, bound, depth + 1, active | {key})
+            for val in self.eval(expr, callee, bound, depth + 1, active | {key}):
+                if isinstance(val, _Param) and val.func in self.scopes:
+                    out |= self.resolve_param(val, set())
+                else:
+                    out.add(val)
         return frozenset(out)
 
     def _iter_child(self, expr: ast.AST, scope, bindings, depth, active) -> frozenset:
@@ -1678,12 +2138,26 @@ class _ModuleWriteSites:
         if isinstance(value, ast.Call):
             dotted = self._dotted(value.func) or ""
             leaf = dotted.rsplit(".", 1)[-1]
+            if dotted == "__iter_child__" and value.args and isinstance(
+                seq := value.args[0], (ast.Tuple, ast.List, ast.Set)
+            ):
+                return frozenset().union(*(
+                    self.eval(row.elts[index], scope, bindings, depth, active)
+                    if isinstance(row, (ast.Tuple, ast.List)) and index < len(row.elts)
+                    else frozenset({_Unknown("tuple element")})
+                    for row in seq.elts
+                )) or frozenset({_Unknown("tuple element")})
             if dotted in {"__iter_child__", "sorted", "list", "reversed", "tuple"} and value.args:
                 return self._tuple_item(value.args[0], index, scope, bindings, depth, active)
-            if leaf in {"exclusive_temp_path", "_exclusive_temp_path"} and index == 1 and value.args:
+            if leaf in {"exclusive_temp_path", "_exclusive_temp_path"} and index in (0, 1) and value.args:
                 base = self.eval(value.args[0], scope, bindings, depth, active)
-                return frozenset(self._join(self._parent(v), ("*",)) for v in base)
-            if leaf == "mkstemp" and index == 1:
+                return frozenset(
+                    _ExtRel("temp sibling of guarded output")
+                    if isinstance(v, _ExtRel) and v.tag == "guarded caller output" and not v.parts
+                    else self._join(self._parent(v), ("*",))
+                    for v in base
+                )
+            if leaf == "mkstemp" and index in (0, 1):
                 for kw in value.keywords:
                     if kw.arg == "dir":
                         base = self.eval(kw.value, scope, bindings, depth, active)
@@ -1785,6 +2259,12 @@ class _ModuleWriteSites:
         if isinstance(seg, _Param):
             return _Unknown("path join operand can replace its base")
         assert isinstance(seg, tuple)
+        if isinstance(value, _ExtRel) and value.tag in {
+            "parent of guarded output",
+            "ancestor above parent of a guarded path",
+            "sibling of parent of a guarded path",
+        }:
+            return _ExtRel("sibling of parent of a guarded path", seg)
         if isinstance(value, (_RepoRel, _Relative)):
             return type(value)(_norm_parts((*value.parts, *seg)))
         if isinstance(value, _Param):
@@ -1803,6 +2283,12 @@ class _ModuleWriteSites:
             return _RepoRel(value.parts[:-1])
         if isinstance(value, _Param):
             return _Param(value.func, value.name, (*value.suffix, _PARENT_TOKEN))
+        if isinstance(value, _ExtRel) and value.tag in {
+            "parent of guarded output",
+            "ancestor above parent of a guarded path",
+            "sibling of parent of a guarded path",
+        }:
+            return _ExtRel("ancestor above parent of a guarded path")
         if isinstance(value, _ExtRel) and value.parts and value.parts[-1] != "**":
             return _ExtRel(value.tag, value.parts[:-1])
         if isinstance(value, _ExtRel) and not value.parts and value.tag == "guarded caller output":
@@ -1815,10 +2301,13 @@ class _ModuleWriteSites:
         return value
 
     # -- write sites ------------------------------------------------------
-    @staticmethod
-    def write_target_exprs(primitive: str, call: ast.Call) -> list[ast.AST | None] | None:
+    def write_target_exprs(self, primitive: str, call: ast.Call, scope: _Scope) -> list[ast.AST | None] | None:
         """Target expressions for one write primitive; None means no path operand."""
         func = call.func
+        if isinstance(func, ast.Name) and func.id not in self.from_aliases and func.id not in self.mod_aliases:
+            exprs = self._lookup_exprs(func.id, scope)
+            if len(exprs) == 1 and isinstance(exprs[0], ast.Attribute):
+                func = exprs[0]
         args = call.args
         kwargs = {kw.arg: kw.value for kw in call.keywords if kw.arg}
 
@@ -1827,35 +2316,60 @@ class _ModuleWriteSites:
 
         receiver = func.value if isinstance(func, ast.Attribute) else None
         if primitive in {"write_text", "write_bytes", "unlink", "mkdir", "rmdir", "touch",
-                         "symlink_to", "hardlink_to", "Path.open"}:
+                         "symlink_to", "hardlink_to", "chmod", "lchmod", "Path.open"}:
             return [receiver]
         if primitive in {"rename", "replace"}:
             return [receiver, arg(0, "target")]
         if primitive in {"os.replace", "os.rename"}:
             return [arg(0, "src"), arg(1, "dst")]
+        if primitive == "os.renames":
+            return [arg(0, "old"), arg(1, "new")]
         if primitive in {"os.link", "os.symlink"}:
             return [arg(1, "dst")]
-        if primitive in {"os.remove", "os.unlink", "os.mkdir", "os.makedirs", "os.rmdir",
-                         "os.chmod", "os.truncate", "os.open"}:
+        if primitive in {
+            "os.remove", "os.removedirs", "os.unlink", "os.mkdir", "os.makedirs", "os.rmdir",
+            "os.chmod", "os.lchmod", "os.chown", "os.lchown", "os.truncate",
+            "os.mkfifo", "os.mknod", "os.utime", "os.open",
+        }:
             if "dir_fd" in kwargs:
                 return [ast.Constant(value=None)]
             return [arg(0, "path")]
+        if primitive in {"os.fdopen", "os.fchmod", "os.fchown", "os.ftruncate"}:
+            return [arg(0, "fd")]
         if primitive == "os.write":
             return None
         if primitive == "open":
             return [arg(0, "file")]
+        if primitive in {"codecs.open", "logging.FileHandler"}:
+            return [arg(0, "filename")]
+        if primitive == "zipfile.ZipFile":
+            return [arg(0, "file")]
+        if primitive == "tarfile.open":
+            return [arg(0, "name")]
+        if primitive == "extractall":
+            return [arg(0, "path") or ast.Constant(value=".")]
+        if primitive == "extract":
+            return [arg(1, "path") or ast.Constant(value=".")]
         if primitive == "shutil.move":
             return [arg(0, "src"), arg(1, "dst")]
         if primitive in {"shutil.copy", "shutil.copy2", "shutil.copyfile", "shutil.copytree"}:
             return [arg(1, "dst")]
+        if primitive == "shutil.unpack_archive":
+            return [arg(1, "extract_dir") or ast.Constant(value=".")]
+        if primitive == "shutil.make_archive":
+            return [arg(0, "base_name")]
         if primitive == "shutil.rmtree":
             return [arg(0, "path")]
         if primitive == "sqlite3.connect":
             return [arg(0, "database")]
         if primitive.startswith("tempfile."):
             return [kwargs.get("dir")] if "dir" in kwargs else None
-        if primitive.startswith(("yaml.", "subprocess.")):
+        if primitive.startswith(("yaml.", "subprocess.", "os.", "asyncio.")):
             return None
+        if primitive == "prune_empty_dirs":
+            return [arg(0, "inbox")]
+        if primitive in {"create_ancestors_and_track", "_create_ancestors_and_track"}:
+            return [arg(0, "parent")]
         if primitive in _WRITE_HELPERS:
             return [arg(0, "path")]
         return [None]
@@ -1870,8 +2384,39 @@ class _ModuleWriteSites:
             return {_Unknown(f"parameter {param.name}")}
         sites = self.call_sites.get(callee, [])
         out: set = set()
+        is_root_convention = (
+            param.name in _ROOT_PARAM_NAMES
+            and param.name not in self.non_root_params
+            and callee not in self.escaped
+        )
         if not sites or callee in self.escaped:
-            out.add(_Unknown(f"parameter {param.name!r} of {callee.qualname} is supplied outside this module"))
+            if is_root_convention:
+                out.add(self.apply_suffix(_RepoRel(()), param.suffix))
+                if param.name in callee.defaults:
+                    for default_val in self.eval(callee.defaults[param.name], callee.parent or self.module):
+                        if not isinstance(default_val, _Null):
+                            shifted = self.apply_suffix(default_val, param.suffix)
+                            if isinstance(shifted, _Param):
+                                out |= self.resolve_param(shifted, visited)
+                            else:
+                                out.add(shifted)
+            else:
+                default_vals = (
+                    self.eval(callee.defaults[param.name], callee.parent or self.module)
+                    if param.name in callee.defaults and callee not in self.escaped
+                    else frozenset()
+                )
+                if default_vals and all(isinstance(dv, _RepoRel) for dv in default_vals):
+                    for dv in default_vals:
+                        out.add(self.apply_suffix(dv, param.suffix))
+                else:
+                    out.add(_Unknown(f"parameter {param.name!r} of {callee.qualname} is supplied outside this module"))
+        elif is_root_convention and (
+            callee is self.module_funcs.get(callee.qualname) or callee.cls is not None
+        ) and not callee.qualname.rsplit(".", 1)[-1].startswith("_"):
+            # Public entry points may also be called from outside the module;
+            # every intra-module call site below is still resolved and checked.
+            out.add(self.apply_suffix(_RepoRel(()), param.suffix))
         for call, caller in sites:
             bound = self._call_bindings(callee, call, caller, None, 0, frozenset())
             if bound is None:
@@ -1893,12 +2438,19 @@ class _ModuleWriteSites:
         return out
 
     def site_values(self, primitive: str, call: ast.Call, scope: _Scope) -> list[object]:
+        if primitive.startswith(("os.", "asyncio.")) and (
+            primitive.removeprefix("os.") in _OS_EXEC_ATTRS
+            or primitive.removeprefix("asyncio.") in _ASYNCIO_SUBPROCESS_ATTRS
+        ):
+            return [_Unknown(f"{primitive} executes external command")]
         if primitive in {"subprocess.git.mv", "subprocess.git.rm", "subprocess.mv",
                          "subprocess.cp", "subprocess.rm"}:
             return self._subprocess_targets(primitive, call, scope)
         if primitive == "subprocess.shell":
             # A shell string hides its write targets from any static check.
             return [_Unknown("shell=True command")]
+        if primitive == "subprocess.git.worktree":
+            return self._git_worktree_targets(call, scope)
         if primitive.startswith("subprocess.git."):
             subcommand = primitive.removeprefix("subprocess.git.")
             if subcommand == "reset":
@@ -1907,16 +2459,19 @@ class _ModuleWriteSites:
                     return [_Unknown("unresolved git reset command")]
                 if {"--hard", "--merge", "--keep"} & set(words):
                     return [_Unknown("git reset rewrites the working tree")]
-            return [_GitState(subcommand)]
+                return [_GitState(subcommand)]
+            if subcommand in _INDEX_OR_REF_GIT_SUBCOMMANDS:
+                return [_GitState(subcommand)]
+            return [_Unknown(f"git {subcommand} rewrites working tree or has unproved target")]
         if primitive.startswith("subprocess."):
-            return [_Unknown(f"unclassified subprocess write {primitive}")]
+            return self._other_subprocess_targets(primitive, call, scope)
         dotted = self._dotted(call.func)
         if dotted == "learning_os.store.study_fence.write_local_output_file":
             return [_ExtRel("guarded caller output")]
         fd_relative = self._dir_fd_targets(primitive, call, scope)
         if fd_relative is not None:
             return fd_relative
-        exprs = self.write_target_exprs(primitive, call)
+        exprs = self.write_target_exprs(primitive, call, scope)
         if exprs is None:
             if primitive.startswith("tempfile."):
                 return [_ExtRel("tempdir")]
@@ -2043,15 +2598,79 @@ class _ModuleWriteSites:
         if not operands:
             return [_Unknown("filesystem command has no resolved path operands")]
         cwd = next((kw.value for kw in call.keywords if kw.arg == "cwd"), None)
-        roots = self.eval(cwd, scope)
+        roots = self._resolved(self.eval(cwd, scope))
         values: set = set()
         for item in operands:
-            for target in self.eval(item, scope):
+            for target in self._resolved(self.eval(item, scope)):
                 if isinstance(target, _Relative):
-                    values.update(self._join(root, target.parts) for root in roots)
+                    values.update(self._resolved({self._join(root, target.parts) for root in roots}))
                 else:
                     values.add(target)
         return sorted(values, key=_describe)
+
+    def _git_worktree_targets(self, call: ast.Call, scope: _Scope) -> list[object]:
+        """Resolve ``_git(repo, 'worktree', 'add'|'remove'|'prune', ...)`` destinations."""
+        args = call.args
+        idx = next(
+            (i for i, a in enumerate(args) if isinstance(a, ast.Constant) and a.value == "worktree"),
+            None,
+        )
+        if idx is None or idx + 1 >= len(args) or not isinstance(args[idx + 1], ast.Constant):
+            return [_Unknown("unresolved git worktree subcommand")]
+        action = args[idx + 1].value
+        if action == "prune" and idx + 2 == len(args):
+            # Prunes stale metadata for already-removed worktrees in compare_world.
+            if self.rel == "tools/compare_world.py":
+                return [_ExtRel("guarded caller output")]
+            return [_Unknown("git worktree prune outside declared worktree owner")]
+        if action == "remove" and idx + 4 == len(args) \
+                and isinstance(args[idx + 2], ast.Constant) and args[idx + 2].value == "--force":
+            return sorted(self._resolved(self.eval(args[idx + 3], scope)), key=_describe)
+        if action == "add" and idx + 5 == len(args) \
+                and isinstance(args[idx + 2], ast.Constant) and args[idx + 2].value == "--detach":
+            return sorted(self._resolved(self.eval(args[idx + 3], scope)), key=_describe)
+        return [_Unknown(f"unresolved git worktree {action!r} operands")]
+
+    def _other_subprocess_targets(self, primitive: str, call: ast.Call, scope: _Scope) -> list[object]:
+        """Verify non-git subprocess sites in declared modules against explicit operands or launcher pins."""
+        cmd_arg = call.args[0] if call.args else next(
+            (kw.value for kw in call.keywords if kw.arg == "args"), None
+        )
+        unparsed_cmd = ast.unparse(cmd_arg) if cmd_arg is not None else ""
+        # 1. yt-dlp caption staging via -o <dest> in ingest_transcript.py
+        if self.rel == "tools/ingest_transcript.py" and scope.qualname == "fetch":
+            env_map = {
+                name: exprs[-1]
+                for name, exprs in scope.assigns.items()
+                if exprs
+            }
+            elts = _flatten_cmd_elts(cmd_arg, env_map)
+            if elts is not None:
+                for i, elt in enumerate(elts[:-1]):
+                    if isinstance(elt, ast.Constant) and elt.value == "-o":
+                        return sorted(self._resolved(self.eval(elts[i + 1], scope)), key=_describe)
+        # 2. compare_world.py running tools/generate.py --root <tree> on its scratch worktree
+        if self.rel == "tools/compare_world.py" \
+                and unparsed_cmd == "[sys.executable, str(generate), '--root', str(tree)]":
+            if isinstance(cmd_arg, ast.List) and len(cmd_arg.elts) == 4:
+                return sorted(self._resolved(self.eval(cmd_arg.elts[3], scope)), key=_describe)
+        # 3. backup_manifest.py dry-run installer preflight against TemporaryDirectory vault
+        if self.rel == "tools/learning_os/app/backup_manifest.py" \
+                and unparsed_cmd == "[sys.executable, '-I', '-B', str(resolved_installer), *args, vault]" \
+                and isinstance(cmd_arg, ast.List) and cmd_arg.elts:
+            return sorted(self._resolved(self.eval(cmd_arg.elts[-1], scope)), key=_describe)
+        # 4. Pinned gateway / sandbox launcher delegations (must declare <DELEGATED_GATEWAY_LAUNCHER>)
+        pinned_launchers = {
+            ("tools/agent_run.py", "_run_subprocess_bounded", "argv"),
+            ("tools/learning_os/adapters/study_broker.py", "_run_subprocess_bounded", "cmd"),
+            ("tools/study_launch.py", "launch_study", "[str(effective_sandbox), '-f', str(sb_path), *command]"),
+            ("tools/codex_obsidian.py", "main", "cmd"),
+            ("tools/codex_obsidian.py", "main", "[python_binary(), str(ROOT / 'tools' / 'los.py'), 'validate']"),
+            ("tools/codex_obsidian.py", "main", "[python_binary(), str(ROOT / 'tools' / 'los.py'), 'generate']"),
+        }
+        if (self.rel, scope.qualname, unparsed_cmd) in pinned_launchers:
+            return [_DelegatedLauncher(f"{self.rel}::{scope.qualname}")]
+        return [_Unknown(f"unclassified subprocess write {primitive}")]
 
 class _SiteVisitor(_Visitor):
     def __init__(self, rel: str):
@@ -2087,6 +2706,7 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                 return _ModuleWriteSites(rel, ast.parse(path.read_text(encoding="utf-8"), filename=rel), load_module)
         return None
 
+    analyzed_modules: dict[str, _ModuleWriteSites] = {}
     for rel in sorted(effects):
         path = root / rel
         if not path.is_file():
@@ -2108,6 +2728,7 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
         visitor = _SiteVisitor(rel)
         visitor.visit(tree)
         analysis = _ModuleWriteSites(rel, tree, load_module)
+        analyzed_modules[rel] = analysis
         reported: set[tuple[int, str]] = set()
         for primitive, call, scope_node in visitor.sites:
             scope = analysis.scopes.get(scope_node, analysis.module) if scope_node else analysis.module
@@ -2120,6 +2741,9 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                 problem: str | None = None
                 if isinstance(value, _BadTraversal):
                     problem = "joins a '..' traversal onto a repository-anchored path"
+                elif isinstance(value, _DelegatedLauncher):
+                    if _DELEGATED_LAUNCHER_TOKEN not in destinations:
+                        problem = f"spawns a delegated launcher without declaring {_DELEGATED_LAUNCHER_TOKEN}"
                 elif isinstance(value, _GitState):
                     if _GIT_STATE_TOKEN not in destinations:
                         problem = f"changes Git index or refs but the module does not declare {_GIT_STATE_TOKEN}"
@@ -2128,15 +2752,19 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                         problem = "is repository-anchored but the module declares no repository destination"
                     elif not any(
                         _pattern_covers(pattern, value.parts)
-                        or (primitive == "mkdir" and _is_destination_parent(pattern, value.parts))
+                        or (
+                            primitive in {"mkdir", "os.mkdir", "os.makedirs", "create_ancestors_and_track"}
+                            and _is_destination_parent(pattern, value.parts)
+                        )
                         for pattern in repo_patterns
                     ):
                         problem = f"is outside declared destinations {repo_patterns}"
                 elif caller_scoped_primitive:
                     # The shared atomic-write primitives take their target from
                     # the caller; each caller's own site is checked instead.
-                    if isinstance(value, _ExtRel) and value.tag == "absolute literal":
-                        problem = "uses an absolute path outside its caller-scoped primitive"
+                    # Only targets originating from a function parameter are valid here (Bar 4 D12).
+                    if not (isinstance(value, _Unknown) and value.why.startswith("parameter ")):
+                        problem = "is not derived from a caller-supplied parameter in caller-scoped primitive"
                 elif isinstance(value, _ExtRel):
                     if concrete:
                         problem = "is external but the module declares only repository destinations"
@@ -2162,6 +2790,50 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                 failures.append(
                     f"A2-sites {rel}:{call.lineno}: {primitive} target {_describe(value)} {problem} — {FIX}"
                 )
+
+    # Bar 4 F4: verify cross-module callers under tools/ never pass a non-root
+    # path into a declared writer's root/repo_root/core_root/repo parameter.
+    for caller_file in _iter_tool_python_files(root):
+        caller_rel = caller_file.relative_to(root).as_posix()
+        caller_mod = analyzed_modules.get(caller_rel)
+        if caller_mod is None:
+            caller_tree = ast.parse(caller_file.read_text(encoding="utf-8"), filename=caller_rel)
+            caller_mod = _ModuleWriteSites(caller_rel, caller_tree, load_module)
+        for caller_scope in caller_mod.scopes.values():
+            for call in caller_scope.calls:
+                dotted = caller_mod._dotted(call.func) or ""
+                imported = caller_mod._imported_member(dotted)
+                if imported is None:
+                    continue
+                target_mod, fn_name = imported
+                if target_mod.rel not in effects:
+                    continue
+                callee_scope = target_mod.module_funcs.get(fn_name)
+                if callee_scope is None:
+                    continue
+                root_params = (
+                    (set(callee_scope.params) | set(callee_scope.kwonly)) & _ROOT_PARAM_NAMES
+                ) - target_mod.non_root_params
+                if not root_params:
+                    continue
+                bound = caller_mod._call_bindings(callee_scope, call, caller_scope, None, 0, frozenset())
+                if bound is None:
+                    failures.append(
+                        f"A2-sites {caller_rel}:{call.lineno}: starred call to {target_mod.rel}::{fn_name} "
+                        f"hides root parameter — {FIX}"
+                    )
+                    continue
+                for rname in sorted(root_params & set(bound)):
+                    for val in bound[rname]:
+                        bad_root = (
+                            (isinstance(val, _RepoRel) and bool(val.parts))
+                            or isinstance(val, (_Relative, _BadTraversal, _ExtRel))
+                        )
+                        if bad_root:
+                            failures.append(
+                                f"A2-sites {caller_rel}:{call.lineno}: call to {target_mod.rel}::{fn_name} "
+                                f"passes non-repository root {_describe(val)} for {rname!r} — {FIX}"
+                            )
     return failures
 
 
@@ -2176,10 +2848,17 @@ def scan_tools_census(
     effects, failures = validate_effects_declarations(
         effects_raw, root=root, data_roots=DATA_ROOTS, tree_roots=tree_roots,
     )
-    recorded = {entry["signature"]: entry["count"] for entry in ratchet_entries}
-    ratchet_modules = {sig.split("::", 1)[0] for sig in recorded}
-    for rel in sorted(set(effects) & ratchet_modules):
-        failures.append(f"A2 {rel}: appears in both effects.yaml and ratchets.yaml")
+    for symlink_rel in _find_tool_symlinks(root):
+        failures.append(
+            f"A2 {symlink_rel}: symlinked module or directory under tools/ is forbidden (Bar 4 F9)"
+        )
+    if ratchet_entries:
+        for entry in ratchet_entries:
+            failures.append(
+                f"A2 {entry.get('signature', '<unknown>')}: A2-static ratchets are retired; "
+                f"declare writers in effects.yaml so check_declared_write_sites runs (Bar 4 F6)"
+            )
+    recorded: dict[str, int] = {}
 
     undeclared_counts, first_seen, writer_modules, unmediated_failures = _scan_static_tree(
         root, effects,
@@ -2216,7 +2895,7 @@ def test_static_lint_matches_baseline():
 
 
 def _synthetic_effects(tmp_path: Path) -> tuple[Path, dict]:
-    (tmp_path / "tools").mkdir()
+    (tmp_path / "tools").mkdir(parents=True, exist_ok=True)
     (tmp_path / "tools/writer_ok.py").write_text(
         "from pathlib import Path\n"
         "def run(root: Path):\n"
@@ -2650,3 +3329,190 @@ def test_census_fails_closed_on_unproved_destinations(tmp_path, destinations, bo
     else:
         assert findings, "the census accepted the counterexample"
         assert any(expected in finding for finding in findings), findings
+
+
+@pytest.mark.parametrize("probe_id, code", [
+    ("U01-git-checkout", "import subprocess\ndef f():\n    subprocess.run(['git', 'checkout', 'HEAD', '--', 'records/x.yaml'])\n"),
+    ("U02-git-restore", "import subprocess\ndef f():\n    subprocess.run(['git', 'restore', '--source=HEAD~1', 'records/x.yaml'])\n"),
+    ("U03-git-apply", "import subprocess\ndef f():\n    subprocess.run(['git', 'apply', '/tmp/p.diff'])\n"),
+    ("U04-git-clean", "import subprocess\ndef f():\n    subprocess.run(['git', 'clean', '-fdx', 'records'])\n"),
+    ("U05-git-stash", "import subprocess\ndef f():\n    subprocess.run(['git', 'stash', '--include-untracked'])\n"),
+    ("U06-rsync", "import subprocess\ndef f():\n    subprocess.run(['rsync', '-a', '/tmp/x/', 'records/'])\n"),
+    ("U07-ln", "import subprocess\ndef f():\n    subprocess.run(['ln', '-sf', '/tmp/x', 'records/x.yaml'])\n"),
+    ("U08-sh-c", "import subprocess\ndef f():\n    subprocess.run(['sh', '-c', 'echo x > records/x.yaml'])\n"),
+    ("U09-os-system", "import os\ndef f():\n    os.system('echo x > records/x.yaml')\n"),
+    ("U10-os-popen", "import os\ndef f():\n    os.popen('cp /tmp/x records/x.yaml')\n"),
+    ("U11-builtins-open", "import builtins\ndef f():\n    builtins.open('records/log.md', 'w').write('x')\n"),
+    ("U12-codecs-open", "import codecs\ndef f():\n    codecs.open('records/log.md', 'w', 'utf-8').write('x')\n"),
+    ("U13-os-renames", "import os\ndef f():\n    os.renames('/tmp/x', 'records/x.yaml')\n"),
+    ("U14-zipfile-extract", "import zipfile\ndef f():\n    zipfile.ZipFile('/tmp/b.zip').extractall('records')\n"),
+    ("U15-shutil-unpack", "import shutil\ndef f():\n    shutil.unpack_archive('/tmp/b.zip', 'records')\n"),
+    ("U17-cmd-concat", "import subprocess\ndef f(paths):\n    subprocess.run(['git', 'rm'] + list(paths))\n"),
+    ("U18-os-execvp", "import os\ndef f():\n    os.execvp('cp', ['cp', '/tmp/x', 'records/x.yaml'])\n"),
+    ("U19-path-chmod", "from pathlib import Path\ndef f():\n    Path('records/x.yaml').chmod(0o777)\n"),
+    ("U20-sqlite-cli", "import subprocess\ndef f():\n    subprocess.run(['sqlite3', 'records/x.db', 'create table t(a)'])\n"),
+    ("U21-bound-method", "from pathlib import Path\ndef f():\n    w = Path('records/x.yaml').write_text\n    w('x')\n"),
+    ("U22-augassign-fdopen", "import os\ndef f():\n    flags = os.O_RDONLY\n    flags |= os.O_WRONLY | os.O_CREAT\n    fd = os.open('records/x.yaml', flags)\n    os.fdopen(fd, 'w').write('x')\n"),
+    ("U23-tarfile-extract", "import tarfile\ndef f():\n    tarfile.open('/tmp/b.tgz').extractall('records')\n"),
+    ("U24-logging-filehandler", "import logging\ndef f():\n    logging.getLogger('x').addHandler(logging.FileHandler('records/x.log'))\n"),
+    ("U25-asyncio-exec", "import asyncio\nasync def f():\n    await asyncio.create_subprocess_exec('cp', '/tmp/x', 'records/x.yaml')\n"),
+    ("U26-fs-prune-helper", "from pathlib import Path\nfrom learning_os.store.fs import prune_empty_dirs\ndef f():\n    prune_empty_dirs(Path('records'), Path('records/a/b'))\n"),
+    ("U27-unmediated-concat", "from learning_os.store.transactions import TransactionService\ndef f(root):\n    TransactionService(root, **{'_unmediated_' + 'test_only': True})\n"),
+    ("U28-starred-git-wrapper", "import subprocess\ndef _git(*args):\n    return subprocess.run(['git', *args], check=True)\ndef f():\n    _git('checkout', 'HEAD', '--', 'records/x.yaml')\n"),
+])
+def test_census_catches_bar4_f3_and_f8_undeclared_primitives(tmp_path: Path, probe_id: str, code: str):
+    root, effects = _synthetic_effects(tmp_path)
+    (root / "tools/zz_probe.py").write_text(code, encoding="utf-8")
+    failures = scan_tools_census(root, effects, [], tree_roots=_load_tree_roots())
+    assert failures, f"{probe_id} was accepted by scan_tools_census"
+
+
+def test_census_catches_bar4_f4_f5_f6_f10_f11_and_d12(tmp_path: Path):
+    """Bar 4 F4, F5 residual, F6, D12, F10, and F11 counterexamples and controls."""
+    # F4 intra-module and cross-module non-root passed to parameter named ``root``
+    root = tmp_path / "f4"
+    (root / "tools").mkdir(parents=True)
+    (root / "tools/writer.py").write_text(
+        "from pathlib import Path\n"
+        "def write_report(root: Path):\n"
+        "    (root / 'generated/reports/out.md').write_text('x')\n"
+        "def bad_caller():\n"
+        "    write_report(Path(__file__).resolve().parents[1] / 'records')\n",
+        encoding="utf-8",
+    )
+    f4_effects = {"tools/writer.py": {"effect": "cache", "destinations": ["generated/reports/out.md"], "reason": "r"}}
+    f4_intra = check_declared_write_sites(root, f4_effects)
+    assert any("repo:records/generated/reports/out.md is outside declared destinations" in m for m in f4_intra), f4_intra
+
+    (root / "tools/writer.py").write_text(
+        "from pathlib import Path\n"
+        "def write_report(root: Path):\n"
+        "    (root / 'generated/reports/out.md').write_text('x')\n",
+        encoding="utf-8",
+    )
+    assert check_declared_write_sites(root, f4_effects) == []
+    (root / "tools/caller.py").write_text(
+        "from pathlib import Path\n"
+        "from writer import write_report\n"
+        "def bad():\n"
+        "    write_report(Path(__file__).resolve().parents[1] / 'records')\n",
+        encoding="utf-8",
+    )
+    f4_cross = check_declared_write_sites(root, f4_effects)
+    assert any("passes non-repository root repo:records" in m for m in f4_cross), f4_cross
+
+    # F5 residual: .parent.parent.mkdir() and guarded path in <TMPDIR>-only module
+    f5_root = tmp_path / "f5"
+    (f5_root / "tools").mkdir(parents=True)
+    (f5_root / "tools/out_tool.py").write_text(
+        _GUARD_IMPORT
+        + "def run(raw):\n"
+        "    safe = guard_tool_output_path(raw)\n"
+        "    safe.parent.parent.mkdir(parents=True, exist_ok=True)\n",
+        encoding="utf-8",
+    )
+    f5_res = check_declared_write_sites(
+        f5_root, {"tools/out_tool.py": {"effect": "tooling", "destinations": ["<EXPLICIT_OUT_FILE>"]}}
+    )
+    assert any("parent of a guarded path" in m for m in f5_res), f5_res
+
+    (f5_root / "tools/tmp_only.py").write_text(
+        _GUARD_IMPORT + "def run(raw):\n    guard_tool_output_path(raw).write_text('x')\n",
+        encoding="utf-8",
+    )
+    f5_tmp = check_declared_write_sites(
+        f5_root, {"tools/tmp_only.py": {"effect": "operational", "destinations": ["<TMPDIR>/**"]}}
+    )
+    assert any("uses a caller-guarded path in a module declaring only" in m for m in f5_tmp), f5_tmp
+
+    # F6: non-empty A2-static ratchet entries are rejected
+    r_root, r_effects = _synthetic_effects(tmp_path / "f6")
+    r_fail = scan_tools_census(
+        r_root, r_effects, [{"signature": "tools/read_only.py::run::write_text", "count": 1}],
+        tree_roots=_load_tree_roots(),
+    )
+    assert any("A2-static ratchets are retired" in m for m in r_fail), r_fail
+
+    # D12: fs.py (<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>) rejects cwd-relative literals
+    d12_root = tmp_path / "d12"
+    (d12_root / "tools/learning_os/store").mkdir(parents=True)
+    (d12_root / "tools/learning_os/store/fs.py").write_text(
+        "from pathlib import Path\ndef leak():\n    Path('records/x.yaml').write_text('x')\n",
+        encoding="utf-8",
+    )
+    d12_fail = check_declared_write_sites(
+        d12_root,
+        {"tools/learning_os/store/fs.py": {"effect": "operational", "destinations": ["<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>"]}},
+    )
+    assert any("not derived from a caller-supplied parameter" in m for m in d12_fail), d12_fail
+
+    # F10: numeric write flag in study_fence.fd_open_flags fails closed
+    f10_root = tmp_path / "f10"
+    (f10_root / "tools/learning_os/store").mkdir(parents=True)
+    sf_src = (ROOT / "tools/learning_os/store/study_fence.py").read_text(encoding="utf-8")
+    (f10_root / "tools/learning_os/store/study_fence.py").write_text(
+        sf_src.replace("    return flags\n", "    flags |= 0x0201\n    return flags\n", 1),
+        encoding="utf-8",
+    )
+    f10_fail = check_declared_write_sites(
+        f10_root,
+        {"tools/learning_os/store/study_fence.py": {
+            "effect": "operational",
+            "destinations": ["$LOS_SCRATCH_DIR/**", "<TMPDIR>/**", "<EXPLICIT_LOCAL_OUTPUT>"],
+        }},
+    )
+    assert f10_fail, "numeric write flag in fd_open_flags was accepted"
+
+    # F11: migration declaration without contract fails even outside DATA_ROOTS
+    mig_root, mig_effects = _synthetic_effects(tmp_path / "f11")
+    bad_mig = {
+        "tools/writer_ok.py": {
+            "effect": "migration",
+            "destinations": ["generated/reports/demo.txt"],
+            "reason": "Migration without contract",
+        }
+    }
+    mig_fail = scan_tools_census(mig_root, bad_mig, [], tree_roots=_load_tree_roots())
+    assert any("migration declaration must cite its recorded maintenance contract" in m for m in mig_fail), mig_fail
+
+
+def test_census_input_inventory_matches_tracked_tools_and_rejects_symlinks(tmp_path: Path):
+    """Bar 4 F9: scanned tools/**/*.py equals tracked + untracked .py files, and symlinks fail."""
+    import subprocess
+
+    scanned = {p.relative_to(ROOT).as_posix() for p in _iter_tool_python_files(ROOT)}
+    proc = subprocess.run(
+        ["git", "-C", str(ROOT), "ls-files", "-z", "--", "tools"],
+        capture_output=True, check=True,
+    )
+    tracked_py = {
+        entry.decode("utf-8")
+        for entry in proc.stdout.split(b"\0")
+        if entry and entry.decode("utf-8").endswith(".py")
+    }
+    assert tracked_py <= scanned, f"tracked tools/*.py skipped by census: {sorted(tracked_py - scanned)}"
+
+    root, effects = _synthetic_effects(tmp_path)
+    outside = tmp_path / "outside.py"
+    outside.write_text("from pathlib import Path\nPath('records/x').write_text('x')\n", encoding="utf-8")
+    (root / "tools/sneaky_link.py").symlink_to(outside)
+    failures = scan_tools_census(root, effects, [], tree_roots=_load_tree_roots())
+    assert any("tools/sneaky_link.py: symlinked module or directory" in m for m in failures), failures
+
+
+def test_git_hooks_inventory_and_write_safety():
+    """Bar 4 F12: mechanical inventory and canonical-write check for non-Python tools/hooks/*."""
+    hooks_dir = ROOT / "tools" / "hooks"
+    entries = sorted(p.name for p in hooks_dir.iterdir())
+    assert entries == ["post-commit", "pre-commit", "pre-push"], entries
+    for name in entries:
+        hook = hooks_dir / name
+        assert hook.is_file() and not hook.is_symlink(), name
+        text = hook.read_text(encoding="utf-8")
+        for line in text.splitlines():
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#"):
+                continue
+            for canonical_root in DATA_ROOTS:
+                assert f">{canonical_root}/" not in stripped.replace(" ", ""), (name, stripped)
+                assert f"rm -rf {canonical_root}" not in stripped, (name, stripped)

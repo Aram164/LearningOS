@@ -96,10 +96,10 @@ class ChecksHygiene:
                                     "inputs/ or outputs/")
 
     # ------------------------------------------------------------------ git
-    def _git(self, args: list[str]) -> str:
+    def _git_ls_files(self, pathspec: str) -> str:
         try:
-            out = subprocess.run(["git", *args], cwd=self.repo.root, capture_output=True,
-                                 text=True, timeout=30,
+            out = subprocess.run(["git", "ls-files", "--", pathspec], cwd=self.repo.root,
+                                 capture_output=True, text=True, timeout=30,
                                  env=clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"}))
             return out.stdout
         except Exception:  # noqa: BLE001

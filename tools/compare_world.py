@@ -337,7 +337,7 @@ def _cleanup(repo: Path, work_dir: Path, worktrees: list[Path],
     # Every tree is a direct child of the work root (built as work_dir / name),
     # so rebuilding the path from the root keeps removal inside it.
     for tree in worktrees:
-        _git(repo, "worktree", "remove", "--force", str(tree))
+        _git(repo, "worktree", "remove", "--force", str(work_dir / tree.name))
         _remove_tree(work_dir / tree.name)
     _git(repo, "worktree", "prune")
     for tree in copies:

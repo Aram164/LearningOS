@@ -16,15 +16,7 @@ baselined:
 - A18-callbacks
 - A19-owners
 checks:
-  A2-static:
-  - signature: tools/learning_os/store/contracts/perimeter.py::write_block::write_text
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
-  - signature: tools/learning_os/store/contracts/tree_contract.py::write_block::write_text
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
+  A2-static: []
   A3-prose:
   - signature: tools/learning_os/domain/plan_import.py::inventory_block::method::```
     count: 1

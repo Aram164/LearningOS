@@ -4,8 +4,8 @@
 
 "tools/agent_run.py":
   effect: operational
-  destinations: ["<TMPDIR>/**"]
-  reason: "Stages immutable session-bound envelope temp copies in TemporaryDirectory; delegates report files to agent_reporting.py."
+  destinations: ["<TMPDIR>/**", "<DELEGATED_GATEWAY_LAUNCHER>"]
+  reason: "Stages immutable session-bound envelope temp copies in TemporaryDirectory and invokes tools/seal_envelope.py and tools/los.py."
 
 "tools/assemble_lecture_study_maps.py":
   effect: operational
@@ -31,6 +31,11 @@
   effect: tooling
   destinations: ["<OUT_DIR>/**"]
   reason: "Merges CI witness audit logs into a scratch verification directory."
+
+"tools/codex_obsidian.py":
+  effect: operational
+  destinations: ["<DELEGATED_GATEWAY_LAUNCHER>"]
+  reason: "Fail-closed Agentic Copilot adapter delegating scoped writes to tools/los.py capability and projection refresh to tools/los.py generate."
 
 "tools/compare_world.py":
   effect: tooling
@@ -59,8 +64,8 @@
 
 "tools/ingest_transcript.py":
   effect: operational
-  destinations: ["../materials/**"]
-  reason: "Saves fetched caption transcripts into the external sibling materials/ tree."
+  destinations: ["../materials/**", "<TMPDIR>/**"]
+  reason: "Stages yt-dlp caption downloads in TemporaryDirectory and saves fetched transcripts into the external sibling materials/ tree."
 
 "tools/library_reconciliation.py":
   effect: tooling
@@ -130,8 +135,8 @@
 
 "tools/study_launch.py":
   effect: operational
-  destinations: ["$LOS_SCRATCH_DIR/**", "~/.local/state/learningos/study-runtimes/**", "<TMPDIR>/**"]
-  reason: "Prepares confined study runtime homes and scratch directories under explicit confinement markers."
+  destinations: ["$LOS_SCRATCH_DIR/**", "~/.local/state/learningos/study-runtimes/**", "<TMPDIR>/**", "<DELEGATED_GATEWAY_LAUNCHER>"]
+  reason: "Prepares confined study runtime homes and scratch directories under explicit confinement markers and spawns sandbox-exec."
 
 "tools/system_map.py":
   effect: projection
@@ -145,8 +150,8 @@
 
 "tools/learning_os/adapters/study_broker.py":
   effect: operational
-  destinations: ["$LOS_SCRATCH_DIR/**", "<TMPDIR>/**", "<EXPLICIT_REPORT_OUT>"]
-  reason: "Stages bounded broker payloads/inputs in temporary scratch and writes explicit --report-out files outside DATA_ROOTS."
+  destinations: ["$LOS_SCRATCH_DIR/**", "<TMPDIR>/**", "<EXPLICIT_REPORT_OUT>", "<DELEGATED_GATEWAY_LAUNCHER>"]
+  reason: "Stages bounded broker payloads/inputs in temporary scratch, writes explicit --report-out files outside DATA_ROOTS, and invokes mediated Core CLI subprocesses."
 
 "tools/learning_os/app/agent_reporting.py":
   effect: operational
@@ -227,6 +232,16 @@
   effect: projection
   destinations: ["system/contracts/manifest-contract.yaml"]
   reason: "Updates the projection manifest contract file on explicit bump."
+
+"tools/learning_os/store/contracts/perimeter.py":
+  effect: projection
+  destinations: ["system/ARCHITECTURE.md"]
+  reason: "Regenerates the workspace root-tree projection block in system/ARCHITECTURE.md."
+
+"tools/learning_os/store/contracts/tree_contract.py":
+  effect: projection
+  destinations: ["system/ARCHITECTURE.md"]
+  reason: "Regenerates the repository tree-contract projection block in system/ARCHITECTURE.md."
 
 "tools/learning_os/store/derived/store.py":
   effect: cache

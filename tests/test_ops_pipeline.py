@@ -2294,6 +2294,35 @@ def test_operational_write_handlers_declare_operational_effect():
     assert actual_operational == expected
 
 
+def test_registry_has_no_unknown_effects_and_matches_catalogue_writes():
+    """Bar 4 F7: zero operations stay UNKNOWN, and every catalogue writer is CANONICAL_WRITE."""
+    import yaml
+
+    unknown = sorted(
+        name for name, entry in REGISTRY.items()
+        if entry.effects == OperationEffects.UNKNOWN
+    )
+    assert unknown == [], f"registered operations with UNKNOWN effects: {unknown}"
+
+    catalogue = yaml.safe_load(
+        (Path(__file__).resolve().parent.parent / "system/contracts/capabilities.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    for section in ("queries", "commands", "porcelain", "tools"):
+        entries = catalogue.get(section) or {}
+        if not isinstance(entries, dict):
+            continue
+        for cap_name, spec in entries.items():
+            if not isinstance(spec, dict) or not spec.get("writes"):
+                continue
+            assert cap_name in REGISTRY, f"catalogue writer {cap_name} missing from REGISTRY"
+            assert REGISTRY[cap_name].effects == OperationEffects.CANONICAL_WRITE, (
+                f"{cap_name} declares writes in capabilities.yaml "
+                f"but has effects={REGISTRY[cap_name].effects!r}"
+            )
+
+
 def test_canonical_write_without_proposal_or_dispatch_fails_closed(pipe, mini_repo):
     """CL-01: a CANONICAL_WRITE handler returning neither proposal nor dispatch raises."""
     _write_gateway_wiring(mini_repo)

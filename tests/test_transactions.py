@@ -1469,3 +1469,22 @@ def test_transaction_service_refuses_unmediated_commit_by_default(mini_repo: Pat
         )
     assert not target.exists()
     assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_transaction_service_forbids_unmediated_flag_from_tools_code(mini_repo: Path):
+    """Bar 4 F8: even dynamic **kwargs obfuscation from inside tools/ fails at runtime."""
+    tools_root = Path(transaction_module.__file__).resolve().parents[2]
+    fake_tool_file = str(tools_root / "zz_synthetic_caller.py")
+    code = compile(
+        "def invoke(cls, root):\n"
+        "    flag = '_unmediated_' + 'test_only'\n"
+        "    return cls(root, **{flag: True})\n",
+        fake_tool_file,
+        "exec",
+    )
+    ns: dict[str, object] = {}
+    exec(code, ns)
+    invoke = ns["invoke"]
+    assert callable(invoke)
+    with pytest.raises(TransactionFailure, match="forbidden in tools/"):
+        invoke(TransactionService, mini_repo)
