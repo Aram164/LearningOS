@@ -1904,7 +1904,8 @@
         },
         "delivery_id": {"type": ["string", "null"]},
         "receipt_id": {"type": ["string", "null"]},
-        "bundle_path": {"type": "string", "pattern": "\\S"}
+        "bundle_path": {"type": "string", "pattern": "\\S"},
+        "verified_prepare_snapshot": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
       }
     },
     "AiActionPrepareV1": {
