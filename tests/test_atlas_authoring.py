@@ -265,6 +265,13 @@ def test_keeper_broker_seals_and_submits_only_relations(mini_repo, tmp_path):
     before = {path.name for path in receipts.glob("transaction-*.yaml")}
     assert seal([*command, "--channel", "operator"]).exit_code == 2
     assert seal(["--capability", "capture.create", "--payload", "{}", "--key", "ordinary"]).exit_code == 2
+    above_cap = change_as(
+        mini_repo, "system-task",
+        [{"action": "add", "new": cited}, {"action": "replace", "old": OLD, "new": _cited(mini_repo, OLD)}],
+        "keeper-over-budget",
+    )
+    assert above_cap.returncode == 2
+    assert "at most 1" in above_cap.stdout + above_cap.stderr
     assert registry.read_bytes() == original
     assert {path.name for path in receipts.glob("transaction-*.yaml")} == before
 

@@ -34,7 +34,6 @@ import runpy
 import secrets
 import stat
 import sys
-from collections.abc import Callable
 from functools import partial
 from pathlib import Path
 from typing import cast
@@ -96,8 +95,8 @@ def _read_request() -> tuple[dict[str, object] | None, str | None]:
 def _run_seal(argv: list[str]) -> int:
     namespace = runpy.run_path(str(_CORE_ROOT / "tools" / "seal_envelope.py"),
                                run_name="learningos_keeper_seal")
-    seal = cast(Callable[..., int], namespace["main"])
-    return seal(argv, ingress=INGRESS_KEEPER)
+    seal = namespace["main"]
+    return int(seal(argv, ingress=INGRESS_KEEPER))
 
 
 def _run_capability(argv: list[str]) -> int:

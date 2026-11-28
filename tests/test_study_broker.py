@@ -299,7 +299,18 @@ def test_keeper_quotes_without_dispatching_study_memory(tmp_path: Path) -> None:
     assert "material-span" in runner.calls[0][0]
     assert "material-study-span" not in runner.calls[0][0]
     assert broker.handle_request({"tool": "study_hook", "event": "session-start"}).exit_code == 2
+    private_memory = core.parent / "reading-memory"
+    memory_before = {p.relative_to(private_memory): p.read_bytes() for p in private_memory.rglob("*") if p.is_file()}
+    for command in ("material-search", "material-context"):
+        refused = broker.handle_request({
+            "tool": "los",
+            "argv": [command, "evidence", "--session", SESSION],
+            "cwd": str(core),
+        })
+        assert refused.exit_code == 2
+        assert "reading-memory sessions" in refused.stderr
     assert len(runner.calls) == 1
+    assert {p.relative_to(private_memory): p.read_bytes() for p in private_memory.rglob("*") if p.is_file()} == memory_before
 
 
 def test_allowlist_counts_and_sets_match_plan_d() -> None:

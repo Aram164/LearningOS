@@ -1785,22 +1785,56 @@ def test_seatbelt_denies_a_direct_app_write(
 
 
 @pytest.mark.skipif(not DARWIN_SEATBELT, reason="macOS /usr/bin/sandbox-exec required")
-def test_keeper_launcher_uses_broker_without_opening_learner_reading_memory(mini_repo: Path) -> None:
+def test_keeper_launcher_seals_and_applies_without_learner_reading_memory(mini_repo: Path) -> None:
+    import yaml
+    from gateway_helpers import file_sha256
+    from test_atlas_authoring import DELEGATION, _cited, _delegate, _relations
+
     core = _make_study_world(mini_repo)
+    _delegate(core, max_operations=1)
+    cited = _cited(core)
+    payload = json.dumps({"change": {"operations": [{"action": "add", "new": cited}]}})
     memory = core.parent / "reading-memory"
     assert not memory.exists()
     receipts = core / "operations/transactions"
     before = {path.name: path.read_bytes() for path in receipts.glob("transaction-*.yaml")}
     python = str(core / ".venv/bin/python")
+    child = """import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+sealer, payload = sys.argv[1:]
+check = Path(os.environ["LOS_SCRATCH_DIR"]) / "keeper-review.json"
+flags = [sys.executable, sealer]
+preview = subprocess.run(
+    [*flags, "--capability", "concept.relations.change", "--payload", payload,
+     "--key", "managed-keeper", "--guards", "auto", "--check-out", str(check)],
+    capture_output=True, text=True,
+)
+assert preview.returncode == 0, preview.stdout + preview.stderr
+assert json.loads(preview.stdout)["channel"] == "system-task"
+applied = subprocess.run(
+    [*flags, "--guards-from", str(check), "--submit"], capture_output=True, text=True,
+)
+assert applied.returncode == 0, applied.stdout + applied.stderr
+sys.stdout.write(applied.stdout)
+"""
     result = subprocess.run(
         [python, str(core / "tools/study_launch.py"), "--profile", "keeper", "--cmd", "--",
-         python, str(core / "tools/los.py"), "status", "--json"],
-        cwd=core, capture_output=True, text=True, timeout=60,
+         python, "-c", child, str(core / "tools/seal_envelope.py"), payload],
+        cwd=core, capture_output=True, text=True, timeout=120,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    assert Path(json.loads(result.stdout)["root"]).resolve() == core.resolve()
+    new = {path.name: path.read_bytes() for path in receipts.glob("transaction-*.yaml")}
+    assert {name: new[name] for name in before} == before
+    [created] = new.keys() - before.keys()
+    receipt = yaml.safe_load(new[created])
+    assert receipt["metadata"]["ingress"] == "keeper-broker"
+    assert receipt["metadata"]["delegation_sha256"] == file_sha256(core / DELEGATION)
+    assert {**cited, "origin": "pilot"} in _relations(core)
     assert not memory.exists()
-    assert {path.name: path.read_bytes() for path in receipts.glob("transaction-*.yaml")} == before
 
 
 @pytest.mark.skipif(not DARWIN_SEATBELT, reason="macOS /usr/bin/sandbox-exec required")

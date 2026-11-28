@@ -191,6 +191,45 @@
     "v2": {
       "type": "object",
       "additionalProperties": false,
+      "if": {
+        "properties": {
+          "metadata": {
+            "anyOf": [
+              {"required": ["ingress"]},
+              {"required": ["delegation_sha256"]}
+            ]
+          }
+        }
+      },
+      "then": {
+        "oneOf": [
+          {
+            "properties": {
+              "metadata": {
+                "required": ["ingress"],
+                "properties": {"ingress": {"const": "ui-ingress"}},
+                "not": {"required": ["delegation_sha256"]}
+              },
+              "request": {"properties": {"channel": {"const": "ui"}}}
+            }
+          },
+          {
+            "properties": {
+              "capability": {"const": "concept.relations.change"},
+              "metadata": {
+                "required": ["ingress", "delegation_sha256"],
+                "properties": {"ingress": {"const": "keeper-broker"}}
+              },
+              "request": {
+                "properties": {
+                  "channel": {"const": "system-task"},
+                  "approval": {"properties": {"kind": {"const": "operator-approval"}}}
+                }
+              }
+            }
+          }
+        ]
+      },
       "required": [
         "schema_version", "id", "type", "status", "capability", "committed_at",
         "snapshot_before", "snapshot_after", "expected_revisions",

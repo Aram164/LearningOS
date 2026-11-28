@@ -165,6 +165,18 @@ def test_frozen_ui_and_keeper_receipts_accept_historical_and_current_evidence(re
         present, errors = transaction_receipt_errors(repo_root, receipt)
         assert present and not errors, (label, errors)
 
+    ui = examples["v70-ui"]
+    keeper = examples["v70-system-task"]
+    invalid = [
+        {**ui, "request": {**ui["request"], "channel": "operator"}},
+        {**keeper, "metadata": {"ingress": "keeper-broker"}},
+        {**keeper, "metadata": {"delegation_sha256": keeper["metadata"]["delegation_sha256"]}},
+        {**keeper, "capability": "capture.create"},
+    ]
+    for receipt in invalid:
+        present, errors = transaction_receipt_errors(repo_root, receipt)
+        assert present and errors, receipt
+
 
 def test_fixture_is_data_only(repo_root):
     """system/ must come from the live tree, or the fixture would test nothing.

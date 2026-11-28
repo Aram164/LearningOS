@@ -663,6 +663,8 @@ class StudyBroker:
             if getattr(ns, "root", None) is None:
                 rewritten = ["--root", str(self.core_root), *rewritten]
             given_session = getattr(ns, "session", None)
+            if given_session is not None and self.profile == "keeper":
+                return _refuse("study broker: reading-memory sessions are only available in study mode")
             if given_session is not None and given_session != self.session_id:
                 return _refuse(
                     f"study broker: --session cannot differ from active session {self.session_id}"

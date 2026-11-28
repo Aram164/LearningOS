@@ -20,7 +20,7 @@
 #
 # Rebuild with: python tools/schema_contract.py --bump
 contract_version: 70
-schema_fingerprint: sha256:d91f9a460fde53b3d56e1db785b97a9bc6d3c6fc7fb7ce0f3b9192b66285650c
+schema_fingerprint: sha256:394f9f6ddbef190bbfecf73a8679c4d6c3eecfee3017dc9a8cda822a9dd34d22
 record_schemas: 39
 history:
 - version: 1
@@ -500,7 +500,8 @@ history:
 - version: 70
   adopted: '2026-11-28'
   note: Record the supported UI or Keeper ingress in transaction receipts. Keeper
-    receipts bind the exact effective delegation policy digest. Historical receipts
-    remain readable.
+    receipts bind the exact effective delegation policy digest. New evidence fields
+    must agree with the receipt channel and capability. Historical receipts remain
+    readable.
   migration: null
   fixture: tests/fixtures/formats/v70/
