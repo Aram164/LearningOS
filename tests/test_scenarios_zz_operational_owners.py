@@ -373,9 +373,9 @@ _REQUIRED_BEHAVIORAL_WITNESSES: dict[str, tuple[tuple[frozenset, str], ...]] = {
     "tools/learning_os/store/transactions.py": (
         # Receipt publication plus at least one authorized canonical write.
         # The basename check keeps the receipt filename convention while the
-        # directory pattern stays inside the valid scope grammar (embedded
-        # wildcards are not valid scopes).
-        (frozenset({"os.rename"}), "operations/transactions/*.yaml", "transaction-*.yaml"),
+        # directory pattern stays inside the valid scope grammar: * and ** only
+        # as whole segments, so "*.yaml" is not a scope either.
+        (frozenset({"os.rename"}), "operations/transactions/*", "transaction-*.yaml"),
         (frozenset({"os.rename"}), "knowledge/**"),
     ),
     "tools/learning_os/store/ai_actions/storage.py": (
@@ -697,6 +697,34 @@ def test_behavioral_witness_requires_the_relevant_operation(tmp_path):
     gaps = _behavioral_witness_gaps(observed)
     assert any("warning_baseline" in gap and "validation-warning-baseline.yaml" in gap
                for gap in gaps), gaps
+
+
+def test_behavioral_witness_patterns_are_valid_scope_grammar():
+    """Every R3b destination is a valid scope; a basename glob rides separately.
+
+    The population gate calls scope_matches on these patterns only when a
+    writer was observed, so an invalid pattern would otherwise surface only
+    in a full CI population.
+    """
+    from learning_os.store.contracts.write_scopes import normalize_scope_pattern
+
+    for writer_key, requirements in _REQUIRED_BEHAVIORAL_WITNESSES.items():
+        for requirement in requirements:
+            assert normalize_scope_pattern(requirement[1]) == requirement[1], (
+                writer_key, requirement)
+            assert len(requirement) in (2, 3), (writer_key, requirement)
+
+
+def test_behavioral_witness_receipt_row_needs_a_receipt_name():
+    """The engine's receipt row closes only on a transaction-*.yaml publication."""
+    engine = "tools/learning_os/store/transactions.py"
+    canonical = (engine, "os.rename", "knowledge/notes/x.md")
+    receipt = (engine, "os.rename",
+               "operations/transactions/transaction-20260101-000000-001.yaml")
+    lineage = (engine, "os.rename", "operations/transactions/lineage.yaml")
+    assert not any(engine in gap for gap in _behavioral_witness_gaps({canonical, receipt}))
+    gaps = _behavioral_witness_gaps({canonical, lineage})
+    assert any(engine in gap and "operations/transactions/*" in gap for gap in gaps), gaps
 
 
 def test_behavioral_witness_accepts_the_relevant_operation(tmp_path):
@@ -1096,8 +1124,12 @@ def test_runtime_gate_accepts_a_package_writer_inside_its_scope(tmp_path):
     world.mkdir()
     with _private_window(tmp_path, world) as log:
         write_baseline(world, Counter({("LOCATOR-VAGUE", "a.yaml"): 1}), "private window")
-    writers = {row["writer"] for row in _write_events(log)}
-    assert writers == {"learning_os.store.warning_baseline"}, writers
+    rows = _write_events(log)
+    # 2D (CL-17) publishes the baseline through the store.fs mechanical
+    # helper: the hook records the helper as the writer and this package
+    # module as its caller, and the gate credits that caller.
+    assert {row["writer"] for row in rows} == {"learning_os.store.fs"}, rows
+    assert {row.get("caller") for row in rows} == {"learning_os.store.warning_baseline"}, rows
     violations, witnessed = _conformance_in_log(log)
     assert violations == {}
     assert witnessed == {"tools/learning_os/store/warning_baseline.py"}
@@ -1255,7 +1287,9 @@ def test_runtime_gate_refuses_an_unknown_writer_only_in_a_tool_process(tmp_path)
 
 
 @pytest.mark.parametrize("rel, ok", [
-    ("generated/reports/out.json", True),
+    # 2A+2D R2: a declared generated/ child is its producer's area, so the
+    # guard refuses generic caller-selected output there, and so does the gate.
+    ("generated/reports/out.json", False),
     (".venv/scratch/out.json", True),
     ("generated/undeclared-child/out.json", False),
     ("archive/out.json", False),
