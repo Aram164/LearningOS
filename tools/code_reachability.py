@@ -60,6 +60,7 @@ ENTRYPOINTS = (
     "plan_write_audit.py",
     "receipt_drift.py",
     "refresh_amls_fixture.py",
+    "reg_a2_claims.py",  # 2A §7 regression a2
     "release_pair_receipt.py",
     "schema_contract.py",
     "seal_envelope.py",
