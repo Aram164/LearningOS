@@ -521,8 +521,8 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
     if channel == KEEPER_CHANNEL:
         if request is None or request.ingress != INGRESS_KEEPER:
             raise WriteRefused("use the managed Atlas Keeper launch")
-        delegation, delegation_sha256 = _keeper_delegation(root)
-        metadata = {"delegation_sha256": delegation_sha256}
+        delegation, _ = _keeper_delegation(root)
+        metadata = {}
         for operation in operations:
             if not isinstance(operation, dict) or not isinstance(operation.get("action"), str):
                 break  # the per-operation checks below refuse it precisely
