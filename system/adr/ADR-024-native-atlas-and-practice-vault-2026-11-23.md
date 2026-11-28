@@ -48,7 +48,8 @@ abilities keep every existing protection.
 
 6. **The keeper writes under a standing delegation.** An agent running a
    bounded job applies `concept.relations.change` through the confined
-   `tools/study_launch.py --profile keeper` broker. The broker supplies
+   `tools/study_launch.py --runtime claude --profile keeper`
+   broker. The broker supplies
    Keeper ingress and seals requests as `system-task` with operator approval.
    Core permits writes while `system/contracts/delegations/atlas-keeper.yaml`
    is `active` and today lies between its `granted` and `expires` dates.

@@ -25,9 +25,8 @@ Agents start here (system/OPERATOR.md):
 `bootstrap` without --brief/--compact prints the complete projection
 (megabytes): a bulk read, never a session start.
 
-Canonical writes pass a GatewayEnvelopeV2 through a supported ingress. Operators
-use `capability NAME --payload-file ENVELOPE.json` (WORKFLOWS §25c). The app
-uses `ui-capability` and the Atlas Keeper uses its confined broker. Run bare, a
+Every canonical write is a capability applied as a GatewayEnvelopeV2 through
+`capability NAME --payload-file ENVELOPE.json` (WORKFLOWS §25c). Run bare, a
 named write command only preflights (`--check`) or refuses. `validate` and
 `generate` delegate to tools/validate.py and tools/generate.py, so there is
 exactly one implementation of every rule.
