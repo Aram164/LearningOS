@@ -93,8 +93,6 @@ def _validate_study_envelope_origin(
     """
     if not isinstance(channel, str) or not channel.strip():
         return _refuse(f"study broker: {label} requires a non-empty channel")
-    if channel == "ui":
-        return _refuse(f"study broker: apply this request from the LearningOS app ({label})")
     if channel == KEEPER_CHANNEL:
         return _refuse(
             f"study broker: 'system-task' is the Atlas Keeper's channel; a study "
