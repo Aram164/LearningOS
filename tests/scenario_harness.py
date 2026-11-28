@@ -438,12 +438,52 @@ def launch(ctx: _CaseContext, argv: list[str],
         # cwd=root: case-relative file references resolve inside the
         # fixture, so payloads (and the intent hashes covering them) hold
         # no per-run absolute path.
-        proc = subprocess.run(argv, capture_output=True, text=True,
-                              timeout=120, env=env, cwd=ctx.root, input=stdin)
+        if stdin is None:
+            proc = subprocess.run(argv, capture_output=True, text=True,
+                                  timeout=120, env=env, cwd=ctx.root)
+        else:
+            proc = _run_with_stdin_pipe(argv, stdin, env=env, cwd=ctx.root,
+                                        timeout=120)
     finally:
         arch_audit_hook.uninstall()
     arch_audit_hook.assert_capture_ok()
     return proc
+
+
+def _run_with_stdin_pipe(argv: list[str], data: str, *, env: dict, cwd: Path,
+                         timeout: int) -> subprocess.CompletedProcess:
+    """Feed a child's stdin through a raw pipe written with ``os.write``.
+
+    ``subprocess.run(input=...)`` opens the pipe's write end with ``io.open``
+    inside the audit window, which A19 reads as an unowned write by the
+    harness process itself. A raw pipe gives the child the same FIFO stdin
+    (the Keeper ingress requires one) and records no write at all.
+    """
+    read_fd, write_fd = os.pipe()
+    try:
+        handle = subprocess.Popen(argv, stdin=read_fd, stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE, text=True, env=env,
+                                  cwd=cwd)
+    except BaseException:
+        os.close(write_fd)
+        raise
+    finally:
+        os.close(read_fd)
+    try:
+        view = memoryview(data.encode("utf-8"))
+        while view:
+            view = view[os.write(write_fd, view):]
+    except BrokenPipeError:
+        pass  # the child exited early; its own refusal is the outcome
+    finally:
+        os.close(write_fd)
+    try:
+        stdout, stderr = handle.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        handle.kill()
+        handle.communicate()
+        raise
+    return subprocess.CompletedProcess(argv, handle.returncode, stdout, stderr)
 
 
 def launch_many(ctx, argvs: list[list[str]],
@@ -846,9 +886,11 @@ def launch_step(ctx: _CaseContext, step: dict, argv: list[str]) -> subprocess.Co
     envelope = Path(argv[payload_index]).read_text(encoding="utf-8")
     argv[payload_index] = "-"
     token, digest = keeper_ingress.new_handshake()
+    # The worker's own argv carries no --root (it arrives on the pipe), so
+    # LOS_FX binds its audit population to this case's world.
     return launch(
         ctx, [sys.executable, "-m", keeper_ingress.MODULE],
-        extra_env={keeper_ingress.HANDSHAKE_ENV: digest},
+        extra_env={keeper_ingress.HANDSHAKE_ENV: digest, "LOS_FX": str(ctx.root)},
         stdin=keeper_ingress.request_text(token, "capability", argv, envelope),
     )
 

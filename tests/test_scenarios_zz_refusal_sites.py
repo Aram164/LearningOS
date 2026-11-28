@@ -989,7 +989,12 @@ def _a9_run_gateway(root: Path, operation: str, payload: dict,
     from learning_os.store.contracts.capability_catalog import (
         command_definitions,
     )
-    from learning_os.store.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import (
+        INGRESS_CLI,
+        INGRESS_KEEPER,
+        INGRESS_UI,
+        intent_sha256,
+    )
     from learning_os.store.diagnostics import tracer as diag_tracer
     from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
 
@@ -1007,10 +1012,15 @@ def _a9_run_gateway(root: Path, operation: str, payload: dict,
     try:
         _bind_diag_store(root)
         attempt = diag_tracer.begin_attempt({"capability": operation})
+        # Enter where a real caller of this channel enters (2B): the app
+        # ingress for ui, the Keeper broker for system-task.
+        ingress = {"ui": INGRESS_UI, "system-task": INGRESS_KEEPER}.get(
+            channel, INGRESS_CLI)
         outcome = pipeline_module.run_gateway(
             root, envelope, requested=operation,
             definitions=command_definitions(root), attempt=attempt,
-            replay_only=False, parser_factory=los.build_parser)
+            replay_only=False, parser_factory=los.build_parser,
+            ingress=ingress)
     finally:
         arch_audit_hook.uninstall()
     return outcome, _read_witness_lines(witness)
