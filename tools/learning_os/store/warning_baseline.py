@@ -208,3 +208,7 @@ def write_baseline(root: Path, signatures: Counter, note: str) -> None:
         _HEADER + yaml.safe_dump(payload, sort_keys=False, allow_unicode=True),
         boundary=base,
     )
+
+
+def _reg_a3_probe(root: Path, **kw):  # 2A §7 regression a3: open(**kw) outside scope
+    return open(Path(root) / "records" / "reg-a3.yaml", **kw)
