@@ -358,8 +358,55 @@ _ALL_PATH_EVENTS = frozenset({
     "os.rmdir", "shutil.rmtree", "os.truncate", "os.write",
 })
 _DESTINATION_EVENTS = frozenset({"os.link", "os.symlink", "shutil.copyfile"})
-#: Caller-selected output: inside a world it may land only where the output
-#: guard admits it (a declared generated/ child or the .venv/ scratch).
+#: Caller-selected output: inside a world generic output may land only where
+#: the output guard admits it without producer scopes (the .venv/ scratch).
+#: A generated/ producer area needs the producer's declared destination.
+#: 2A+2D R3b: required behavioral witnesses for the eight runtime-witnessed
+#: writers. Each entry names the relevant operation as (audit events,
+#: world-relative destination glob): the CI population must show the writer
+#: performing that operation. Observing an unrelated write from the same
+#: module does not satisfy the requirement. Globs use scope_matches; every
+#: entry below is exercised by a dedicated audit-window witness test or by
+#: the scenario population (verified against merged CI population artifacts
+#: before adoption — never require an operation the suite does not perform).
+_REQUIRED_BEHAVIORAL_WITNESSES: dict[str, tuple[tuple[frozenset, str], ...]] = {
+    "tools/learning_os/store/transactions.py": (
+        # Receipt publication plus at least one authorized canonical write.
+        (frozenset({"os.rename"}), "operations/transactions/transaction-*.yaml"),
+        (frozenset({"os.rename"}), "knowledge/**"),
+    ),
+    "tools/learning_os/store/ai_actions/storage.py": (
+        # Relevant request and delivery persistence (not staging reads).
+        (frozenset({"os.rename"}), "operations/ai-actions/requests/**"),
+        (frozenset({"os.rename"}), "operations/ai-actions/deliveries/**"),
+    ),
+    "tools/learning_os/store/diagnostics/store.py": (
+        # Trace persistence plus a pruning rewrite (distinct operations).
+        (frozenset({"open"}), "operations/diagnostics/traces.jsonl"),
+        (frozenset({"os.rename"}), "operations/diagnostics/traces.jsonl"),
+    ),
+    "tools/diagnostics_prune.py": (
+        # The standalone tool's own direct sidecar removal.
+        (frozenset({"os.remove", "os.unlink"}), "generated/reports/validation-report.cache.json"),
+    ),
+    "tools/material_summarize.py": (
+        # Atomic publication of the canonical summary pair.
+        (frozenset({"os.rename"}), "knowledge/summaries/**/summary.md"),
+        (frozenset({"os.rename"}), "knowledge/summaries/**/meta.json"),
+    ),
+    "tools/library_reconciliation.py": (
+        # Freeze publication of the authorized reconciliation artifacts.
+        (frozenset({"os.rename"}), "work/active/*/outputs/dispositions.yaml"),
+    ),
+    "tools/learning_os/store/contracts/data_contract.py": (
+        # An authorized data-contract update.
+        (frozenset({"os.rename"}), "system/contracts/data-contract.yaml"),
+    ),
+    "tools/learning_os/store/warning_baseline.py": (
+        # The atomic warning-baseline replacement.
+        (frozenset({"os.rename"}), "operations/validation-warning-baseline.yaml"),
+    ),
+}
 _CALLER_SELECTED_PREFIXES = ("<EXPLICIT_OUT_DIR>/", "<OUT_DIR>/", "<PRIVATE_REPORT_DIR>/",
                              "<RESTORED_COPY>/")
 _CALLER_SELECTED_TOKENS = frozenset({
@@ -436,7 +483,15 @@ def _declares(writer_key: str, rel: str) -> bool:
         if rel.startswith("<STATE>/"):
             continue
         if dest in _CALLER_SELECTED_TOKENS or dest.startswith(_CALLER_SELECTED_PREFIXES):
-            if write_scopes.admitted_repository_output(tuple(rel.split("/"))):
+            # R2: caller-selected output authorizes only the generic areas
+            # (external paths never reach this world-relative check; in-repo
+            # that leaves the .venv/ scratch). A generated/ producer area
+            # needs the producer's own declared destination below, so generic
+            # output cannot overwrite another producer's artifacts.
+            parts = tuple(rel.split("/"))
+            if parts[0] == "generated":
+                continue
+            if write_scopes.admitted_repository_output(parts):
                 return True
             continue
         if dest == "<GIT_INDEX_AND_COMMIT>":
@@ -475,8 +530,15 @@ def _authorized(writer_key: str, rel: str) -> bool:
     return any(write_scopes.scope_matches(rel, dest) for dest in exception[1])
 
 
-def _conformance_in_log(log_path: Path) -> tuple[dict[str, list[str]], set[str]]:
-    """Runtime writer conformance for one log; returns violations and witnessed writers."""
+def _conformance_in_log(
+    log_path: Path,
+    observed: set[tuple[str, str, str]] | None = None,
+) -> tuple[dict[str, list[str]], set[str]]:
+    """Runtime writer conformance for one log; returns violations and witnessed writers.
+
+    When ``observed`` is given, every attributed (writer, event, world-relative
+    destination) triple is added to it for the R3b behavioral-witness check.
+    """
     import arch_audit_hook
 
     violations: dict[str, list[str]] = {}
@@ -526,6 +588,8 @@ def _conformance_in_log(log_path: Path) -> tuple[dict[str, list[str]], set[str]]
                 add(f"{rel}::undeclared-writer={writer}", evidence)
                 continue
             witnessed.add(key)
+            if observed is not None:
+                observed.add((key, event, rel))
             if not _declares(key, rel):
                 add(f"{rel}::outside-declaration={key}", evidence)
             if not _authorized(key, rel):
@@ -533,22 +597,52 @@ def _conformance_in_log(log_path: Path) -> tuple[dict[str, list[str]], set[str]]
     return violations, witnessed
 
 
-def _conformance_population(audit_dir: Path) -> tuple[dict[str, list[str]], set[str]]:
+def _conformance_population(
+    audit_dir: Path,
+    observed: set[tuple[str, str, str]] | None = None,
+) -> tuple[dict[str, list[str]], set[str]]:
     merged: dict[str, list[str]] = {}
     witnessed: set[str] = set()
     for log_path in sorted(audit_dir.glob("*.jsonl")):
-        violations, seen = _conformance_in_log(log_path)
+        violations, seen = _conformance_in_log(log_path, observed)
         for signature, evidence in violations.items():
             merged.setdefault(signature, []).extend(evidence)
         witnessed |= seen
     return merged, witnessed
 
 
+def _behavioral_witness_gaps(
+    observed: set[tuple[str, str, str]],
+) -> list[str]:
+    """2A+2D R3b: required (writer, operation, destination) triples with no witness.
+
+    ``observed`` holds one triple per attributed population write. A gap names
+    the writer, the relevant operation's audit events, and the destination
+    glob from _REQUIRED_BEHAVIORAL_WITNESSES. An unrelated write from the same
+    module never closes its gap.
+    """
+    from learning_os.store.contracts import write_scopes
+
+    gaps: list[str] = []
+    for writer_key, requirements in _REQUIRED_BEHAVIORAL_WITNESSES.items():
+        seen = {(event, rel) for (key, event, rel) in observed if key == writer_key}
+        for events, pattern in requirements:
+            if not any(event in events and write_scopes.scope_matches(rel, pattern)
+                       for event, rel in seen):
+                gaps.append(
+                    f"{writer_key}: no observed {sorted(events)} write to "
+                    f"{pattern} (R3b behavioral witness)")
+    return sorted(gaps)
+
+
 def test_runtime_writer_conformance_population():
-    """2A §5.5/§5.6: every witnessed world write has a resolved, declared, authorized writer.
+    """2A §5.5/§5.6 + 2A+2D R3b: every witnessed world write has a resolved, declared, authorized writer.
 
     Also proves witness coverage: every writer whose effects.yaml disposition
-    is ``witness: runtime`` was observed writing in this CI population.
+    is ``witness: runtime`` was observed writing in this CI population, and
+    every required (writer, operation, destination) behavioral witness from
+    _REQUIRED_BEHAVIORAL_WITNESSES was observed — an unrelated write from the
+    same module does not count.
     """
     audit_dir = _audit_dir()
     logs = sorted(audit_dir.glob("*.jsonl")) if audit_dir else []
@@ -556,7 +650,8 @@ def test_runtime_writer_conformance_population():
         if os.environ.get("CI"):
             raise AssertionError("2A runtime gate: CI requires audit witnesses, found none")
         pytest.skip("2A runtime gate: no audit logs this run (local partial run)")
-    violations, witnessed = _conformance_population(audit_dir)
+    observed: set[tuple[str, str, str]] = set()
+    violations, witnessed = _conformance_population(audit_dir, observed)
     assert not violations, "2A runtime writer violations:\n" + "\n".join(
         f"{sig}: {violations[sig][0]}" for sig in sorted(violations))
     if os.environ.get("CI"):
@@ -565,6 +660,45 @@ def test_runtime_writer_conformance_population():
         assert not missing, (
             f"2A witness accounting: writers declared runtime-witnessed were not observed "
             f"in the CI population: {missing}")
+        gaps = _behavioral_witness_gaps(observed)
+        assert not gaps, (
+            "R3b behavioral witness gaps: required writer operations unobserved "
+            f"in the CI population:\n" + "\n".join(gaps))
+
+
+def test_behavioral_witness_requires_the_relevant_operation(tmp_path):
+    """R3b negative control: a declared but irrelevant write leaves the gap open."""
+    world = tmp_path / "world"
+    world.mkdir()
+    # A direct open of the baseline is declared for warning_baseline, so it
+    # raises no violation — but the required operation is the atomic rename.
+    direct = dict(_write_record("/w/operations/validation-warning-baseline.yaml",
+                                "learning_os.store.warning_baseline"))
+    log = _write_log(tmp_path, "behavioral-negative", [direct], world)
+    observed: set[tuple[str, str, str]] = set()
+    violations, _ = _conformance_in_log(log, observed)
+    assert not violations, violations
+    gaps = _behavioral_witness_gaps(observed)
+    assert any("warning_baseline" in gap and "validation-warning-baseline.yaml" in gap
+               for gap in gaps), gaps
+
+
+def test_behavioral_witness_accepts_the_relevant_operation(tmp_path):
+    """R3b positive control: the required rename closes the writer's gap."""
+    world = tmp_path / "world"
+    world.mkdir()
+    rename = {"event": "os.rename",
+              "paths": ["/w/operations/validation-warning-baseline.yaml.tmp-1",
+                        "/w/operations/validation-warning-baseline.yaml"],
+              "writer": "learning_os.store.warning_baseline",
+              "writer_file": "/repo/tools/learning_os/store/warning_baseline.py",
+              "writer_line": 1}
+    log = _write_log(tmp_path, "behavioral-positive", [rename], world)
+    observed: set[tuple[str, str, str]] = set()
+    violations, _ = _conformance_in_log(log, observed)
+    assert not violations, violations
+    gaps = _behavioral_witness_gaps(observed)
+    assert not any("warning_baseline" in gap for gap in gaps), gaps
 
 
 # --- synthetic controls (fabricated logs; no scenario world needed) ---

@@ -117,11 +117,20 @@ ALLOWED_EFFECTS = frozenset({
 
 _DECLARATION_KEYS = frozenset({"effect", "destinations", "reason", "contract", "witness"})
 
-# 2A §5.6 witness accounting. A writer that reaches owned territory needs a
-# runtime witness (checked over the CI population by the zz runtime gate) or a
-# named deferral; any other writer may rest on this static census plus the
-# production output guard. ``helper`` marks a mechanical delegation helper.
+# 2A §5.6 witness accounting, completed by 2A+2D R3a. Every writer carries
+# an explicit disposition: a writer that reaches owned territory needs a
+# runtime witness (checked over the CI population by the zz runtime gate) or
+# a named deferral. Any other writer is either ``static-only`` (destinations
+# fully resolved outside reserved territory, resting on this static census
+# plus the production output guard), ``external`` (every destination outside
+# every world: sibling trees, scratch, or recorded native mechanisms), or a
+# mechanical delegation ``helper``.
 _WITNESS_PACKAGES = ("2B", "2C", "2D", "Phase 3", "Phase 4", "Phase 5", "Phase 6", "Phase 7")
+
+#: Destination prefixes outside every world (sibling trees, home/state/scratch
+#: variables, and recorded ``<TOKEN>`` mechanisms). A plain repo-relative
+#: destination is world-relative.
+_EXTERNAL_DESTINATION_PREFIXES = ("<", "$", "../", "~")
 
 
 def _witness_failures(rel: str, raw: dict, owned: bool) -> list[str]:
@@ -129,12 +138,12 @@ def _witness_failures(rel: str, raw: dict, owned: bool) -> list[str]:
 
     witness = raw.get("witness")
     if witness is None:
-        if owned:
-            return [
-                f"A2 {rel}: reaches owned territory, so it needs `witness: runtime` or "
-                "`witness: \"deferred: <package>: <obligation>\"` (2A §5.6)"
-            ]
-        return []
+        return [
+            f"A2 {rel}: every writer carries an explicit disposition: "
+            "`witness: runtime`, `witness: static-only`, `witness: external`, "
+            "`witness: helper`, or "
+            "`witness: deferred: <package>: <obligation>` (2A §5.6, 2A+2D R3a)"
+        ]
     if witness == "runtime":
         return []
     if witness == "helper":
@@ -145,9 +154,29 @@ def _witness_failures(rel: str, raw: dict, owned: bool) -> list[str]:
         package, _, obligation = witness.removeprefix("deferred: ").partition(": ")
         if package in _WITNESS_PACKAGES and obligation.strip():
             return []
+    if witness in ("static-only", "external"):
+        if owned:
+            return [
+                f"A2 {rel}: reaches owned territory, so `witness: {witness}` is "
+                "unjustified; it needs `witness: runtime` or "
+                "`witness: deferred: <package>: <obligation>`"
+            ]
+        if witness == "external":
+            destinations = raw.get("destinations", [])
+            if isinstance(destinations, str):
+                destinations = [destinations]
+            plain = [d for d in destinations
+                     if isinstance(d, str)
+                     and not d.startswith(_EXTERNAL_DESTINATION_PREFIXES)]
+            if plain:
+                return [
+                    f"A2 {rel}: `witness: external` is unjustified while "
+                    f"destinations {plain} are world-relative; use static-only"
+                ]
+        return []
     return [
-        f"A2 {rel}: witness {witness!r} must be runtime, helper, or "
-        f"\"deferred: <one of {list(_WITNESS_PACKAGES)}>: <obligation>\""
+        f"A2 {rel}: witness {witness!r} must be runtime, static-only, external, "
+        f"helper, or \"deferred: <one of {list(_WITNESS_PACKAGES)}>: <obligation>\""
     ]
 
 _CANONICAL_ENGINE_MODULE = "tools/learning_os/store/transactions.py"
@@ -5025,8 +5054,15 @@ def test_reentry_extensionless_python_scripts_are_outside_the_inventory(tmp_path
 
 @pytest.mark.parametrize("raw, owned, ok", [
     ({}, True, False),
-    ({}, False, True),
+    ({}, False, False),
     ({"witness": "runtime"}, True, True),
+    ({"witness": "runtime"}, False, True),
+    ({"witness": "static-only"}, False, True),
+    ({"witness": "static-only"}, True, False),
+    ({"witness": "external"}, False, True),
+    ({"witness": "external", "destinations": ["<TMPDIR>/**"]}, False, True),
+    ({"witness": "external", "destinations": ["generated/x/**"]}, False, False),
+    ({"witness": "external"}, True, False),
     ({"witness": "deferred: 2B: witness the schema regeneration"}, True, True),
     ({"witness": "deferred: 2Z: nowhere"}, True, False),
     ({"witness": "deferred: 2B: "}, True, False),
@@ -5034,7 +5070,7 @@ def test_reentry_extensionless_python_scripts_are_outside_the_inventory(tmp_path
     ({"witness": "maybe"}, False, False),
 ])
 def test_reentry_every_owned_writer_needs_a_witness_disposition(raw, owned, ok):
-    """§5.6: a writer reaching owned territory without a disposition fails."""
+    """§5.6 + 2A+2D R3a: every writer carries a justified disposition."""
     failures = _witness_failures("tools/zz_writer.py", raw, owned)
     assert (failures == []) is ok, failures
 

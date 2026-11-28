@@ -6,47 +6,56 @@
   effect: operational
   destinations: ["<TMPDIR>/**", "<DELEGATED_GATEWAY_LAUNCHER>"]
   reason: "Stages immutable session-bound envelope temp copies in TemporaryDirectory and invokes tools/seal_envelope.py and tools/los.py."
+  witness: external
 
 "tools/assemble_lecture_study_maps.py":
   effect: operational
   destinations: ["<EXPLICIT_OUT_DIR>/**"]
   reason: "Writes assembled study-map drafts into an explicit caller-specified --out directory."
+  witness: external
 
 "tools/build_material_search_index.py":
   effect: cache
   destinations: ["generated/material-search/**"]
   reason: "Builds and swaps the disposable SQLite FTS5 material search index cache under generated/."
+  witness: static-only
 
 "tools/build_materials_tree.py":
   effect: operational
   destinations: ["../materials/**"]
   reason: "Maintains the external sibling materials/ topic tree and .flat compatibility symlinks under --apply."
+  witness: external
 
 "tools/capture_world.py":
   effect: tooling
   destinations: ["<OUT_DIR>/**"]
   reason: "Captures a read-only world snapshot bundle into an explicit --out directory for comparison gates."
+  witness: external
 
 "tools/check_shard_completeness.py":
   effect: tooling
   destinations: ["<OUT_DIR>/**"]
   reason: "Merges CI witness audit logs into a scratch verification directory."
+  witness: external
 
 "tools/codex_obsidian.py":
   effect: operational
   destinations: ["<AGENT_WORKSPACE_WRITE_LAUNCHER>", "<DELEGATED_GATEWAY_LAUNCHER>"]
   reason: "Agentic Copilot adapter. For a named capability prompt it launches Codex with --sandbox workspace-write over the checkout, which can edit canonical files directly; after the run it refuses to validate or publish unless every changed canonical path is covered by a transaction receipt committed during the run. It then delegates validation and projection refresh to tools/los.py."
+  witness: external
   contract: "Recorded 2A exception (Bar 4 v2 NF-5): 2A detects unreceipted direct edits after the fact; Package 2B (seatbelt-macos direct-write denial, broker confinement) owns preventing them."
 
 "tools/compare_world.py":
   effect: tooling
   destinations: ["../scratch/world-runs/**", "<TMPDIR>/**"]
   reason: "Overlays captured-world fixtures in disposable scratch worktrees during release comparison checks."
+  witness: external
 
 "tools/contract_bundle.py":
   effect: tooling
   destinations: ["<OUT_DIR>/**", "<TMPDIR>/**"]
   reason: "Emits bundled JSON Schema artifacts into an explicit --out build directory; check mode emits into a temporary directory and compares."
+  witness: external
 
 "tools/diagnostics_prune.py":
   effect: cache
@@ -58,6 +67,7 @@
   effect: tooling
   destinations: ["<EXPLICIT_OUT_FILE>"]
   reason: "Writes offline evaluation packages/reports to the explicit --out path."
+  witness: external
 
 "tools/generate_capability_schemas.py":
   effect: projection
@@ -70,6 +80,7 @@
   effect: operational
   destinations: ["../materials/**", "<TMPDIR>/**"]
   reason: "Stages yt-dlp caption downloads in TemporaryDirectory and saves fetched transcripts into the external sibling materials/ tree."
+  witness: external
 
 "tools/library_reconciliation.py":
   effect: tooling
@@ -89,6 +100,7 @@
   effect: cache
   destinations: ["generated/material-outlines/**", "<EXPLICIT_OUT_DIR>/**"]
   reason: "Caches extracted PDF outline structures under generated/material-outlines/ or an explicit guarded --outline-dir."
+  witness: static-only
 
 "tools/material_summarize.py":
   effect: cache
@@ -101,11 +113,13 @@
   effect: cache
   destinations: ["generated/.text-cache/**", "<EXPLICIT_OUT_DIR>/**"]
   reason: "Digest-keyed PDF page-text extraction cache under generated/.text-cache/ or an explicit guarded --cache-dir."
+  witness: static-only
 
 "tools/materials_index/cli.py":
   effect: projection
   destinations: ["../materials/README.md", "../materials/FILES.txt", "../materials/INDEX.html"]
   reason: "Regenerates browsable indexes inside the external sibling materials/ tree."
+  witness: external
 
 "tools/migrations/curriculum_v2.py":
   effect: migration
@@ -142,102 +156,122 @@
                  "system/WORKFLOWS.md",
                  "pyproject.toml", "Makefile"]
   reason: "Mechanical module/path move tool updating imports/references across tools/, tests/, system/ (never its contract roots), pyproject.toml, Makefile via git mv (--apply only; leaves all DATA_ROOTS forbidden)."
+  witness: static-only
   contract: "tools/README.md (OD9 maintenance move tool; --apply only)"
 
 "tools/refresh_amls_fixture.py":
   effect: tooling
   destinations: ["tests/fixtures/amls-paper-inventory.yaml"]
   reason: "Refreshes checked-in test fixture YAML from external AMLS list."
+  witness: static-only
 
 "tools/release_pair_receipt.py":
   effect: tooling
   destinations: ["<EXPLICIT_OUT_FILE>"]
   reason: "Emits exact-pair release receipt JSON to the explicit --out path."
+  witness: external
 
 "tools/seal_envelope.py":
   effect: tooling
   destinations: ["<EXPLICIT_OUT_FILE>", "<STATE>/sealed-requests/**"]
   reason: "Writes caller-requested sealed GatewayEnvelopeV2 files and local submit retry state."
+  witness: external
 
 "tools/study_hooks.py":
   effect: operational
   destinations: ["<EXPLICIT_OUT_DIR>/.claude/settings.json", "<EXPLICIT_OUT_DIR>/.gemini/config/hooks.json"]
   reason: "Generates opt-in IDE/agent hook profiles in an explicit target directory."
+  witness: external
 
 "tools/study_launch.py":
   effect: operational
   destinations: ["$LOS_SCRATCH_DIR/**", "~/.local/state/learningos/study-runtimes/**", "<TMPDIR>/**", "<DELEGATED_GATEWAY_LAUNCHER>"]
   reason: "Prepares confined study runtime homes and scratch directories under explicit confinement markers and spawns sandbox-exec."
+  witness: external
 
 "tools/system_map.py":
   effect: projection
   destinations: ["system/developer/**"]
   reason: "Regenerates generated ownership/architecture blocks inside system/developer/ docs."
+  witness: static-only
 
 "tools/validate.py":
   effect: cache
   destinations: ["generated/reports/validation-report.md"]
   reason: "Writes the human-readable validation report cache under generated/reports/."
+  witness: static-only
 
 "tools/learning_os/adapters/study_broker.py":
   effect: operational
   destinations: ["$LOS_SCRATCH_DIR/**", "<TMPDIR>/**", "<EXPLICIT_REPORT_OUT>", "<DELEGATED_GATEWAY_LAUNCHER>"]
   reason: "Stages bounded broker payloads/inputs in temporary scratch, writes explicit --report-out files outside DATA_ROOTS, and invokes mediated Core CLI subprocesses."
+  witness: external
 
 "tools/learning_os/app/agent_reporting.py":
   effect: operational
   destinations: ["<PRIVATE_REPORT_DIR>/**"]
   reason: "Writes incremental full-report recovery logs in private non-canonical report dirs."
+  witness: external
 
 "tools/learning_os/app/backup_manifest.py":
   effect: operational
   destinations: ["<TMPDIR>/**", "<RESTORED_COPY>/**"]
   reason: "Reconstructs disposable projection/alias layers strictly inside restored backup copies during backup.verify."
+  witness: external
 
 "tools/learning_os/app/check.py":
   effect: operational
   destinations: ["<TMPDIR>/learningos-plan-check-*/**"]
   reason: "Populates ephemeral shadow copies in TMPDIR during --check preflights."
+  witness: external
 
 "tools/learning_os/app/handlers/note_analysis.py":
   effect: operational
   destinations: ["<EXPLICIT_OUT_DIR>/**"]
   reason: "Stages reviewed note-analysis bodies and envelope in an explicit caller staging directory outside the repository."
+  witness: external
 
 "tools/learning_os/app/handlers/platform.py":
   effect: operational
   destinations: ["<EXPLICIT_OUT_FILE>"]
   reason: "Writes backup-manifest JSON to explicit --out path validated outside every backed-up root."
+  witness: external
 
 "tools/learning_os/app/handlers/plan.py":
   effect: operational
   destinations: ["<EXPLICIT_REPORT_OUT>"]
   reason: "Saves create-only --check --report-out files outside canonical data roots."
+  witness: external
 
 "tools/learning_os/app/lock.py":
   effect: operational
   destinations: ["<STATE>/operator.lock", "<STATE>/learningos-*.lock"]
   reason: "Manages repository advisory flock files in the session state directory."
+  witness: external
 
 "tools/learning_os/app/session.py":
   effect: operational
   destinations: ["<GIT_INDEX_AND_COMMIT>", "<TMPDIR>/**"]
   reason: "Commits session-touched paths via an isolated GIT_INDEX_FILE inside a temporary directory."
+  witness: external
 
 "tools/learning_os/app/validation.py":
   effect: cache
   destinations: ["generated/reports/validation-report.md"]
   reason: "Writes the rendered validation report alongside the validation cache under generated/reports/."
+  witness: static-only
 
 "tools/learning_os/derive/projection/outputs.py":
   effect: projection
   destinations: ["generated/**"]
   reason: "Publishes generated/ projection views and prunes obsolete generated projection files."
+  witness: static-only
 
 "tools/learning_os/derive/semantics/dossiers.py":
   effect: cache
   destinations: ["generated/**"]
   reason: "Persists content-addressed semantic dossier cache files under generated/."
+  witness: static-only
 
 "tools/learning_os/store/ai_actions/storage.py":
   effect: operational
@@ -256,6 +290,7 @@
   effect: projection
   destinations: ["README.md", "system/AI-ACTIONS.md", "system/OPERATOR.md", "system/SEMANTIC-CONTRACT.md", "system/WORKFLOWS.md"]
   reason: "Updates generated command-reference documentation blocks in normative prose."
+  witness: static-only
 
 "tools/learning_os/store/contracts/manifest_contract.py":
   effect: projection
@@ -268,21 +303,25 @@
   effect: projection
   destinations: ["system/ARCHITECTURE.md"]
   reason: "Regenerates the workspace root-tree projection block in system/ARCHITECTURE.md."
+  witness: static-only
 
 "tools/learning_os/store/contracts/tree_contract.py":
   effect: projection
   destinations: ["system/ARCHITECTURE.md"]
   reason: "Regenerates the repository tree-contract projection block in system/ARCHITECTURE.md."
+  witness: static-only
 
 "tools/learning_os/store/derived/store.py":
   effect: cache
   destinations: ["generated/derived-state/**"]
   reason: "Publishes content-addressed derived-state blobs and state-v1.json under generated/derived-state/."
+  witness: static-only
 
 "tools/learning_os/store/diagnostics/context.py":
   effect: cache
   destinations: ["<TRACE_DEBUG_FILE>"]
   reason: "Appends best-effort trace debug lines to the opt-in LOS_TRACE_DEBUG_FILE sink."
+  witness: external
 
 "tools/learning_os/store/diagnostics/store.py":
   effect: cache
@@ -294,6 +333,7 @@
   effect: cache
   destinations: ["<TRACE_DEBUG_FILE>"]
   reason: "Appends span debug lines to LOS_TRACE_DEBUG_FILE and delegates store persistence to diagnostics/store.py."
+  witness: external
 
 "tools/learning_os/store/fs.py":
   effect: operational
@@ -305,31 +345,37 @@
   effect: operational
   destinations: ["../reading-memory/**"]
   reason: "Persists private reading-card memory and journals in the external sibling reading-memory/ store."
+  witness: external
 
 "tools/learning_os/store/materials/search_index.py":
   effect: cache
   destinations: ["generated/material-search/**"]
   reason: "Runs SQLite FTS5 integrity checks against the generated/material-search/ cache."
+  witness: static-only
 
 "tools/learning_os/store/observations.py":
   effect: operational
   destinations: ["<LOS_OBSERVATIONS>", "<COUNTER_FILE>"]
   reason: "Maintains deterministic test-harness ID counters inside explicit test override files."
+  witness: external
 
 "tools/learning_os/store/practice_export.py":
   effect: operational
   destinations: ["<EXTERNAL_PRACTICE_VAULT>/**"]
   reason: "Append-only create-only LearnKit export into a separately marked external practice vault."
+  witness: external
 
 "tools/learning_os/store/session_ledger.py":
   effect: operational
   destinations: ["<STATE>/learningos-*-touched.json", "<STATE>/learningos-*-released.json", "<STATE>/sealed-requests/**", "<STATE>/review-checks-*.json"]
   reason: "Manages operational session ledgers, sealed-request retry state, and review-check evidence in <STATE>/."
+  witness: external
 
 "tools/learning_os/store/study_fence.py":
   effect: operational
   destinations: ["$LOS_SCRATCH_DIR/**", "<TMPDIR>/**", "<EXPLICIT_LOCAL_OUTPUT>"]
   reason: "Writes confined study staged files, manifests, and boundary-checked local tool outputs."
+  witness: external
 
 "tools/learning_os/store/transactions.py":
   effect: canonical-engine
@@ -341,6 +387,7 @@
   effect: cache
   destinations: ["generated/reports/validation-report.cache.json"]
   reason: "Clears corrupt static validation cache sidecar under generated/reports/."
+  witness: static-only
 
 "tools/learning_os/store/warning_baseline.py":
   effect: operational

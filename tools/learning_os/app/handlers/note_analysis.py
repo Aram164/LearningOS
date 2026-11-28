@@ -549,16 +549,19 @@ def _read_draft_items(drafts: object) -> list[tuple[dict, dict, bytes]]:
     return prepared
 
 
-def _prepare_out_dir(root: Path, value: object) -> Path:
-    """Resolve the staging dir, which must stay outside the repository.
+def _resolve_out_dir(root: Path, value: object) -> tuple[Path, bool]:
+    """Validate the staging dir without changing a byte (2A+2D R1).
 
-    Prep writes no canonical data, so staging lives out-of-tree by
-    contract, like every other draft. A first prep needs a new or empty
-    directory and marks it with :data:`_STAGE_MARKER`. ``bodies/`` is
-    prep-owned and rebuilt every run in a marked directory, so a re-prep
-    with fewer notes leaves no stale body files behind. A non-empty
-    directory without a valid mark is refused before anything is
-    removed, so prep never deletes files it did not stage (2D, CL-16).
+    Returns ``(resolved, fresh)``: ``fresh`` selects a new claim (create
+    ``bodies/`` and the stage mark) while a marked re-preparation rebuilds
+    the owned ``bodies/``. Prep writes no canonical data, so staging lives
+    out-of-tree by contract, like every other draft. A non-empty directory
+    without a valid mark is refused, so prep never deletes files it did
+    not stage (2D, CL-16). The previous ``envelope.json`` is validated too:
+    a symlink or a non-file is refused before anything is restaged, and the
+    envelope destination passes the generic guard. Every check here is
+    read-only; mutation happens only in :func:`_restage_out_dir`, after all
+    drafts validate.
     """
     if not isinstance(value, str) or not value or value == "-":
         raise WriteRefused(
@@ -585,25 +588,51 @@ def _prepare_out_dir(root: Path, value: object) -> Path:
     else:
         raise WriteRefused("staging dir must stay outside the repository")
     bodies = resolved / "bodies"
+    envelope_path = resolved / "envelope.json"
+    if resolved.is_dir() and any(resolved.iterdir()):
+        if not _stage_marked(resolved):
+            raise WriteRefused(
+                f"staging dir {resolved} holds files that note-analysis-prepare "
+                "did not stage; use a new or empty directory, or the directory "
+                "an earlier prep created")
+        if bodies.is_symlink() or (bodies.exists() and not bodies.is_dir()):
+            raise WriteRefused(
+                f"staging bodies path is not a directory: {bodies}")
+        if envelope_path.is_symlink():
+            raise WriteRefused(
+                f"staging envelope is a symlink and is left untouched: {envelope_path}")
+        if envelope_path.exists() and not envelope_path.is_file():
+            raise WriteRefused(
+                f"staging envelope is not a regular file: {envelope_path}")
+        fresh = False
+    else:
+        fresh = True
     try:
-        if resolved.is_dir() and any(resolved.iterdir()):
-            if not _stage_marked(resolved):
-                raise WriteRefused(
-                    f"staging dir {resolved} holds files that note-analysis-prepare "
-                    "did not stage; use a new or empty directory, or the directory "
-                    "an earlier prep created")
-            if bodies.is_symlink() or (bodies.exists() and not bodies.is_dir()):
-                raise WriteRefused(
-                    f"staging bodies path is not a directory: {bodies}")
+        guard_tool_output_path(envelope_path, repo_root=root)
+    except WriteScopeError as exc:
+        raise WriteRefused(
+            f"cannot stage envelope into {resolved}: {exc}") from exc
+    return resolved, fresh
+
+
+def _restage_out_dir(resolved: Path, fresh: bool) -> None:
+    """Claim the validated staging dir (2A+2D R1).
+
+    Runs only after every draft resolved: a first prep creates ``bodies/``
+    and the stage mark, while a marked re-preparation removes the previous
+    owned bodies so fewer notes leave no stale files behind.
+    """
+    bodies = resolved / "bodies"
+    try:
+        if fresh:
+            bodies.mkdir(parents=True)
+            _mark_stage(resolved)
+        else:
             if bodies.exists():
                 shutil.rmtree(bodies)
             bodies.mkdir()
-        else:
-            bodies.mkdir(parents=True)
-            _mark_stage(resolved)
     except OSError as exc:
         raise WriteRefused(f"cannot stage into {resolved}: {exc}") from exc
-    return resolved
 
 
 #: Ownership mark of a prep-created staging dir (2D, CL-16).
@@ -647,7 +676,10 @@ def note_analysis_prepare(ctx: OpContext, req: dict) -> Result:
     """
     root = ctx.root
     prepared = _read_draft_items(_read_drafts_file(req["drafts"]))
-    out = _prepare_out_dir(root, req["out"])
+    # R1: validate the staging dir first; nothing is restaged until every
+    # draft below resolves, so a refused re-preparation keeps the previous
+    # staged bodies and envelope byte-identical.
+    out, fresh = _resolve_out_dir(root, req["out"])
     repo = ctx.repo()
     snapshot = ctx.snapshot_id()
     staged: list[tuple[str, str, bytes, dict, bool]] = []
@@ -660,34 +692,42 @@ def note_analysis_prepare(ctx: OpContext, req: dict) -> Result:
                 f"draft {index} ({analysis['id']}): {exc}") from exc
         staged.append((note_id, path.relative_to(root).as_posix(),
                        body_bytes, analysis, content is not None))
+    # Build the whole proposal in memory before touching the staging dir.
+    bodies: list[tuple[str, bytes]] = []
     bundle_notes = []
     report = []
+    for note_id, relpath, body_bytes, analysis, predicted_new in staged:
+        body_name = f"{path_segment(note_id)}.bin"
+        bodies.append((body_name, body_bytes))
+        digest = hashlib.sha256(body_bytes).hexdigest()
+        bundle_notes.append({
+            "analysis": analysis,
+            "body_file": str(out / "bodies" / body_name),
+            "body_file_sha256": f"sha256:{digest}",
+        })
+        report.append({
+            "note_id": note_id,
+            "note_path": relpath,
+            "predicted_new": predicted_new,
+            "frozen_input_sha256": digest,
+            "body_file": str(out / "bodies" / body_name),
+        })
+    revisions = {note_id: artifact_revision(root, note_id)
+                 for note_id, _, _, _, _ in staged}
+    envelope = prepare_review_envelope(
+        "note.analysis.save_batch", {"bundle": {"notes": bundle_notes}},
+        snapshot, revisions)
+    envelope_text = json.dumps(envelope, indent=2, ensure_ascii=False) + "\n"
+    # All drafts resolved: restage now, then publish. The envelope goes
+    # through the bounded atomic helper, which refuses a symlinked leaf
+    # and replaces the file without following it (2A+2D R1).
+    _restage_out_dir(out, fresh)
+    envelope_path = out / "envelope.json"
     try:
-        for note_id, relpath, body_bytes, analysis, predicted_new in staged:
-            body_path = out / "bodies" / f"{path_segment(note_id)}.bin"
-            body_path.write_bytes(body_bytes)
-            digest = hashlib.sha256(body_bytes).hexdigest()
-            bundle_notes.append({
-                "analysis": analysis,
-                "body_file": str(body_path),
-                "body_file_sha256": f"sha256:{digest}",
-            })
-            report.append({
-                "note_id": note_id,
-                "note_path": relpath,
-                "predicted_new": predicted_new,
-                "frozen_input_sha256": digest,
-                "body_file": str(body_path),
-            })
-        revisions = {note_id: artifact_revision(root, note_id)
-                     for note_id, _, _, _, _ in staged}
-        envelope = prepare_review_envelope(
-            "note.analysis.save_batch", {"bundle": {"notes": bundle_notes}},
-            snapshot, revisions)
-        envelope_path = out / "envelope.json"
-        envelope_path.write_text(
-            json.dumps(envelope, indent=2, ensure_ascii=False) + "\n",
-            encoding="utf-8")
+        for body_name, body_bytes in bodies:
+            (out / "bodies" / body_name).write_bytes(body_bytes)
+        atomic_write_text_exclusive(
+            envelope_path, envelope_text, boundary=out, durable=False)
     except OSError as exc:
         raise WriteRefused(f"cannot write staging dir {out}: {exc}") from exc
     submit = (f".venv/bin/python tools/los.py capability note.analysis.save_batch "

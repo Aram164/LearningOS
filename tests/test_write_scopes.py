@@ -150,8 +150,12 @@ def test_guard_tool_output_path_refuses_protected_roots_and_symlinks(tmp_path: P
 
     ext = tmp_path / "outside" / "report.json"
     assert guard_tool_output_path(ext, repo_root=repo) == ext
+    # R2: generated/reports/ is a producer area, not a generic out dir.
     gen = repo / "generated/reports/eval.json"
-    assert guard_tool_output_path(gen, repo_root=repo) == gen
+    with pytest.raises(WriteScopeError, match="producer"):
+        guard_tool_output_path(gen, repo_root=repo)
+    assert guard_tool_output_path(
+        gen, repo_root=repo, scopes=("generated/reports/**")) == gen
 
 
 def _case_insensitive(path: Path) -> bool:
@@ -186,16 +190,28 @@ def test_guard_tool_output_path_refuses_case_folded_protected_roots(tmp_path: Pa
     if _case_insensitive(tmp_path):
         with ExitStack() as stack, pytest.raises(WriteScopeError, match="protected root knowledge/"):
             open_guarded_directory(repo / "Knowledge", stack)
-    # A peer whose name merely starts like a protected root is still allowed.
+    # A peer whose name merely starts like a protected root is not refused as
+    # one: under R2 this is refused as a producer area instead.
     peer = repo / "generated" / "reports" / "Records-report.json"
-    assert guard_tool_output_path(peer, repo_root=repo) == peer
+    with pytest.raises(WriteScopeError, match="producer"):
+        guard_tool_output_path(peer, repo_root=repo)
+    assert guard_tool_output_path(
+        peer, repo_root=repo, scopes=("generated/reports/**",)) == peer
 
 
-def test_guard_admits_only_declared_generated_children_inside_a_repository(tmp_path: Path):
-    """2A N-8: caller-chosen output in a repository lands only in a declared generated/ child."""
+def test_guard_denies_generic_output_in_producer_generated_areas(tmp_path: Path):
+    """2A+2D R2: producer generated/ areas are not shared writable areas.
+
+    Deliberately replaces the 2A N-8 assertion that generic caller-chosen
+    output lands in any declared generated/ child. Generic output reaches
+    only the .venv/ scratch and external destinations; each generated/
+    child admits only its contracted producer via scopes.
+    """
     from learning_os.store.contracts.write_scopes import (
+        WriteScopeError,
         declared_generated_children,
         guard_tool_output_path,
+        scoped_write_target,
     )
 
     repo = tmp_path / "repo"
@@ -222,9 +238,42 @@ def test_guard_admits_only_declared_generated_children_inside_a_repository(tmp_p
         guard_tool_output_path(repo, repo_root=repo, allow_existing_dir=True)
     children = declared_generated_children()
     assert {"reports", ".text-cache", "material-search", "material-outlines"} <= children
-    for child in children:
-        admitted = repo / "generated" / child / "out.json"
-        assert guard_tool_output_path(admitted, repo_root=repo) == admitted
+    # R2 table: generic output into producer areas refuses, bytes untouched.
+    report = repo / "generated" / "reports" / "validation-report.md"
+    report.parent.mkdir(parents=True)
+    report.write_bytes(b"canonical report bytes")
+    with pytest.raises(WriteScopeError, match="producer"):
+        guard_tool_output_path(report, repo_root=repo)
+    assert report.read_bytes() == b"canonical report bytes"
+    for target in (
+        repo / "generated" / ".text-cache" / "ab" / "page.json",
+        repo / "generated" / "atlas" / "board.json",
+        repo / "generated" / "material-search" / "index.db",
+        repo / "generated" / "material-outlines" / "outline.json",
+    ):
+        with pytest.raises(WriteScopeError, match="producer"):
+            guard_tool_output_path(target, repo_root=repo)
+    # The contracted producers admit exactly their own area, nothing else.
+    own_cache = repo / "generated" / ".text-cache" / "ab" / "index.json"
+    assert guard_tool_output_path(
+        own_cache, repo_root=repo,
+        scopes=("generated/.text-cache/**",)) == own_cache
+    cache_dir = repo / "generated" / ".text-cache"
+    assert guard_tool_output_path(
+        cache_dir, repo_root=repo, allow_existing_dir=True,
+        scopes=("generated/.text-cache/**",)) == cache_dir
+    foreign = repo / "generated" / "atlas" / "board.json"
+    with pytest.raises(WriteScopeError, match="may not write"):
+        guard_tool_output_path(
+            foreign, repo_root=repo, scopes=("generated/.text-cache/**",))
+    outline = repo / "generated" / "material-outlines" / "outline.json"
+    assert guard_tool_output_path(
+        outline, repo_root=repo,
+        scopes=("generated/material-outlines/**",)) == outline
+    # The projection generator publishes its normal artifacts via its scope.
+    atlas = repo / "generated" / "atlas" / "board.json"
+    assert scoped_write_target(
+        repo, atlas, ("generated/atlas/**",)) == atlas
     # The documented repo-confined scratch (build-write-envelope.md) stays admitted.
     scratch = repo / ".venv" / "tmp" / "review.json"
     assert guard_tool_output_path(scratch, repo_root=repo) == scratch

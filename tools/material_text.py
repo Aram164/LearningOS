@@ -615,7 +615,10 @@ def main(argv: list[str] | None = None) -> int:
     base = Path(args.materials_root) if args.materials_root else materials_root()
     try:
         cache = guard_tool_output_path(
-            args.cache_dir, repo_root=REPO, allow_existing_dir=True
+            args.cache_dir, repo_root=REPO, allow_existing_dir=True,
+            # R2: the default in-repo cache is this producer's contracted
+            # area; any other in-repo generated/ child stays refused.
+            scopes=("generated/.text-cache/**",),
         )
     except WriteScopeError as exc:
         print(f"los: {exc}", file=sys.stderr)

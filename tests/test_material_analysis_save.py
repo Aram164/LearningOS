@@ -1368,3 +1368,138 @@ def test_material_binding_under_source_authority_root_accepted(mini_repo: Path):
     assert "is not the source's registered file or under its registered directory" in (
         res_bad.stdout + res_bad.stderr
     )
+
+
+# --------------------------------------------------------------------------
+# R1: the staging dir is validated before a single staged byte is written,
+# and the envelope is published atomically without following symlinks.
+# --------------------------------------------------------------------------
+
+def _first_staging(mini_repo, tmp_path, tag, notes):
+    drafts = {"notes": notes}
+    drafts_file = tmp_path / f"drafts-{tag}.json"
+    drafts_file.write_text(json.dumps(drafts), encoding="utf-8")
+    out = tmp_path / f"staging-{tag}"
+    result = _run_prepare(mini_repo, str(drafts_file), out)
+    assert result.returncode == 0, result.stderr
+    return drafts_file, out
+
+
+def _staging_snapshot(out):
+    """Every staging entry by kind, without following symlinks (R1)."""
+    snap = {}
+    for path in sorted(out.rglob("*")):
+        rel = path.relative_to(out).as_posix()
+        if path.is_symlink():
+            snap[rel] = ("link", str(path.readlink()))
+        elif path.is_file():
+            snap[rel] = ("file", path.read_bytes())
+        elif path.is_dir():
+            snap[rel] = ("dir", None)
+        else:
+            snap[rel] = ("other", None)
+    return snap
+
+
+def test_prepare_refuses_symlinked_envelope_and_changes_nothing(mini_repo, tmp_path):
+    """R1: a symlinked envelope refuses; protected target and staging kept."""
+    _, out = _first_staging(
+        mini_repo, tmp_path, "envlink",
+        [_draft("note-analysis-prep-envlink", "kept body")])
+    vault = tmp_path / "vault.txt"
+    vault.write_bytes(b"do not touch")
+    (out / "envelope.json").unlink()
+    (out / "envelope.json").symlink_to(vault)
+    before = _staging_snapshot(out)
+    second_file = tmp_path / "drafts-envlink-2.json"
+    second_file.write_text(json.dumps(
+        {"notes": [_draft("note-analysis-prep-envlink", "kept body")]}),
+        encoding="utf-8")
+    refused = _run_prepare(mini_repo, str(second_file), out)
+    assert refused.returncode != 0
+    assert "symlink" in refused.stderr
+    assert vault.read_bytes() == b"do not touch"
+    assert (out / "envelope.json").is_symlink()
+    assert _staging_snapshot(out) == before
+
+
+def test_prepare_refuses_dangling_envelope_symlink(mini_repo, tmp_path):
+    """R1: a dangling envelope symlink refuses; no destination is created."""
+    _, out = _first_staging(
+        mini_repo, tmp_path, "envdangle",
+        [_draft("note-analysis-prep-envdangle", "kept body")])
+    missing = out / "never-created.json"
+    assert not missing.exists()
+    (out / "envelope.json").unlink()
+    (out / "envelope.json").symlink_to(missing)
+    second_file = tmp_path / "drafts-envdangle-2.json"
+    second_file.write_text(json.dumps(
+        {"notes": [_draft("note-analysis-prep-envdangle", "kept body")]}),
+        encoding="utf-8")
+    before_dangle = _staging_snapshot(out)
+    refused = _run_prepare(mini_repo, str(second_file), out)
+    assert refused.returncode != 0
+    assert "symlink" in refused.stderr
+    assert not missing.exists()
+    assert (out / "envelope.json").is_symlink()
+    assert _staging_snapshot(out) == before_dangle
+
+
+def test_prepare_refuses_envelope_directory_before_deleting_bodies(mini_repo, tmp_path):
+    """R1: an envelope directory refuses; previously staged bodies kept."""
+    _, out = _first_staging(
+        mini_repo, tmp_path, "envdir",
+        [_draft("note-analysis-prep-envdir", "kept body")])
+    (out / "envelope.json").unlink()
+    (out / "envelope.json").mkdir()
+    before = _staging_snapshot(out)
+    second_file = tmp_path / "drafts-envdir-2.json"
+    second_file.write_text(json.dumps(
+        {"notes": [_draft("note-analysis-prep-envdir", "kept body")]}),
+        encoding="utf-8")
+    refused = _run_prepare(mini_repo, str(second_file), out)
+    assert refused.returncode != 0
+    assert "regular file" in refused.stderr
+    assert _staging_snapshot(out) == before
+
+
+def test_prepare_failed_reprep_keeps_previous_staging(mini_repo, tmp_path):
+    """R1: an invalid draft refuses without deleting previously staged bodies."""
+    _, out = _first_staging(
+        mini_repo, tmp_path, "restage",
+        [_draft("note-analysis-prep-restage", "kept body")])
+    before = _tree_bytes(out)
+    ghost = _draft("note-analysis-prep-ghost", "ghost body", binding={
+        "resolution": "resolved", "source_id": "source-nope",
+        "material": "demo/deck.pdf", "recorded_source_digest": "ab" * 32,
+        "live_source_digest": "ab" * 32,
+        "inspected_range": {"start": 1, "end": 3}})
+    ghost_file = tmp_path / "drafts-restage-ghost.json"
+    ghost_file.write_text(json.dumps({"notes": [ghost]}), encoding="utf-8")
+    refused = _run_prepare(mini_repo, str(ghost_file), out)
+    assert refused.returncode != 0
+    assert "not registered" in refused.stderr
+    assert _tree_bytes(out) == before
+    assert json.loads((out / "envelope.json").read_text(
+        encoding="utf-8"))["capability"] == "note.analysis.save_batch"
+
+
+def test_prepare_reprep_with_fewer_notes_refreshes_envelope(mini_repo, tmp_path):
+    """R1: a valid smaller re-preparation removes obsolete bodies and envelope."""
+    _, out = _first_staging(
+        mini_repo, tmp_path, "reshrink",
+        [_draft("note-analysis-prep-shrink-a", "one"),
+         _draft("note-analysis-prep-shrink-b", "two")])
+    assert len(_staged_bodies(out)) == 2
+    second_file = tmp_path / "drafts-reshrink-2.json"
+    second_file.write_text(json.dumps(
+        {"notes": [_draft("note-analysis-prep-shrink-a", "one")]}),
+        encoding="utf-8")
+    result = _run_prepare(mini_repo, str(second_file), out)
+    assert result.returncode == 0, result.stderr
+    assert [path.name for path in _staged_bodies(out)] == [
+        "note-analysis-prep-shrink-a.bin"]
+    envelope = json.loads((out / "envelope.json").read_text(encoding="utf-8"))
+    assert [row["note_id"] for row in
+            json.loads(result.stdout)["notes"]] == ["note-analysis-prep-shrink-a"]
+    assert len(envelope["payload"]["bundle"]["notes"]) == 1

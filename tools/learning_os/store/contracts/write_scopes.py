@@ -254,14 +254,18 @@ def guard_tool_output_path(
     *,
     repo_root: Path | None = None,
     allow_existing_dir: bool = False,
+    scopes: tuple[str, ...] | list[str] | None = None,
 ) -> Path:
     """Refuse caller-supplied output targets inside a repository or through symlinks.
 
     Rejects symlink components (including dangling target symlinks). Inside any
-    discovered or specified LearningOS repository, a target is admitted only
-    when it lies, lexically and after resolution, inside a ``generated/`` child
-    the tree contract declares or the checkout's ``.venv/`` scratch (2A, N-8).
-    ``DATA_ROOTS``, ``system/`` and
+    discovered or specified LearningOS repository, a generic caller-selected
+    target is admitted only inside the checkout's ``.venv/`` scratch (2A, N-8;
+    2A+2D R2): producer ``generated/`` areas belong to their contracted
+    producer, so generic output may not land in any ``generated/`` child even
+    though the tree contract declares it. A producer passes its contracted
+    repo-relative ``scopes`` to admit exactly its own area (checked with
+    :func:`require_write_scope`). ``DATA_ROOTS``, ``system/`` and
     ``operations/`` keep their protected-root refusal; every other repository
     path (``archive/``, ``boards/``, ``tools/``, ``generated/manifest.json``,
     top-level files...) is refused too. External scratch, temp and sibling
@@ -354,6 +358,17 @@ def guard_tool_output_path(
                     "generated/ child or the .venv/ scratch is admitted; write it "
                     f"outside the repository: {raw_path}"
                 )
+            # R2: a declared generated/ child is its producer's area, not a
+            # shared writable area. Generic caller-selected output may not
+            # land there; a producer admits its own area via scopes.
+            if rel.parts[0] == "generated":
+                if scopes is None:
+                    raise WriteScopeError(
+                        "refusing generic tool output inside producer "
+                        f"generated/ areas: {raw_path}; write it outside the "
+                        "repository or through the owning producer"
+                    )
+                require_write_scope("guarded tool output", rel.as_posix(), scopes)
 
     return lexical
 

@@ -364,7 +364,9 @@ def owned_territory(root: Path | None = None) -> tuple[str, ...]:
     ``operations/``, every capability write scope, and the tree-contract roots
     whose owner is ``interface``. A tree-contract owner marks a root as owned;
     it never authorizes a module. The output guard is stricter than this set
-    (it admits only declared ``generated/`` children), so it refuses all of it.
+    (generic output reaches only the ``.venv/`` scratch; ``generated/``
+    children admit only their contracted producer via scopes), so it refuses
+    all of it.
     """
     return _owned_territory((root or _CORE_ROOT).resolve())
 

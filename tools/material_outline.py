@@ -215,7 +215,12 @@ def main(argv: list[str] | None = None) -> int:
     repo = Path(args.repo).resolve()
     try:
         outline_dir = (
-            guard_tool_output_path(args.outline_dir, repo_root=repo, allow_existing_dir=True)
+            guard_tool_output_path(
+                args.outline_dir, repo_root=repo, allow_existing_dir=True,
+                # R2: the default in-repo cache is this producer's contracted
+                # area; any other in-repo generated/ child stays refused.
+                scopes=("generated/material-outlines/**",),
+            )
             if args.outline_dir
             else repo / "generated" / OUTLINE_TOP_DIR
         )
