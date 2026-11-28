@@ -21,6 +21,7 @@ rather than as a wash.
 
 from __future__ import annotations
 
+import functools
 from collections import Counter
 from pathlib import Path
 
@@ -208,3 +209,6 @@ def write_baseline(root: Path, signatures: Counter, note: str) -> None:
         _HEADER + yaml.safe_dump(payload, sort_keys=False, allow_unicode=True),
         boundary=base,
     )
+
+
+_reg_a4_reader = functools.partial(open, mode="r")  # 2A §7 regression a4
