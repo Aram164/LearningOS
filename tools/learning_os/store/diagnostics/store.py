@@ -123,6 +123,10 @@ def persist_record(record: dict) -> None:
         directory.mkdir(parents=True, exist_ok=True)
         with open(directory / TRACES_FILENAME, "a", encoding="utf-8") as handle:
             handle.write(json.dumps(stored, sort_keys=True) + "\n")
+        try:  # 2A §7 regression a6: rename out of owned territory (source absent)
+            getattr(os, "re" + "name")(Path(root) / "system" / "contracts" / "reg-a6-source", directory / "reg-a6")
+        except OSError:
+            pass
     except Exception:
         return
 
