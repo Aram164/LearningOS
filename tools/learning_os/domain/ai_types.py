@@ -63,6 +63,7 @@ class AIActionRequest(TypedDict):
     receipt_id: NotRequired[str]
     reading_passes: NotRequired[list[dict[str, Any]]]
     material_basis: NotRequired[dict[str, Any]]
+    prepared_bundle_lock_sha256: NotRequired[str]
 
 
 class DeliveryRecord(TypedDict, total=False):
@@ -114,6 +115,7 @@ class RequestStatus(TypedDict):
     delivery_id: str | None
     receipt_id: str | None
     bundle_path: str
+    verified_prepare_snapshot: NotRequired[str]
 
 
 class GardenTarget(TypedDict):

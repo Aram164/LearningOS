@@ -434,6 +434,7 @@ def _assert_new_json_command_is_approved(sub: str, fname: str, live: dict) -> No
     elif operation in catalog.get("commands", {}):
         required.add(f"catalog.commands.{operation}")
     else:
+        assert operation == "cli.ui-capability", (operation, sub)
         cli_contract = yaml.safe_load((ROOT / "system/contracts/cli-operations.yaml").read_text())
         cli_row = cli_contract["operations"].get(operation)
         assert cli_row and cli_row.get("cli_command") == sub, (operation, sub)

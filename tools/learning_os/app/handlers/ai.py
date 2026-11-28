@@ -153,10 +153,12 @@ def ai_action_list(ctx: OpContext, req: dict) -> Result:
     return Result({"ok": True, "actions": actions})
 
 
-@register("ai-action.status", kind="tool", effects=OperationEffects.READ)
+@register("ai-action.status", kind="tool", lock="shared", effects=OperationEffects.READ)
 def ai_action_status(ctx: OpContext, req: dict) -> Result:
     """Show one prepared request status."""
-    request = AIActionService(ctx.root).request_status(req["request_id"])
+    request = AIActionService(ctx.root).request_status(
+        req["request_id"], include_prepare_proof=True,
+    )
     return Result({"ok": True, "request": request})
 
 

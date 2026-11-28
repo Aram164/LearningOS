@@ -560,6 +560,13 @@ class AIActionService:
                 + json.dumps(context, indent=2, ensure_ascii=False)
                 + "\n```\n"
             ).encode("utf-8")
+        lock = json.loads(bundle_files.pop("contract-lock.json"))
+        lock["prepared_files_sha256"] = {
+            name: _sha256_bytes(content) for name, content in bundle_files.items()
+        }
+        lock_bytes = (json.dumps(lock, indent=2) + "\n").encode("utf-8")
+        request["prepared_bundle_lock_sha256"] = _sha256_bytes(lock_bytes)
+        bundle_files["contract-lock.json"] = lock_bytes
         self.repository.save_request(request, bundle_files)
         return request
 
@@ -582,13 +589,7 @@ class AIActionService:
         same action, target, provider and snapshot and its bundle is intact.
         Any difference is refused: an id never names two different intents.
         """
-        path = self.repository.request_path(request_id)
-        existing = _read_yaml(path) if path.is_file() else None
-        if not isinstance(existing, dict):
-            raise DeliveryValidationError(
-                f"request already exists: {request_id}; its request.yaml is "
-                "missing or unreadable, so it cannot be confirmed")
-        request = cast(AIActionRequest, existing)
+        request = self.repository.get_request(request_id)
         differs = []
         if request.get("id") != request_id:
             differs.append("id")
@@ -611,11 +612,50 @@ class AIActionService:
     def _verify_request_bundle(self, request: AIActionRequest) -> None:
         """Refuse a committed request whose prepared bundle is not intact."""
         directory = self.repository.request_dir(str(request["id"]))
-        for name in ("instructions.md", "context.md", "contract-lock.json"):
+        lock = directory / "contract-lock.json"
+        try:
+            if lock.is_symlink():
+                raise ValueError("symbolic link")
+            lock_bytes = lock.read_bytes()
+            if _sha256_bytes(lock_bytes) != request.get("prepared_bundle_lock_sha256"):
+                raise ValueError("missing or different prepare-time digest")
+            inventory = json.loads(lock_bytes)["prepared_files_sha256"]
+            if not isinstance(inventory, dict) or not {
+                "instructions.md", "context.md", "artifact-index.json", "allowed-capabilities.json",
+            }.issubset(inventory):
+                raise ValueError("incomplete prepare-time inventory")
+        except (KeyError, OSError, ValueError, TypeError) as exc:
+            raise DeliveryValidationError(
+                f"request {request['id']} cannot verify its contract lock: {exc}"
+            ) from None
+
+        for name, expected in inventory.items():
             entry = directory / name
-            if entry.is_symlink() or not entry.is_file():
+            try:
+                if any(part.is_symlink() for part in (entry, *entry.parents)
+                       if part.is_relative_to(directory)):
+                    raise ValueError("symbolic link")
+                content = _inside(directory, name).read_bytes()
+                passes = request.get("reading_passes")
+                if name == f"{SLICE_BUNDLE_PREFIX}/index.json" and passes:
+                    # Continuations append an indexed slice and its record.
+                    # Compare the ordered prefix emitted by prepare separately.
+                    index = json.loads(content)
+                    for row, reading_pass in zip(index[-len(passes):], passes, strict=True):
+                        if any(row[key] != reading_pass[key]
+                               for key in ("pass", "route_id", "bundle_path")):
+                            raise ValueError("continuation does not match the request")
+                        for key in ("bundle_path", "continuation"):
+                            if not _inside(directory, reading_pass[key]).is_file():
+                                raise ValueError(f"missing {reading_pass[key]}")
+                    content = (json.dumps(index[:-len(passes)], indent=2) + "\n").encode("utf-8")
+                if _sha256_bytes(content) != expected:
+                    raise ValueError("does not match its checksum")
+            except (KeyError, OSError, ValueError, TypeError) as exc:
                 raise DeliveryValidationError(
-                    f"request {request['id']} bundle is missing {name}")
+                    f"request {request['id']} bundle {name}: {exc}"
+                ) from None
+
         context = request.get("context") or {}
         originals = list(context.get("originals") or [])
         for name, expected in (
@@ -1436,9 +1476,11 @@ class AIActionService:
             ),
         )
 
-    def request_status(self, request_id: str) -> RequestStatus:
+    def request_status(
+        self, request_id: str, *, include_prepare_proof: bool = False,
+    ) -> RequestStatus:
         request = self.repository.get_request(request_id)
-        return {
+        status: RequestStatus = {
             "id": request["id"],
             "action_id": request["action_id"],
             "target": request["target"],
@@ -1449,6 +1491,13 @@ class AIActionService:
             "receipt_id": request.get("receipt_id"),
             "bundle_path": self.repository.request_dir(request_id).relative_to(self.root).as_posix(),
         }
+        if include_prepare_proof and request.get("prepared_bundle_lock_sha256"):
+            try:
+                self._verify_request_bundle(request)
+            except DeliveryValidationError:
+                return status
+            status["verified_prepare_snapshot"] = request["preconditions"]["snapshot_id"]
+        return status
 
     def manifest_projection(self) -> dict[str, Any]:
         # Compatibility method for callers that already hold a service. The

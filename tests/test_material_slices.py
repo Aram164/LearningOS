@@ -1109,6 +1109,29 @@ def test_compare_materials_attaches_a_scoped_source_map_view(mini_repo):
     assert view["view"]["routes_omitted"] == 5
 
 
+@pytest.mark.parametrize("member", [
+    "attachments/unit-source-map.yaml",
+    "attachments/slices/index.json",
+    "attachments/slices/route-demo-current.md",
+])
+def test_status_withholds_prepare_proof_for_a_damaged_compare_materials_bundle(
+    mini_repo, member,
+):
+    request, bundle = _prepare_view(mini_repo, "ai-request-view-unconfirmed")
+    app = AIActionService(mini_repo)
+    request_id = request["id"]
+    assert "verified_prepare_snapshot" in app.request_status(
+        request_id, include_prepare_proof=True,
+    )
+    path = bundle / member
+    assert path.is_file()
+    path.unlink()
+
+    status = app.request_status(request_id, include_prepare_proof=True)
+    assert status["status"] == "prepared"
+    assert "verified_prepare_snapshot" not in status
+
+
 def test_scoped_view_keeps_canonical_basis_and_transport_identities(mini_repo):
     import hashlib
 

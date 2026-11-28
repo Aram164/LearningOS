@@ -105,15 +105,25 @@ class FilesystemAIActionRepository:
 
     def get_request(self, request_id: str) -> AIActionRequest:
         path = self.request_path(request_id)
-        value = _read_yaml(path)
-        if not isinstance(value, dict):
+        try:
+            path.parent.lstat()
+        except FileNotFoundError:
             # Miss-only inventory ((cx) D-8): the happy path above keeps
             # its single-file read; only a miss enumerates the same store.
             candidates = [str(row["id"]) for row in self.request_projections()
                           if row.get("id")]
             raise RequestNotFound(
                 "request", request_id, candidates,
-                message=f"AI action request not found: {request_id}")
+                message=f"AI action request not found: {request_id}") from None
+        try:
+            value = _read_yaml(path) if not path.is_symlink() else None
+        except (OSError, ValueError, yaml.YAMLError):
+            value = None
+        if not isinstance(value, dict):
+            raise DeliveryValidationError(
+                f"request already exists: {request_id}; its request.yaml is "
+                "missing or unreadable, so it cannot be confirmed"
+            )
         return cast(AIActionRequest, value)
 
     def update_request(self, request: AIActionRequest) -> None:

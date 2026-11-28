@@ -18,6 +18,7 @@ from learning_os.app.context import OpContext
 from learning_os.domain.ai_errors import (
     ActionPolicyError,
     DeliveryValidationError,
+    RequestNotFound,
     StaleDeliveryError,
 )
 from learning_os.store.contracts import validate_contract
@@ -1224,6 +1225,39 @@ def test_prepare_refuses_to_confirm_a_committed_id_whose_bundle_changed(ai_repo:
 
     with pytest.raises(DeliveryValidationError, match="does not match its checksum"):
         _prepare_seed(app, ai_repo, "ai-request-retry-003")
+
+
+def test_prepare_status_distinguishes_an_absent_id_from_an_incomplete_bundle(ai_repo: Path):
+    app = service(ai_repo)
+    request_id = "ai-request-status-proof"
+    with pytest.raises(RequestNotFound):
+        app.request_status(request_id, include_prepare_proof=True)
+
+    request = _prepare_seed(app, ai_repo, request_id)
+    assert app.request_status(request_id, include_prepare_proof=True)[
+        "verified_prepare_snapshot"
+    ] == request["preconditions"]["snapshot_id"]
+
+    app.repository.request_path(request_id).unlink()
+    with pytest.raises(DeliveryValidationError, match="missing or unreadable"):
+        app.request_status(request_id, include_prepare_proof=True)
+    with pytest.raises(DeliveryValidationError, match="missing or unreadable"):
+        _prepare_seed(app, ai_repo, request_id)
+    assert app.repository.request_dir(request_id).is_dir()
+
+
+def test_legacy_prepare_status_remains_readable_without_retrospective_proof(ai_repo: Path):
+    app = service(ai_repo)
+    request_id = "ai-request-legacy-prepare"
+    request = _prepare_seed(app, ai_repo, request_id)
+    del request["prepared_bundle_lock_sha256"]
+    app.repository.update_request(request)
+
+    status = app.request_status(request_id, include_prepare_proof=True)
+    assert status["status"] == "prepared"
+    assert "verified_prepare_snapshot" not in status
+    with pytest.raises(DeliveryValidationError, match="cannot verify its contract lock"):
+        _prepare_seed(app, ai_repo, request_id)
 
 
 def _crash_after_delivery_publish(app: AIActionService, request_id: str, source: Path):
