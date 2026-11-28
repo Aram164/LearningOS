@@ -14,6 +14,7 @@ import yaml
 from learning_os.domain.ai_errors import (
     MAX_DELIVERY_BYTES,
     MAX_DELIVERY_ENTRIES,
+    DeliveryAlreadyExists,
     DeliveryNotFound,
     DeliveryValidationError,
     RequestNotFound,
@@ -22,6 +23,7 @@ from learning_os.domain.ai_types import AIActionRequest, DeliveryRecord, Request
 from learning_os.store.ai_actions.support import dump_yaml as _dump_yaml
 from learning_os.store.ai_actions.support import inside as _inside
 from learning_os.store.ai_actions.support import read_yaml as _read_yaml
+from learning_os.store.ai_actions.support import sha256_file as _sha256_file
 from learning_os.store.contracts.write_scopes import (
     WriteScopeError,
     path_segment,
@@ -178,7 +180,7 @@ class FilesystemAIActionRepository:
             raise DeliveryValidationError("delivery.yaml must carry a non-empty id")
         destination = self.delivery_dir(str(delivery.get("id", "")))
         if destination.exists():
-            raise DeliveryValidationError(f"delivery already exists: {delivery.get('id')}")
+            raise DeliveryAlreadyExists(str(delivery.get("id")))
         try:
             quarantine = scoped_write_target(
                 self.root, self.quarantine.absolute(), ("operations/ai-actions/incoming",),
@@ -200,13 +202,42 @@ class FilesystemAIActionRepository:
                 raise DeliveryValidationError("delivery.yaml must carry a non-empty id")
             destination = self.delivery_dir(str(delivery.get("id", "")))
             if destination.exists():
-                raise DeliveryValidationError(
-                    f"delivery already exists: {delivery.get('id')}"
-                )
+                raise DeliveryAlreadyExists(str(delivery.get("id")))
         except Exception:
             shutil.rmtree(temp, ignore_errors=True)
             raise
         return cast(DeliveryRecord, delivery), staged
+
+    def _delivery_tree(self, root: Path) -> dict[str, str]:
+        """Every entry under ``root``: directories as ``dir``, files by digest."""
+        self._scan_delivery_tree(root)
+        tree: dict[str, str] = {}
+        for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+            current = Path(dirpath)
+            for name in dirnames:
+                tree[(current / name).relative_to(root).as_posix()] = "dir"
+            for name in filenames:
+                candidate = current / name
+                if candidate.is_symlink() or not candidate.is_file():
+                    raise DeliveryValidationError(
+                        f"delivery entry is not a regular file: {name}")
+                tree[candidate.relative_to(root).as_posix()] = _sha256_file(candidate)
+        return tree
+
+    def same_delivery_bytes(self, source: Path, directory: Path) -> bool:
+        """True when ``source`` holds exactly the imported delivery's bytes.
+
+        The untrusted source gets the same admission checks as a fresh import
+        (no symbolic links, the entry and byte limits) before anything is read.
+        """
+        expanded = source.expanduser()
+        if expanded.is_symlink():
+            raise DeliveryValidationError("delivery bundles may not contain symbolic links")
+        source = expanded.resolve()
+        if not source.is_dir() or not (source / "delivery.yaml").is_file():
+            raise DeliveryValidationError(
+                "delivery import requires a directory containing delivery.yaml")
+        return self._delivery_tree(source) == self._delivery_tree(directory)
 
     def _checked_staged_delivery(self, staged: Path) -> Path:
         try:

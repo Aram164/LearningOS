@@ -43,6 +43,20 @@ class DeliveryIdempotencyConflict(DeliveryValidationError):
     """The delivery's idempotency key names a different approved intent."""
 
 
+class DeliveryAlreadyExists(DeliveryValidationError):
+    """``deliveries/<id>`` is already occupied when an import stages it.
+
+    Kept a ``DeliveryValidationError`` (same message, exit and class for every
+    existing caller). ``AIActionService.import_delivery`` catches it to resume
+    an import that published the directory but never advanced its request
+    (CL-02), and refuses every other case.
+    """
+
+    def __init__(self, delivery_id: str):
+        self.delivery_id = str(delivery_id)
+        super().__init__(f"delivery already exists: {self.delivery_id}")
+
+
 class StaleDeliveryError(AIActionError):
     pass
 

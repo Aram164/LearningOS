@@ -28,6 +28,7 @@ from learning_os.domain.ai_errors import (
     AIActionError,
     ConceptNotFound,
     ContinuationRefusedError,
+    DeliveryAlreadyExists,
     DeliveryBindingError,
     DeliveryIdempotencyConflict,
     DeliveryRevisionConflict,
@@ -68,6 +69,7 @@ from learning_os.store.ai_actions.binding import (
 from learning_os.store.ai_actions.registry import ActionRegistry, AdapterRegistry
 from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
 from learning_os.store.ai_actions.support import (
+    REQUEST_ID_RE,
     Clock,
     check_request_id,
     parse_frontmatter_request_id,
@@ -348,6 +350,13 @@ class AIActionService:
             raise ActionPolicyError(
                 f"adapter {adapter.id} does not support {action.interaction_mode} mode"
             )
+        if request_id is not None and REQUEST_ID_RE.fullmatch(str(request_id)) \
+                and self.repository.request_dir(request_id).exists():
+            return self._prepared_request_replay(
+                request_id, action_id=action.id, target_kind=target_kind,
+                target_id=target_id, provider=provider, adapter_id=adapter.id,
+                expected_snapshot=expected_snapshot,
+            )
         repo = load_repo(self.root)
         target, source = self._target(target_id, target_kind, repo=repo)
         snapshot = _snapshot(self.root)
@@ -554,6 +563,85 @@ class AIActionService:
         self.repository.save_request(request, bundle_files)
         return request
 
+    def _prepared_request_replay(
+        self,
+        request_id: str,
+        *,
+        action_id: str,
+        target_kind: str,
+        target_id: str,
+        provider: str,
+        adapter_id: str,
+        expected_snapshot: str | None,
+    ) -> AIActionRequest:
+        """Answer a retried prepare whose request id already committed (CL-03).
+
+        The interface mints the id and records it before Core runs, so a lost
+        response is retried with the same id. The committed request is returned
+        unchanged, and nothing is written, only when it was prepared from the
+        same action, target, provider and snapshot and its bundle is intact.
+        Any difference is refused: an id never names two different intents.
+        """
+        path = self.repository.request_path(request_id)
+        existing = _read_yaml(path) if path.is_file() else None
+        if not isinstance(existing, dict):
+            raise DeliveryValidationError(
+                f"request already exists: {request_id}; its request.yaml is "
+                "missing or unreadable, so it cannot be confirmed")
+        request = cast(AIActionRequest, existing)
+        differs = []
+        if request.get("id") != request_id:
+            differs.append("id")
+        if request.get("action_id") != action_id:
+            differs.append("action_id")
+        if request.get("target") != {"kind": target_kind, "id": target_id}:
+            differs.append("target")
+        if request.get("provider") != {"preferred": provider, "adapter": adapter_id}:
+            differs.append("provider")
+        snapshot_id = (request.get("preconditions") or {}).get("snapshot_id")
+        if expected_snapshot and snapshot_id != expected_snapshot:
+            differs.append("expected_snapshot")
+        if differs:
+            raise DeliveryValidationError(
+                f"request already exists: {request_id} with a different "
+                f"{', '.join(differs)}; nothing was prepared")
+        self._verify_request_bundle(request)
+        return request
+
+    def _verify_request_bundle(self, request: AIActionRequest) -> None:
+        """Refuse a committed request whose prepared bundle is not intact."""
+        directory = self.repository.request_dir(str(request["id"]))
+        for name in ("instructions.md", "context.md", "contract-lock.json"):
+            entry = directory / name
+            if entry.is_symlink() or not entry.is_file():
+                raise DeliveryValidationError(
+                    f"request {request['id']} bundle is missing {name}")
+        context = request.get("context") or {}
+        originals = list(context.get("originals") or [])
+        for name, expected in (
+            ("artifact-index.json", originals),
+            ("allowed-capabilities.json", list(request.get("allowed_capabilities") or [])),
+        ):
+            entry = directory / name
+            try:
+                if entry.is_symlink():
+                    raise ValueError("symbolic link")
+                value = json.loads(entry.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as exc:
+                raise DeliveryValidationError(
+                    f"request {request['id']} bundle has an unreadable {name}: {exc}"
+                ) from None
+            if value != expected:
+                raise DeliveryValidationError(
+                    f"request {request['id']} bundle {name} does not match request.yaml")
+        for original in originals:
+            entry = _inside(directory, str(original.get("bundle_path", "")))
+            if entry.is_symlink() or not entry.is_file() \
+                    or _sha256_file(entry) != original.get("checksum"):
+                raise DeliveryValidationError(
+                    f"request {request['id']} bundle attachment "
+                    f"{original.get('bundle_path')} does not match its checksum")
+
     def append_slices(
         self,
         *,
@@ -671,7 +759,10 @@ class AIActionService:
                 "pages": list(range(start, end + 1)), "page_total": record.page_total}
 
     def import_delivery(self, source: Path) -> DeliveryRecord:
-        delivery, staged = self.repository.stage_delivery_directory(source)
+        try:
+            delivery, staged = self.repository.stage_delivery_directory(source)
+        except DeliveryAlreadyExists as occupied:
+            return self._resume_delivery_import(source, occupied.delivery_id)
         delivery_id = str(delivery.get("id", ""))
         try:
             request_id = str(delivery.get("request_id", ""))
@@ -693,6 +784,42 @@ class AIActionService:
         request["delivery_id"] = delivery_id
         self.repository.commit_delivery_import(staged, delivery_id, request)
         return delivery
+
+    def _resume_delivery_import(self, source: Path, delivery_id: str) -> DeliveryRecord:
+        """Settle a retried import of a delivery that already landed (CL-02).
+
+        A crash between publishing ``deliveries/<id>`` and advancing
+        ``request.yaml`` leaves the delivery on disk while its request still
+        says ``prepared``, and the old refusal ("delivery already exists")
+        dead-ended every retry. A retry is accepted only when the existing
+        directory holds exactly the bytes being imported again and the request
+        it names is still ``prepared``, or already ``delivery-ready`` for this
+        same delivery. Every other state, and any differing byte, is refused
+        with both left untouched.
+        """
+        existing, directory = self.repository.get_delivery(delivery_id)
+        if not self.repository.same_delivery_bytes(source, directory):
+            raise DeliveryValidationError(
+                f"delivery already exists: {delivery_id}; the bundle being "
+                "imported differs from the imported one, so nothing was changed")
+        request_id = str(existing.get("request_id", ""))
+        if not request_id:
+            raise DeliveryValidationError("delivery must name its request_id")
+        request = self.repository.get_request(request_id)
+        status = request.get("status")
+        bound = request.get("delivery_id")
+        if status == "delivery-ready" and bound == delivery_id:
+            return existing
+        if status != "prepared" or bound not in (None, delivery_id):
+            bound_text = f" for delivery {bound!r}" if bound else ""
+            raise DeliveryValidationError(
+                f"delivery already exists: {delivery_id}; request {request_id!r} "
+                f"has status {status!r}{bound_text}, so the import cannot resume")
+        self._validate(existing, directory)
+        request["status"] = "delivery-ready"
+        request["delivery_id"] = delivery_id
+        self.repository.update_request(request)
+        return existing
 
     def validate_delivery(self, delivery_id: str) -> DeliveryValidationResult:
         delivery, directory = self.repository.get_delivery(delivery_id)
@@ -1197,6 +1324,13 @@ class AIActionService:
         )
         request = plan.request
         request_path = plan.request_path
+        # The exact original envelope was answered by the replay above. Any
+        # other envelope for a request that already completed, however fresh
+        # its guards, is refused before the write window (CL-04).
+        if request.get("status") == "completed":
+            raise DeliveryValidationError(
+                f"AI request {request.get('id')} has already been applied "
+                f"(receipt {request.get('receipt_id')}); nothing was written")
         # Re-check the *target*, not the whole repository, immediately before the
         # write window; unrelated concurrent edits are not this delivery's
         # business, a changed target is.

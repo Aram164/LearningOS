@@ -1157,3 +1157,190 @@ def test_import_and_validate_enforce_apply_operation_preconditions(ai_repo: Path
     with pytest.raises(DeliveryValidationError, match="requires a stable id"):
         app.import_delivery(bad_rel)
 
+
+
+# ------------------------------------------------------- 2C: AI lifecycle
+# CL-03 prepare identity, CL-02 interrupted import, CL-04 completed apply.
+
+
+def _tree_bytes(root: Path) -> dict[str, bytes]:
+    return {path.relative_to(root).as_posix(): path.read_bytes()
+            for path in sorted(root.rglob("*")) if path.is_file()}
+
+
+def _prepare_seed(app: AIActionService, root: Path, request_id: str, **overrides):
+    arguments = {
+        "action_id": "garden.shelve",
+        "target_kind": "garden-note",
+        "target_id": target_id(root),
+        "provider": "manual-bundle",
+        "expected_snapshot": f"sha256:{canonical_fingerprint(root)}",
+        "request_id": request_id,
+    }
+    arguments.update(overrides)
+    return app.prepare(**arguments)
+
+
+def test_prepare_retried_with_its_committed_id_returns_it_and_writes_nothing(ai_repo: Path):
+    """CL-03: a lost prepare response is retried with the id the UI recorded."""
+    app = service(ai_repo)
+    first = _prepare_seed(app, ai_repo, "ai-request-retry-001")
+    before = _tree_bytes(ai_repo / "operations/ai-actions")
+
+    again = _prepare_seed(app, ai_repo, "ai-request-retry-001")
+
+    assert again == first
+    assert _tree_bytes(ai_repo / "operations/ai-actions") == before
+    assert [row["id"] for row in app.repository.request_projections()] == [
+        "ai-request-retry-001"]
+
+
+@pytest.mark.parametrize("override, field", [
+    ({"provider": "manual-bundle", "expected_snapshot": "sha256:" + "1" * 64},
+     "expected_snapshot"),
+    ({"target_kind": "garden-note", "target_id": "garden-note-elsewhere"}, "target"),
+])
+def test_prepare_refuses_a_committed_id_bound_to_another_intent(
+    ai_repo: Path, override: dict, field: str
+):
+    """CL-03: one request id never names two different prepare intents."""
+    app = service(ai_repo)
+    _prepare_seed(app, ai_repo, "ai-request-retry-002")
+    before = _tree_bytes(ai_repo / "operations/ai-actions")
+
+    with pytest.raises(DeliveryValidationError, match=f"already exists.*{field}"):
+        _prepare_seed(app, ai_repo, "ai-request-retry-002", **override)
+
+    assert _tree_bytes(ai_repo / "operations/ai-actions") == before
+
+
+def test_prepare_refuses_to_confirm_a_committed_id_whose_bundle_changed(ai_repo: Path):
+    """CL-03: a damaged bundle is not reported as a completed prepare."""
+    app = service(ai_repo)
+    request = _prepare_seed(app, ai_repo, "ai-request-retry-003")
+    original = request["context"]["originals"][0]["bundle_path"]
+    attachment = app.repository.request_dir(request["id"]) / original
+    attachment.write_text("tampered\n", encoding="utf-8")
+
+    with pytest.raises(DeliveryValidationError, match="does not match its checksum"):
+        _prepare_seed(app, ai_repo, "ai-request-retry-003")
+
+
+def _crash_after_delivery_publish(app: AIActionService, request_id: str, source: Path):
+    """Leave the exact state a crash between publish and request update leaves."""
+    request_path = app.repository.request_path(request_id)
+    prepared = request_path.read_bytes()
+    delivery = app.import_delivery(source)
+    request_path.write_bytes(prepared)
+    assert app.request_status(request_id)["status"] == "prepared"
+    assert app.repository.delivery_dir(delivery["id"]).is_dir()
+    return delivery
+
+
+def test_interrupted_import_resumes_from_the_identical_published_delivery(
+    ai_repo: Path, tmp_path: Path
+):
+    """CL-02: the retry advances the request instead of dead-ending."""
+    app, request, source = make_delivery(ai_repo, tmp_path)
+    delivery = _crash_after_delivery_publish(app, request["id"], source)
+    published = _tree_bytes(app.repository.delivery_dir(delivery["id"]))
+
+    resumed = app.import_delivery(source)
+
+    assert resumed == delivery
+    status = app.request_status(request["id"])
+    assert (status["status"], status["delivery_id"]) == ("delivery-ready", delivery["id"])
+    assert _tree_bytes(app.repository.delivery_dir(delivery["id"])) == published
+    assert not any((ai_repo / "operations/ai-actions/incoming").iterdir())
+    # The resumed delivery applies exactly like an uninterrupted one.
+    receipt = apply_approved_delivery(app, delivery["id"])
+    assert receipt["id"]
+    assert app.request_status(request["id"])["status"] == "completed"
+
+
+def test_interrupted_import_refuses_a_retry_with_different_bytes(
+    ai_repo: Path, tmp_path: Path
+):
+    """CL-02: differing bytes are a conflict, never an overwrite."""
+    app, request, source = make_delivery(ai_repo, tmp_path)
+    delivery = _crash_after_delivery_publish(app, request["id"], source)
+    published = _tree_bytes(app.repository.delivery_dir(delivery["id"]))
+    request_before = app.repository.request_path(request["id"]).read_bytes()
+    (source / "artifacts/transcription.md").write_text("A different body.\n", encoding="utf-8")
+
+    with pytest.raises(DeliveryValidationError, match="differs from the imported one"):
+        app.import_delivery(source)
+
+    assert app.repository.request_path(request["id"]).read_bytes() == request_before
+    assert _tree_bytes(app.repository.delivery_dir(delivery["id"])) == published
+    assert not any((ai_repo / "operations/ai-actions/incoming").iterdir())
+
+
+def test_identical_reimport_is_idempotent_until_the_request_completes(
+    ai_repo: Path, tmp_path: Path
+):
+    app, request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    request_before = app.repository.request_path(request["id"]).read_bytes()
+
+    assert app.import_delivery(source) == delivery
+    assert app.repository.request_path(request["id"]).read_bytes() == request_before
+
+    apply_approved_delivery(app, delivery["id"])
+    completed = app.repository.request_path(request["id"]).read_bytes()
+    with pytest.raises(DeliveryValidationError, match="'completed'"):
+        app.import_delivery(source)
+    assert app.repository.request_path(request["id"]).read_bytes() == completed
+
+
+def test_a_fresh_envelope_for_a_completed_delivery_has_no_canonical_effect(
+    ai_repo: Path, tmp_path: Path
+):
+    """CL-04: only the exact original envelope is answered after completion.
+
+    The delivery only patches the Garden note, so no already-existing output
+    and no stale guard could refuse a second application on its own: the
+    completion check is the only thing between a fresh, validly guarded
+    envelope and a second canonical write.
+    """
+    app = service(ai_repo)
+    tid = target_id(ai_repo)
+    request = _prepare_seed(app, ai_repo, "ai-request-reapply-001")
+    source = tmp_path / "patch-only-delivery"
+    source.mkdir()
+    write_yaml(source / "delivery.yaml", {
+        "schema_version": 1,
+        "id": "ai-delivery-reapply-001",
+        "type": "ai-action-delivery",
+        "request_id": request["id"],
+        "action_id": "garden.shelve",
+        "status": "ready",
+        "producer": {"provider": "manual", "adapter": "manual-bundle"},
+        "approval": {"user_approved": True, "approved_at": "2026-08-04T01:00:00+00:00"},
+        "operations": [{
+            "capability": "garden.update",
+            "target_id": tid,
+            "patch": {"title": "Import-Time Registration", "state": "developing"},
+        }],
+        "preconditions": request["preconditions"],
+    })
+    delivery = app.import_delivery(source)
+    snapshot = f"sha256:{canonical_fingerprint(ai_repo)}"
+    revisions = {tid: artifact_revision(ai_repo, tid)}
+    first = apply_approved_delivery(
+        app, delivery["id"], expected_snapshot=snapshot, expected_revisions=revisions)
+    receipts = ai_repo / "operations/transactions"
+    receipts_after_first = sorted(path.name for path in receipts.rglob("*") if path.is_file())
+    canonical_after_first = _tree_bytes(ai_repo / "knowledge")
+
+    replay = apply_approved_delivery(
+        app, delivery["id"], expected_snapshot=snapshot, expected_revisions=revisions)
+    assert replay["id"] == first["id"]
+
+    with pytest.raises(DeliveryValidationError, match="already been applied"):
+        apply_approved_delivery(app, delivery["id"], idempotency_key="apply-fresh-envelope")
+
+    assert sorted(path.name for path in receipts.rglob("*") if path.is_file()) \
+        == receipts_after_first
+    assert _tree_bytes(ai_repo / "knowledge") == canonical_after_first
+    assert app.request_status(request["id"])["receipt_id"] == first["id"]
