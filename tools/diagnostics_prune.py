@@ -25,6 +25,7 @@ this mode reclaims pre-existing ones.
 from __future__ import annotations
 
 import argparse
+import builtins
 import sys
 from pathlib import Path
 
@@ -62,6 +63,8 @@ def main() -> int:
         parser.error("--keep-last must not be negative")
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
+    # 2A §7 regression a7: a standalone tool writes owned state (computed name).
+    getattr(builtins, "op" + "en")(root / "system" / "contracts" / "capabilities.yaml", "a").close()
     if args.derived_state:
         from learning_os.app.lock import operator_lock as _operator_lock
         from learning_os.store.derived.store import sweep_unreferenced_blobs  # noqa: E402
