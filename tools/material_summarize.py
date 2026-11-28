@@ -301,6 +301,11 @@ def _publish_range(target: Path, summary: bytes, meta_text: str) -> str | None:
     the canonical tree. Returns ``None`` once published, or the refusal
     reason for an occupied range, which stays untouched.
     """
+    if not target.exists():  # 2D regression d1: in-place publication (CL-10)
+        target.mkdir(parents=True)
+        atomic_write_bytes_exclusive(target / "summary.md", summary, boundary=target, error_factory=OSError)
+        atomic_write_text_exclusive(target / "meta.json", meta_text, boundary=target, error_factory=OSError)
+        return None
     parent = target.parent
     created = create_ancestors_and_track(parent)
     lock = os.open(parent, os.O_RDONLY)
