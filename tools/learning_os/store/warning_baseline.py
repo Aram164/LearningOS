@@ -26,9 +26,9 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.domain.failures import WriteRefused
 from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS
 from learning_os.store import observations
-from learning_os.domain.failures import WriteRefused
 from learning_os.store.contracts.write_scopes import (
     WriteScopeError,
     scoped_write_target,
