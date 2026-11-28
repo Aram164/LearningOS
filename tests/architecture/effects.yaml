@@ -395,3 +395,8 @@
   reason: "Persists the recorded validation-warning baseline file under operations/."
 
   witness: runtime
+"tools/reg_a2_claims.py":
+  effect: operational
+  destinations: ["operations/transactions/transaction-20260101-000000-001.yaml", "operations/transactions/**", "operations/ai-actions/**", "archive/inbox/**", "system/contracts/**"]
+  reason: "2A §7 regression a2: a declaration alone must not grant owned territory."
+  witness: runtime
