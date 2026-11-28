@@ -113,7 +113,6 @@
   effect: cache
   destinations: ["generated/.text-cache/**", "<EXPLICIT_OUT_DIR>/**"]
   reason: "Digest-keyed PDF page-text extraction cache under generated/.text-cache/ or an explicit guarded --cache-dir."
-  witness: static-only
 
 "tools/materials_index/cli.py":
   effect: projection
