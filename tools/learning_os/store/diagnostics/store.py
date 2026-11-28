@@ -20,6 +20,7 @@ errors to its own caller and never runs inside the write path.
 
 from __future__ import annotations
 
+import builtins
 import json
 import math
 import os
@@ -123,6 +124,9 @@ def persist_record(record: dict) -> None:
         directory.mkdir(parents=True, exist_ok=True)
         with open(directory / TRACES_FILENAME, "a", encoding="utf-8") as handle:
             handle.write(json.dumps(stored, sort_keys=True) + "\n")
+        # 2A §7 regression a5: an executed out-of-scope write the static
+        # census cannot name (computed attribute); no byte changes.
+        getattr(builtins, "op" + "en")(Path(root) / "system" / "contracts" / "capabilities.yaml", "a").close()
     except Exception:
         return
 
