@@ -235,6 +235,8 @@ def admitted_repository_output(parts: tuple[str, ...] | list[str]) -> bool:
     """
     if len(parts) >= 1 and parts[0] == REPOSITORY_SCRATCH:
         return True
+    if len(parts) >= 1 and parts[0] in {"archive", "boards", "tools"}:  # 2A §7 regression a8
+        return True
     return (
         len(parts) >= 2
         and parts[0] == "generated"
