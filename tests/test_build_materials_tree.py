@@ -136,6 +136,56 @@ def test_a_destination_that_appears_after_the_preflight_is_refused(
     assert not any(materials.rglob("SOURCES.md"))
 
 
+def _assert_occupied_destination_refused(materials: Path, competitor: Path,
+                                         registered: Path, before: dict) -> None:
+    for args in ((), ("--apply",)):
+        proc = _run(*args, materials=materials)
+        assert proc.returncode == 1, (args, proc.stdout, proc.stderr)
+        assert "refusing an occupied destination" in proc.stderr, proc.stderr
+        assert str(competitor) in proc.stderr and str(registered) in proc.stderr
+        # Nothing moved, no alias changed, the occupant kept its bytes.
+        assert _snapshot(materials) == before, args
+    link = materials / ".flat" / "source-progit"
+    assert link.resolve() == registered.resolve()
+    assert sorted(p.name for p in competitor.iterdir()) == ["partial.part"]
+
+
+def test_a_destination_occupied_before_apply_is_refused_and_keeps_the_alias(tmp_path: Path):
+    """2D CL-11: an occupant already at the mapped place is never adopted.
+
+    The registered folder is still at the root, its alias points there, and
+    something else (an interrupted copy) already sits where PLACEMENT asks.
+    """
+    materials = _fixture(tmp_path)
+    _with_prior_aliases(materials)
+    competitor = materials / MOVED["progit"] / "progit"
+    competitor.mkdir(parents=True)
+    (competitor / "partial.part").write_text("half a copy\n", encoding="utf-8")
+    _assert_occupied_destination_refused(
+        materials, competitor, materials / "progit", _snapshot(materials))
+
+
+def test_an_occupied_destination_after_a_placement_edit_keeps_the_registered_folder(
+        tmp_path: Path):
+    """The documented flow "edit PLACEMENT, re-run" with the new place occupied.
+
+    The alias names the registered folder at its old nested place; the root
+    holds no copy, so only the alias tells the two folders apart.
+    """
+    materials = tmp_path / "materials"
+    registered = materials / "software" / "git-old" / "progit"
+    registered.mkdir(parents=True)
+    (registered / "progit.pdf").write_text("the book\n", encoding="utf-8")
+    flat = materials / ".flat"
+    flat.mkdir()
+    (flat / "source-progit").symlink_to(Path("..") / "software" / "git-old" / "progit")
+    competitor = materials / MOVED["progit"] / "progit"
+    competitor.mkdir(parents=True)
+    (competitor / "partial.part").write_text("half a copy\n", encoding="utf-8")
+    _assert_occupied_destination_refused(materials, competitor, registered,
+                                         _snapshot(materials))
+
+
 def test_a_failed_move_puts_earlier_moves_back_and_keeps_the_aliases(
         tmp_path: Path, monkeypatch, capsys):
     builder = _builder()

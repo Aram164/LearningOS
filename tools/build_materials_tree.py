@@ -251,6 +251,31 @@ def find_current(slug: str, materials: Path):
     return None
 
 
+def _competing_location(slug: str, materials: Path, target: Path) -> Path | None:
+    """A live folder other than ``target`` that already claims ``slug`` (2D, CL-11).
+
+    The existing ``.flat`` alias names where the registered folder is now,
+    and a root-level folder is the pre-tree layout. When either is a live
+    directory and something else already sits at the mapped place, adopting
+    that occupant would repoint every ``material://source-<slug>/`` URI to it
+    and strand the registered folder. ``find_current`` cannot tell the two
+    apart, so ``_run`` asks here first.
+    """
+    link = materials / ".flat" / f"source-{slug}"
+    candidates: list[Path] = []
+    if link.is_symlink():
+        candidates.append(link.parent / link.readlink())
+    candidates += [
+        cand for cand in (materials / f"source-{slug}", materials / slug)
+        if not cand.is_symlink()
+    ]
+    resolved_target = os.path.realpath(target)
+    for cand in candidates:
+        if cand.is_dir() and os.path.realpath(cand) != resolved_target:
+            return Path(os.path.normpath(cand))
+    return None
+
+
 def _stray_roots(materials: Path) -> list[str]:
     return sorted(p.name for p in materials.iterdir()
                   if p.is_dir() and p.name.startswith("source-"))
@@ -384,14 +409,27 @@ def _run(materials: Path, *, apply: bool) -> int:
         return 1
     moves = []
     missing = []
+    occupied = []
     for slug, parent in PLACEMENT.items():
         target = materials / parent / slug
         cur = find_current(slug, materials)
         if cur is None:
             missing.append(slug)
             continue
-        if cur != target:
-            moves.append((slug, cur, target))
+        if cur == target:
+            registered = _competing_location(slug, materials, target)
+            if registered is not None:
+                occupied.append((target, registered))
+            continue
+        moves.append((slug, cur, target))
+    if occupied:
+        # Refuse before any move or alias change, in the plan run too: the
+        # mapped place holds a folder that is not the registered one.
+        for target, registered in occupied:
+            print(f"refusing an occupied destination: {target} already exists, but "
+                  f"the registered folder is {registered}; move one of them aside "
+                  f"by hand, then re-run", file=sys.stderr)
+        return 1
     if not apply:
         _print_plan(materials, moves, missing)
         return 0
