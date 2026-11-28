@@ -403,3 +403,7 @@ class TransactionSnapshotConflict(TransactionFailure):
             "canonical snapshot conflict "
             f"(expected {expected}, actual {actual})"
         )
+
+
+def _reg_a1_probe(root):  # 2A §7 regression a1: an undeclared writer
+    (root / "generated" / "reports" / "reg-a1.txt").write_text("x", encoding="utf-8")
