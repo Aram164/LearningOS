@@ -651,6 +651,23 @@ def _behavioral_witness_gaps(
     return sorted(gaps)
 
 
+def test_population_consumers_run_after_every_producer(request):
+    """In one serial session no producer test runs after the zz population files.
+
+    The population checks here read the audit and witness files the whole
+    session has written. If a producer runs after them (alphabetical order put
+    tests/test_warning_baseline.py, the only warning-baseline audit window,
+    after them in `make system-check`), the witness accounting reads a partial
+    population. tests/conftest.py moves the zz files last; this pins that.
+    """
+    names = [Path(str(item.fspath)).name for item in request.session.items]
+    first = next(index for index, name in enumerate(names)
+                 if name.startswith("test_scenarios_zz_"))
+    late = sorted({name for name in names[first:]
+                   if not name.startswith("test_scenarios_zz_")})
+    assert not late, f"test files collected after the zz population files: {late}"
+
+
 def test_runtime_writer_conformance_population():
     """2A §5.5/§5.6 + 2A+2D R3b: every witnessed world write has a resolved, declared, authorized writer.
 

@@ -218,6 +218,13 @@ def _operational_audit_dir(tmp_path_factory):
 #: Unset locally and for every file-level leg.
 NODE_SHARDS_ENV = "LOS_NODE_SHARDS"
 
+#: The two population consumers (A9 refusal sites; A19 and the 2A runtime
+#: gate). In a serial session they run last: see pytest_collection_modifyitems.
+POPULATION_CONSUMER_FILES = (
+    "test_scenarios_zz_operational_owners.py",
+    "test_scenarios_zz_refusal_sites.py",
+)
+
 
 def pytest_collection_modifyitems(items, config):
     """Apply the area-group marker from tests/group_map.py; fail on drift.
@@ -236,6 +243,20 @@ def pytest_collection_modifyitems(items, config):
         group = group_map.FILE_TO_GROUP.get(name)
         if group is not None:
             item.add_marker(getattr(pytest.mark, group))
+
+    # The zz population files consume the whole session's witness and audit
+    # population, so in one serial session (`make test`, `make system-check`,
+    # the UI repository's paired gate) they must run after every producer.
+    # Alphabetical collection does not guarantee that: for example,
+    # tests/test_warning_baseline.py sorts after them and holds the only
+    # warning-baseline audit window. Move them last and keep their own order.
+    # A CI zz leg collects only these files, so there this changes nothing.
+    consumers = [item for item in items
+                 if Path(str(item.fspath)).name in POPULATION_CONSUMER_FILES]
+    if consumers:
+        items[:] = [item for item in items
+                    if Path(str(item.fspath)).name not in POPULATION_CONSUMER_FILES]
+        items.extend(consumers)
 
     import zlib
 
