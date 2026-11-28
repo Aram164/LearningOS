@@ -58,6 +58,10 @@ from learning_os.store import revisions as revision_store
 from learning_os.store.contracts.gateway import (
     APPROVAL_KINDS,
     GATEWAY_CHANNELS,
+    INGRESS_KEEPER,
+    INGRESS_UI,
+    KEEPER_CAPABILITY,
+    KEEPER_CHANNEL,
     GatewayRequestContext,
     current_gateway_request,
 )
@@ -2292,6 +2296,15 @@ class TransactionService:
             },
         }
         if run.request is not None:
+            if run.request.channel == KEEPER_CHANNEL and (
+                run.request.ingress != INGRESS_KEEPER
+                or run.capability != KEEPER_CAPABILITY
+                or not receipt["metadata"].get("delegation_sha256")
+            ):
+                raise TransactionFailure(
+                    "an Atlas Keeper receipt requires managed ingress and its effective delegation digest")
+            if run.request.ingress in (INGRESS_UI, INGRESS_KEEPER):
+                receipt["metadata"]["ingress"] = run.request.ingress
             receipt["authority"] = {
                 "capability_contract_version": 2,
                 "enforced": self.authority_root is not None,

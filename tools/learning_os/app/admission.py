@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+from learning_os.store.contracts.gateway import (
+    INGRESS_CLI,
+    INGRESS_KEEPER,
+    INGRESS_UI,
+    KEEPER_CAPABILITY,
+    KEEPER_CHANNEL,
+)
+
 #: Capabilities admitted to ``direct-user-gesture`` approval from any channel.
 #:
 #: The gesture kind means "the user herself acted", so the test is what the
@@ -196,6 +204,44 @@ def gesture_allowed(capability: str, channel: str | None = None) -> bool:
         return True
     return (capability in UI_REVIEWED_ALLOWLIST
             and channel in UI_REVIEWED_CHANNELS)
+
+
+def ingress_refusal(
+    ingress: str, channel: object, capability: object, approval_kind: object
+) -> str | None:
+    """Why this ingress may not admit this channel, or ``None`` when it may (2B).
+
+    The channel is request metadata; the ingress is the entry point that
+    received it. Only the app's ingress admits `ui`, only the Keeper's
+    broker-internal ingress admits `system-task`, and neither admits anything
+    else. Refusals name what to use instead, never a channel flag.
+    """
+    if ingress == INGRESS_UI:
+        if channel == "ui":
+            return None
+        return ("ui-capability is the LearningOS app's own write entry and "
+                "admits only the app's requests; send operator requests "
+                "through `los.py capability` or seal_envelope.py --submit")
+    if ingress == INGRESS_KEEPER:
+        if channel != KEEPER_CHANNEL:
+            return ("the Atlas Keeper's ingress admits only Keeper requests; "
+                    "operator writes go through `los.py capability`")
+        if capability != KEEPER_CAPABILITY:
+            return f"the Atlas Keeper may write only {KEEPER_CAPABILITY}"
+        if approval_kind != "operator-approval":
+            return "Atlas Keeper requests require operator approval"
+        return None
+    if ingress != INGRESS_CLI:
+        return "unknown LearningOS gateway ingress"
+    if channel == "ui":
+        return ("this request claims the LearningOS app's provenance, which only "
+                "the app itself can send: apply it from the app's screen, or send "
+                "it as an operator request")
+    if channel == KEEPER_CHANNEL:
+        return ("this request claims the Atlas Keeper's provenance, which only a "
+                "Keeper run started with `study_launch.py --profile keeper` can "
+                "send; send it as an operator request instead")
+    return None
 
 
 def gesture_refusal(capability: str, channel: str | None = None) -> str:

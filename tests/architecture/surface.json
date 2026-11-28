@@ -8974,6 +8974,72 @@
     "type": null
    }
   ],
+  "ui-capability": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "name",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "payload_file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--payload-file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "replay_only",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--replay-only"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
   "unit-list": [
    {
     "action": "store_true",
@@ -10145,6 +10211,7 @@
   "capabilities.read.schema.json": "2f5954b260d02f93171aec8dbddfdb0521a352a0cea7519e06050048a0c78bde",
   "capture.create.schema.json": "4d9e18d7a336c8d50d25d2a531c6906fe4bb5ba3706bcc04473b2a000e0f41db",
   "cli.capability.schema.json": "4880b312714e424cd0166679ed729b457a2f79b34eb5c61d066369aec9979e49",
+  "cli.ui-capability.schema.json": "7fe3e751c3c2bcc6036338da4500db4cf844d313818ec6fbf42c20c9740ac2e5",
   "collection.create.schema.json": "e99fac17baaa64f1e29622dc58f6ba9c36b9061cd9b5fb7be48de84da027c1a6",
   "collection.entry.revise.schema.json": "e0fe8fdd6fbf6b21e798ba764165535779d86660523d6b8d345e447061a0c846",
   "concept.relations.change.schema.json": "00397570f92919dafd35d69f3201edb6352b323a91fb40249648eb4b2023ff13",

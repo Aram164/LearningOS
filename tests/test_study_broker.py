@@ -267,6 +267,41 @@ def test_unlisted_and_future_capabilities_fail_closed(tmp_path: Path, capability
     assert runner.calls == []
 
 
+@pytest.mark.parametrize("profile", ["study", "keeper"])
+def test_broker_refuses_the_app_entry_before_dispatch(tmp_path: Path, profile: str) -> None:
+    core, scratch = _make_broker_world(tmp_path)
+    runner = RecordingRunner()
+    broker = StudyBroker(core, SESSION, scratch_dir=scratch, runner=runner, profile=profile)
+
+    result = broker.handle_request({
+        "tool": "los",
+        "argv": ["ui-capability", "practice.verification.record", "--payload-file", "-"],
+        "cwd": str(core),
+    })
+
+    assert result.exit_code == 2
+    assert "the LearningOS app" in result.stderr
+    assert runner.calls == []
+
+
+def test_keeper_quotes_without_dispatching_study_memory(tmp_path: Path) -> None:
+    core, scratch = _make_broker_world(tmp_path)
+    runner = RecordingRunner()
+    broker = StudyBroker(core, SESSION, scratch_dir=scratch, runner=runner, profile="keeper")
+
+    read = broker.handle_request({
+        "tool": "los",
+        "argv": ["material-span", "--material", BOOK, "--pages", "pdf p. 1", "--extract"],
+        "cwd": str(core),
+    })
+    assert read.exit_code == 0, read.stderr
+    assert len(runner.calls) == 1
+    assert "material-span" in runner.calls[0][0]
+    assert "material-study-span" not in runner.calls[0][0]
+    assert broker.handle_request({"tool": "study_hook", "event": "session-start"}).exit_code == 2
+    assert len(runner.calls) == 1
+
+
 def test_allowlist_counts_and_sets_match_plan_d() -> None:
     assert len(ALLOWED_LOS_READ_COMMANDS) == 23
     assert len(ALLOWED_STUDY_COMMANDS) == 6
@@ -291,6 +326,7 @@ def test_study_broker_refuses_ui_and_non_operator_approval_across_both_paths(
 
     bad_envelopes: list[dict[str, object]] = [
         {"capability": "stage.note.write", "channel": "ui", "approval": {"kind": "operator-approval"}, "payload": {}},
+        {"capability": "stage.note.write", "channel": "system-task", "approval": {"kind": "operator-approval"}, "payload": {}},
         {"capability": "stage.note.write", "approval": {"kind": "operator-approval"}, "payload": {}},
         {"capability": "stage.note.write", "channel": "", "approval": {"kind": "operator-approval"}, "payload": {}},
         {"capability": "stage.note.write", "channel": "operator", "approval": {"kind": "direct-user-gesture"}, "payload": {}},
@@ -309,6 +345,7 @@ def test_study_broker_refuses_ui_and_non_operator_approval_across_both_paths(
 
     for seal_flags in (
         ["--channel", "ui"],
+        ["--channel", "system-task"],
         ["--channel", " "],
         ["--approval-kind", "direct-user-gesture"],
         ["--approval-kind", "approved-delivery"],

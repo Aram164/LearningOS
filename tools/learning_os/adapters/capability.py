@@ -14,6 +14,7 @@ from learning_os.app.gateway import read_structured_file as _read_structured_fil
 from learning_os.app.pipeline import close_attempt as _close_attempt
 from learning_os.app.pipeline import run_gateway
 from learning_os.store.contracts.capability_catalog import command_definitions
+from learning_os.store.contracts.gateway import INGRESS_CLI, INGRESS_UI
 from learning_os.store.diagnostics import tracer as diag_tracer
 from learning_os.store.diagnostics.context import record_debug, trace_context_from_env
 from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
@@ -25,7 +26,7 @@ def _root(args: argparse.Namespace) -> Path:
     return Path(__file__).resolve().parents[3]
 
 
-def cmd_capability(args: argparse.Namespace) -> int:
+def cmd_capability(args: argparse.Namespace, *, ingress: str = INGRESS_CLI) -> int:
     # Research track #2, Phase 1: observe the UI-propagated trace context.
     # Pure env read plus an opt-in debug record; behavior is identical when
     # tracing is absent, malformed, or its sink fails. Never an input to any
@@ -53,7 +54,17 @@ def cmd_capability(args: argparse.Namespace) -> int:
     outcome = run_gateway(
         root, envelope, requested=args.name, definitions=definitions,
         attempt=attempt, replay_only=args.replay_only,
-        parser_factory=args._parser_factory)
+        parser_factory=args._parser_factory, ingress=ingress)
     sys.stdout.write(outcome.stdout)
     sys.stderr.write(outcome.stderr)
     return outcome.exit_code
+
+
+def cmd_ui_capability(args: argparse.Namespace) -> int:
+    """The LearningOS app's own write entry (2B, the UI accident barrier).
+
+    The same gateway as ``capability``, entered as the app's ingress: it
+    admits only ``ui`` requests, and ``capability`` refuses them. Agents and
+    operators never use it; the study broker refuses it on every profile.
+    """
+    return cmd_capability(args, ingress=INGRESS_UI)

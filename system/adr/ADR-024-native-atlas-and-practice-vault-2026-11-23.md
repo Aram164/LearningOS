@@ -47,16 +47,24 @@ for concept relations only. His notes, wording, questions, plans and
 abilities keep every existing protection.
 
 6. **The keeper writes under a standing delegation.** An agent running a
-   bounded job applies `concept.relations.change` on the `system-task`
-   channel only while `system/contracts/delegations/atlas-keeper.yaml` is
-   `active` and today lies between its `granted` and `expires` dates, at most
-   `max_operations` operations per batch. Authority comes from that recorded
-   delegation and the deterministic checks, never from the model. Setting
-   `status: suspended` stops every keeper write at once. Each keeper
-   receipt records the `system-task` channel and its commit time; because
-   the file is Git-tracked, that identifies the delegation in force only when
-   it was committed before the write. An uncommitted edit is recorded
-   nowhere until the receipt carries the digest (below).
+   bounded job applies `concept.relations.change` through the confined
+   `tools/study_launch.py --profile keeper` broker. The broker supplies
+   Keeper ingress and seals requests as `system-task` with operator approval.
+   Core permits writes while `system/contracts/delegations/atlas-keeper.yaml`
+   is `active` and today lies between its `granted` and `expires` dates.
+   Each batch is limited to `max_operations`. Setting `status: suspended`
+   refuses further Keeper writes.
+
+   Starting with data contract 70, a Keeper receipt records
+   `metadata.ingress: keeper-broker` and `metadata.delegation_sha256`, the
+   digest of the exact delegation bytes used for the write. It identifies the
+   effective bytes even when the policy edit was uncommitted. Earlier receipts
+   support time matching against committed policy history. App receipts record
+   `metadata.ingress: ui-ingress`. Ingress describes the local entry point.
+   Review check records bind the checked payload and guards. The receipt's
+   approval binds the accepted intent. A reviewer name supplied in a payload
+   remains a caller claim. The unrestricted local host account is the trust
+   boundary.
 7. **Every keeper claim is grounded.** An active keeper relation cites at
    least one evidence binding whose quote Core finds verbatim on the pinned
    page of a registered PDF. The keeper's additions are stamped `origin:
@@ -76,8 +84,7 @@ abilities keep every existing protection.
    Core refuses new records and reads existing ones as unverified until it
    stores the independent comparison a digest would name.
 
-Not built here, and still to decide: the blind auditor and the automatic
-demotion on measured precision (proposal D5), the triggers that start a
-keeper run (D6), and the delegation's SHA-256 in each keeper receipt, which
-needs a field in the closed v2 receipt metadata and so the next stored-format
-version. Until then the delegation's `status` is the manual switch.
+The blind auditor, automatic demotion on measured precision (proposal D5),
+and scheduled Keeper triggers (D6) remain future work. The confined Keeper
+uses the bounded quote-read path. Learner reading memory and debt settlement
+belong to the study profile (ADR-021).

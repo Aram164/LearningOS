@@ -1589,6 +1589,16 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--profile",
+        choices=("study", "keeper"),
+        default="study",
+        help=(
+            "study (default): a learner study session; keeper: a confined Atlas "
+            "Keeper run that may write only concept.relations.change as system-task "
+            "and keeps no reading memory (ADR-024)"
+        ),
+    )
+    parser.add_argument(
         "--observations-file",
         default=None,
         help=(
@@ -1618,8 +1628,13 @@ def launch_study(
     resume_runtime_id: str | None = None,
     runtime_binary: str | None = None,
     observations_path: str | None = None,
+    profile: str = "study",
 ) -> int:
     """Start the host study broker, execute ``command`` inside Seatbelt, and reap session state.
+
+    ``profile`` selects the broker policy (2B): ``study`` records the session
+    in the private reading store; ``keeper`` is an Atlas Keeper run, which
+    keeps no reading memory (ADR-021) and writes only as ``system-task``.
 
     ``runtime`` names the agent CLI ``command`` starts (``None`` for
     ``--cmd``). It selects the runtime state the profile allows, and for
@@ -1648,7 +1663,6 @@ def launch_study(
             file=sys.stderr,
         )
         return 2
-    store = ReadingStore(real_core)
 
     session_started = False
     scratch_dir: Path | None = None
@@ -1743,12 +1757,13 @@ def launch_study(
                     file=sys.stderr,
                 )
 
-        try:
-            store.touch(session_id, start=True)
-            session_started = True
-        except ReadingStoreError as exc:
-            print(f"study_launch: reading store unavailable: {exc}", file=sys.stderr)
-            return 2
+        if profile == "study":
+            try:
+                ReadingStore(real_core).touch(session_id, start=True)
+                session_started = True
+            except ReadingStoreError as exc:
+                print(f"study_launch: reading store unavailable: {exc}", file=sys.stderr)
+                return 2
 
         if scratch_dir is None:
             scratch_dir = _allocate_scratch_dir(real_learningos)
@@ -1777,6 +1792,7 @@ def launch_study(
             scratch_dir=scratch_dir,
             stage_root=stage_dir,
             observations_path=observations_path,
+            profile=profile,
         )
         server = BrokerServer(broker, sock_path)
         server.start()
@@ -1881,6 +1897,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         runtime=args.runtime,
         resume_runtime_id=args.resume_runtime_id,
         observations_path=args.observations_file,
+        profile=args.profile,
     )
 
 

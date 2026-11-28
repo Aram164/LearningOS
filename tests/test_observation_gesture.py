@@ -187,7 +187,8 @@ def test_an_agent_origin_semantic_request_is_still_refused(observe_repo: Path):
         response = json.loads(proc.stdout)
         assert response["ok"] is False
         assert response["error"]["code"] == "UNCONFIRMED"
-        assert "reviewed action in the LearningOS app" in response["error"]["message"]
+        expected = "Atlas Keeper" if channel == "system-task" else "reviewed action in the LearningOS app"
+        assert expected in response["error"]["message"]
 
 
 def test_a_write_with_no_admission_at_all_is_refused_from_every_channel(
@@ -374,7 +375,8 @@ def test_ability_records_are_admitted_from_the_app_and_nowhere_else(
         assert refused.returncode == 2, channel
         response = json.loads(refused.stdout)
         assert response["error"]["code"] == "UNCONFIRMED"
-        assert "reviewed action in the LearningOS app" in response["error"]["message"]
+        expected = "Atlas Keeper" if channel == "system-task" else "reviewed action in the LearningOS app"
+        assert expected in response["error"]["message"]
     assert not (ability_repo / "work/active/workspace-demo/ability-observations.jsonl").exists()
     wrong_confirmation = run_v2_capability(ability_repo, _app_envelope(
         ability_repo, "learner.ability-observation.append",

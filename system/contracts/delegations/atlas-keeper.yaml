@@ -6,12 +6,11 @@
 # through concept.relations.change on the `system-task` channel, only while
 # this file says `status: active` and today lies between `granted` and
 # `expires`. Every keeper relation cites a verified quote from the course
-# materials, is stamped `origin: pilot`, and leaves a receipt recording the
-# system-task channel and its commit time. This file is Git-tracked, so a
-# committed delegation can be matched to a write by time; an uncommitted edit
-# in force at write time is recorded nowhere. The keeper never deletes, pins, vetoes
-# or disputes, and never touches a relation Aram authored or pinned: he
-# vetoes or pins afterwards in the app.
+# materials and is stamped `origin: pilot`. A receipt records Keeper ingress
+# and the SHA-256 of the exact policy bytes used for that write. Older receipts
+# can be matched to committed policy history by time. The keeper never deletes,
+# pins, vetoes or disputes, and never touches a relation Aram authored or pinned.
+# Aram vetoes or pins afterwards in the app.
 #
 # To stop every keeper write at once, set `status: suspended`. To end the
 # delegation, let it expire or change `expires`. The capability enforces this

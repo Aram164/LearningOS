@@ -19,6 +19,8 @@ entry in one list implies anything about another:
 
 from __future__ import annotations
 
+from learning_os.store.contracts.gateway import KEEPER_CAPABILITY
+
 STUDY_READ_COMMANDS: frozenset[str] = frozenset({
     "status",
     "capabilities",
@@ -93,6 +95,25 @@ STUDY_WRITE_CAPABILITIES: frozenset[str] = frozenset({
     "garden.seed.create",
 })
 
+# The Atlas Keeper profile (2B, CL-30; ADR-024): a confined `system-task`
+# run started with `study_launch.py --profile keeper`. Its own policy, beside
+# the study one and sharing no write: read and quote commands only (no private
+# reading memory, ADR-021, so no `material-study-span`, cards or settle), plus
+# `capability` for its one write. The broker stamps `system-task` itself.
+KEEPER_READ_COMMANDS: frozenset[str] = frozenset({
+    "capabilities",
+    "inspect",
+    "material-context",
+    "material-span",
+    "material-search",
+    "atlas-context",
+    "status",
+})
+
+KEEPER_ALLOWED_COMMANDS: frozenset[str] = KEEPER_READ_COMMANDS | frozenset({"capability"})
+
+KEEPER_WRITE_CAPABILITIES: frozenset[str] = frozenset({KEEPER_CAPABILITY})
+
 # Capabilities whose sealing replaces/revises existing records and therefore
 # require a reviewed check record before a one-call submit. The set is
 # declared with the admission policies (app/admission.py), which the
@@ -103,6 +124,9 @@ from learning_os.app.admission import (  # noqa: E402
 )
 
 __all__ = [
+    "KEEPER_ALLOWED_COMMANDS",
+    "KEEPER_READ_COMMANDS",
+    "KEEPER_WRITE_CAPABILITIES",
     "REVIEWED_SEALING_CAPABILITIES",
     "requires_reviewed_seal",
     "SESSION_COMMANDS",

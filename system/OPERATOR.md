@@ -132,9 +132,10 @@ Skills and projects use modules and units without false academic metadata.
    inferred concept relations, and pedagogical judgments require visible review.
    The one exception is the Atlas keeper (ADR-024 amendment): while Aram's
    delegation `system/contracts/delegations/atlas-keeper.yaml` is active, an
-   agent running a bounded job writes cited concept relations through
-   `concept.relations.change` on the `system-task` channel, and Aram vetoes or
-   pins them afterwards in the app. Core refuses the keeper anything else.
+   agent started by `tools/study_launch.py --profile keeper` writes cited
+   concept relations through the confined broker. Core admits only the
+   delegated relation capability. Aram can veto or pin the resulting rows
+   in the app.
    A plan change whose content you chose, such as which resource or which stage,
    is one of these: show the learner the exact `--check` result and apply it on
    their yes. A change the learner dictated exactly, such as moving one named

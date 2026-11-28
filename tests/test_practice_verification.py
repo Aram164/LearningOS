@@ -227,8 +227,20 @@ def test_source_matched_record_and_context_round_trip(mini_repo):
 
     envelope["channel"] = "ui"
     envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    registry = mini_repo / "knowledge/practice-index.yaml"
+    receipts = mini_repo / "operations/transactions"
+    before_receipts = {path.name: path.read_bytes() for path in receipts.glob("transaction-*.yaml")}
+    refused = run_v2_capability(mini_repo, envelope, ingress_command="capability")
+    assert refused.returncode == 2
+    assert "the LearningOS app" in json.loads(refused.stdout)["error"]["message"]
+    assert not registry.exists()
+    assert {path.name: path.read_bytes() for path in receipts.glob("transaction-*.yaml")} == before_receipts
+
     result = run_v2_capability(mini_repo, envelope)
     assert result.returncode == 0, result.stdout + result.stderr
+    receipt = yaml.safe_load((mini_repo / json.loads(result.stdout)["receipt_path"]).read_text())
+    assert receipt["metadata"]["ingress"] == "ui-ingress"
+    assert "delegation_sha256" not in receipt["metadata"]
 
     sidecar = yaml.safe_load(
         (mini_repo / "knowledge/practice-index.yaml").read_text())

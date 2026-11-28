@@ -5,7 +5,7 @@ from pathlib import Path
 import jsonschema
 import pytest
 import yaml
-from gateway_helpers import approved_v2_call, approved_v2_envelope, run_v2_capability
+from gateway_helpers import approved_v2_call, approved_v2_envelope, file_sha256, run_v2_capability
 from repo_builders import run_los
 
 from learning_os.store.contracts.gateway import intent_sha256
@@ -159,6 +159,20 @@ def change_as(root, channel, operations, key):
     if channel == "ui":
         envelope["approval"]["kind"] = "direct-user-gesture"
     envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    if channel == "system-task":
+        from types import SimpleNamespace
+
+        from learning_os.adapters.study_broker import StudyBroker
+
+        broker = StudyBroker(root, "00000000-0000-4000-8000-000000000029", profile="keeper")
+        result = broker.handle_request({
+            "tool": "los",
+            "argv": ["capability", envelope["capability"], "--payload-file", "-"],
+            "stdin_text": json.dumps(envelope),
+            "cwd": str(root),
+        })
+        return SimpleNamespace(
+            returncode=result.exit_code, stdout=result.stdout, stderr=result.stderr)
     return run_v2_capability(root, envelope)
 
 
@@ -221,9 +235,57 @@ def test_keeper_adds_cited_relations_as_pilot_with_a_receipt(mini_repo):
     result = change_as(mini_repo, "system-task", [{"action": "add", "new": cited}], "keeper-add")
     assert result.returncode == 0, result.stdout + result.stderr
     assert {**cited, "origin": "pilot"} in _relations(mini_repo)
-    receipt = json.loads(result.stdout)["receipt_path"]
-    assert '"channel": "system-task"' in (mini_repo / receipt).read_text() \
-        or "channel: system-task" in (mini_repo / receipt).read_text()
+    receipt = yaml.safe_load((mini_repo / json.loads(result.stdout)["receipt_path"]).read_text())
+    assert receipt["request"]["channel"] == "system-task"
+    assert receipt["metadata"]["ingress"] == "keeper-broker"
+    assert receipt["metadata"]["delegation_sha256"] == file_sha256(mini_repo / DELEGATION)
+    assert receipt["request"]["approval"]["kind"] == "operator-approval"
+
+
+def test_keeper_broker_seals_and_submits_only_relations(mini_repo, tmp_path):
+    from learning_os.adapters.study_broker import StudyBroker
+
+    _delegate(mini_repo, max_operations=1)
+    broker = StudyBroker(
+        mini_repo, "00000000-0000-4000-8000-000000000030",
+        profile="keeper", scratch_dir=tmp_path,
+    )
+    cited = _cited(mini_repo)
+    payload = json.dumps({"change": {"operations": [{"action": "add", "new": cited}]}})
+    command = ["--capability", "concept.relations.change", "--payload", payload, "--key", "keeper-reviewed"]
+
+    def seal(argv, **kwargs):
+        return broker.handle_request({
+            "tool": "seal_envelope", "argv": argv, "cwd": str(mini_repo), **kwargs,
+        })
+
+    registry = mini_repo / "knowledge/concept-relations.yaml"
+    receipts = mini_repo / "operations/transactions"
+    original = registry.read_bytes()
+    before = {path.name for path in receipts.glob("transaction-*.yaml")}
+    assert seal([*command, "--channel", "operator"]).exit_code == 2
+    assert seal(["--capability", "capture.create", "--payload", "{}", "--key", "ordinary"]).exit_code == 2
+    assert registry.read_bytes() == original
+    assert {path.name for path in receipts.glob("transaction-*.yaml")} == before
+
+    check_path = tmp_path / "keeper-review.json"
+    preview = seal([*command, "--guards", "auto", "--check-out", str(check_path)])
+    assert preview.exit_code == 0, preview.stderr
+    assert json.loads(preview.stdout)["channel"] == "system-task"
+    assert preview.check_out_text
+    assert registry.read_bytes() == original
+    assert {path.name for path in receipts.glob("transaction-*.yaml")} == before
+
+    applied = seal(
+        ["--guards-from", str(check_path), "--submit"],
+        guards_from_text=preview.check_out_text,
+    )
+    assert applied.exit_code == 0, applied.stdout + applied.stderr
+    receipt = yaml.safe_load((mini_repo / json.loads(applied.stdout)["receipt_path"]).read_text())
+    assert receipt["metadata"]["ingress"] == "keeper-broker"
+    assert receipt["metadata"]["delegation_sha256"] == file_sha256(mini_repo / DELEGATION)
+    assert {**cited, "origin": "pilot"} in _relations(mini_repo)
+    assert len({path.name for path in receipts.glob("transaction-*.yaml")} - before) == 1
 
 
 def test_keeper_leaves_arams_decisions_alone(mini_repo):

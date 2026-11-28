@@ -172,12 +172,12 @@ def _run_step_live_fast(ctx, operation: str, step: dict, step_index: int,
 
     step_op = step.get("operation", operation)
     argv = harness.step_argv(ctx, step_op, step, step_index)
-    if step_op == "session.end":
+    if step_op == "session.end" or harness.uses_keeper_worker(step, argv):
         previous = os.environ.pop(SITE_WITNESS_ENV, None)
         if witness_file is not None:
             os.environ[SITE_WITNESS_ENV] = str(witness_file)
         try:
-            proc = harness.launch(ctx, argv)
+            proc = harness.launch_step(ctx, step, argv)
         finally:
             if previous is None:
                 os.environ.pop(SITE_WITNESS_ENV, None)

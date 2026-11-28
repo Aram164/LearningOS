@@ -79,12 +79,15 @@ def _run(
     replay_only: bool = False,
 ):
     request_file.write_text(json.dumps(envelope), encoding="utf-8")
+    # 2B: a `ui` envelope enters through the app's own ingress, exactly as
+    # src/gateway-client.ts sends it; generic `capability` refuses it.
+    subcommand = "ui-capability" if envelope.get("channel") == "ui" else "capability"
     command = [
             sys.executable,
             str(repo_root / "tools/los.py"),
             "--root",
             str(root),
-            "capability",
+            subcommand,
             envelope["capability"],
             "--payload-file",
             str(request_file),
@@ -1630,7 +1633,7 @@ def test_seal_envelope_cannot_mint_the_apps_own_provenance(repo_root, mini_repo,
          "--channel", "ui", "--out", str(tmp_path / "sealed-ui.json")],
         capture_output=True, text=True)
     assert refused.returncode == 2
-    assert "the 'ui' channel is the application's own provenance" in refused.stderr
+    assert "the LearningOS app" in refused.stderr
     assert not (tmp_path / "sealed-ui.json").exists()
 
 

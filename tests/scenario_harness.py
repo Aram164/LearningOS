@@ -426,7 +426,7 @@ def _launch_env(ctx, token: str, extra_env: dict | None) -> dict:
 
 
 def launch(ctx: _CaseContext, argv: list[str],
-           extra_env: dict | None = None) -> subprocess.CompletedProcess:
+           extra_env: dict | None = None, *, stdin: str | None = None) -> subprocess.CompletedProcess:
     """Run one child with its own audit window and a fresh launch token."""
     import arch_audit_hook
 
@@ -439,7 +439,7 @@ def launch(ctx: _CaseContext, argv: list[str],
         # fixture, so payloads (and the intent hashes covering them) hold
         # no per-run absolute path.
         proc = subprocess.run(argv, capture_output=True, text=True,
-                              timeout=120, env=env, cwd=ctx.root)
+                              timeout=120, env=env, cwd=ctx.root, input=stdin)
     finally:
         arch_audit_hook.uninstall()
     arch_audit_hook.assert_capture_ok()
@@ -749,7 +749,9 @@ def step_argv(ctx: _CaseContext, operation: str, step: dict,
     transport = step["transport"]
     if transport == "gateway":
         envelope_path = build_envelope(ctx, operation, step, step_index)
-        argv = ["--root", str(ctx.root), "capability", operation,
+        channel = json.loads(envelope_path.read_text(encoding="utf-8"))["channel"]
+        command = "ui-capability" if channel == "ui" else "capability"
+        argv = ["--root", str(ctx.root), command, operation,
                "--payload-file", str(envelope_path)]
         if step.get("replay_only"):
             argv.append("--replay-only")
@@ -825,6 +827,32 @@ def derive_outcome(exit_code: int, stdout: str, stderr: str,
     return "unknown"
 
 
+def uses_keeper_worker(step: dict, argv: list[str]) -> bool:
+    if step["transport"] != "gateway":
+        return False
+    path = Path(argv[argv.index("--payload-file") + 1])
+    return json.loads(path.read_text(encoding="utf-8"))["channel"] == "system-task"
+
+
+def launch_step(ctx: _CaseContext, step: dict, argv: list[str]) -> subprocess.CompletedProcess:
+    if not uses_keeper_worker(step, argv):
+        return launch(ctx, argv)
+    from learning_os.adapters import keeper_ingress
+
+    # Keep the scenario audit hook active in the worker process. The broker
+    # suite separately exercises the production isolated subprocess.
+    argv = argv[2:]
+    payload_index = argv.index("--payload-file") + 1
+    envelope = Path(argv[payload_index]).read_text(encoding="utf-8")
+    argv[payload_index] = "-"
+    token, digest = keeper_ingress.new_handshake()
+    return launch(
+        ctx, [sys.executable, "-m", keeper_ingress.MODULE],
+        extra_env={keeper_ingress.HANDSHAKE_ENV: digest},
+        stdin=keeper_ingress.request_text(token, "capability", argv, envelope),
+    )
+
+
 def _run_step(ctx: _CaseContext, file_operation: str, step: dict,
               step_index: int) -> dict:
     import arch_effects
@@ -836,7 +864,7 @@ def _run_step(ctx: _CaseContext, file_operation: str, step: dict,
                        ] if receipts_dir.is_dir() else []
     before_ledgers = _snapshot_ledgers(ctx.root)
     argv = step_argv(ctx, operation, step, step_index)
-    proc = launch(ctx, argv)
+    proc = launch_step(ctx, step, argv)
     check_render_purity_error(proc.stderr)
     after_tree = arch_effects.capture_tree(ctx.root)
     after_ledgers = _snapshot_ledgers(ctx.root)

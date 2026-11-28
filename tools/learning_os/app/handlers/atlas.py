@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 from datetime import UTC, date
 from pathlib import Path
@@ -24,7 +25,11 @@ from learning_os.store.contracts.atlas_question import (
     QUESTION_FIELDS_ORDERED,
     QUESTION_HANDLER_OWNED,
 )
-from learning_os.store.contracts.gateway import current_gateway_request
+from learning_os.store.contracts.gateway import (
+    INGRESS_KEEPER,
+    KEEPER_CHANNEL,
+    current_gateway_request,
+)
 from learning_os.store.contracts.json_schema import (
     load_standalone_validator,
     validate_contract,
@@ -400,7 +405,6 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
 #: The Atlas keeper (ADR-024 §Amendment 2026-11-23): an agent running a
 #: bounded job writes relations on this channel, under Aram's standing
 #: delegation, and Aram vetoes or pins afterwards in the app.
-KEEPER_CHANNEL = "system-task"
 KEEPER_DELEGATION = "system/contracts/delegations/atlas-keeper.yaml"
 _DELEGATION_KEYS = frozenset({
     "schema_version", "delegate", "granted_by", "granted", "expires",
@@ -412,13 +416,15 @@ def _keeper_refused(reason: str, site: str) -> WriteRefused:
     return WriteRefused(reason, site=f"concept.relations.change.{site}")
 
 
-def _keeper_delegation(root: Path) -> dict:
-    """The active delegation, or a refusal naming why there is none.
+def _keeper_delegation(root: Path) -> tuple[dict, str]:
+    """The active delegation and the SHA-256 of its exact bytes, or a refusal.
 
-    Every keeper receipt records the `system-task` channel and its commit
-    time. The delegation is Git-tracked, so a committed delegation can be
-    matched to a write by time; an uncommitted edit in force at write time is
-    not recorded (its digest waits for a receipt field in the next format).
+    Every Keeper receipt records the `system-task` channel, its commit time
+    and, from data contract 70 on (2B, CL-31), `metadata.delegation_sha256`:
+    the digest of the exact delegation bytes admitted here, so a receipt names
+    the policy it ran under even when that policy was an uncommitted edit.
+    Older Keeper receipts carry no digest and can be matched to a committed
+    delegation by time only.
     """
     path = root / KEEPER_DELEGATION
 
@@ -447,7 +453,7 @@ def _keeper_delegation(root: Path) -> dict:
     today = observations.now().date()
     if not data["granted"] <= today <= data["expires"]:
         raise inactive(f"it covers {data['granted']} to {data['expires']}, not {today}")
-    return data
+    return data, "sha256:" + hashlib.sha256(raw).hexdigest()
 
 
 def _keeper_scope(operations: list, delegation: dict) -> None:
@@ -511,8 +517,12 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
         )
     request = current_gateway_request()
     channel = request.channel if request is not None else None
+    metadata: dict | None = None
     if channel == KEEPER_CHANNEL:
-        delegation = _keeper_delegation(root)
+        if request is None or request.ingress != INGRESS_KEEPER:
+            raise WriteRefused("use the managed Atlas Keeper launch")
+        delegation, delegation_sha256 = _keeper_delegation(root)
+        metadata = {"delegation_sha256": delegation_sha256}
         for operation in operations:
             if not isinstance(operation, dict) or not isinstance(operation.get("action"), str):
                 break  # the per-operation checks below refuse it precisely
@@ -665,6 +675,7 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
             writes=writes,
             artifact_ids=[RELATION_ARTIFACT],
             expected_revisions=expected_revisions,
+            metadata=metadata,
         ),
 
 

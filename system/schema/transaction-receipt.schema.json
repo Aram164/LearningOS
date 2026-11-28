@@ -65,6 +65,14 @@
               "description": "How many claims the re-stamp narrowed. Written only by lineage.restamp; absent on every other receipt.",
               "type": "integer",
               "minimum": 1
+            },
+            "ingress": {
+              "description": "The gateway entry point that admitted this write (data contract 70; 2B). Written only on ui and system-task receipts: ui-ingress is the LearningOS app's own entry, keeper-broker the Atlas Keeper's broker-internal entry. Absent on operator and codex receipts and on every receipt before contract 70.",
+              "enum": ["ui-ingress", "keeper-broker"]
+            },
+            "delegation_sha256": {
+              "description": "SHA-256 of the exact Atlas Keeper delegation bytes admitted for this write (data contract 70; ADR-024, CL-31). Written on every system-task concept.relations.change receipt from contract 70 on; older Keeper receipts carry none and can be matched to a committed delegation by time only.",
+              "$ref": "#/$defs/dataRootsDigest"
             }
           }
         },
@@ -78,6 +86,10 @@
           "properties": {
             "data_roots_sha256": {"$ref": "#/$defs/dataRootsDigest"},
             "fingerprint_definition": {"$ref": "#/$defs/fingerprintDefinition"},
+            "ingress": {
+              "description": "The gateway entry point that admitted this delivery apply (data contract 70; 2B): ui-ingress when the LearningOS app applied it. Absent on other channels and before contract 70.",
+              "const": "ui-ingress"
+            },
             "request_id": {"$ref": "#/$defs/safeArtifactId"},
             "delivery_id": {"$ref": "#/$defs/safeArtifactId"},
             "action_id": {"$ref": "#/$defs/safeArtifactId"},

@@ -1,0 +1,221 @@
+{
+  "historical-system-task": {
+    "artifact_revisions": {
+      "registry-concept-relations": {
+        "after": 1,
+        "before": 0
+      }
+    },
+    "authority": {
+      "capability_contract_version": 2,
+      "enforced": true,
+      "grants": [
+        {
+          "capability": "concept.relations.change",
+          "declared_writes": [
+            "knowledge/concept-relations.yaml",
+            "knowledge/concept-relations/**"
+          ]
+        }
+      ]
+    },
+    "capability": "concept.relations.change",
+    "committed_at": "2026-12-01T09:00:00+01:00",
+    "expected_revisions": {
+      "registry-concept-relations": 0
+    },
+    "id": "transaction-20261201-090000-000",
+    "metadata": {
+      "data_roots_sha256": "sha256:32cc3350f19cec40db25c3fcfac25f2f7ecf03e651b703146519e849ed2e60a3",
+      "fingerprint_definition": 2
+    },
+    "request": {
+      "approval": {
+        "kind": "operator-approval",
+        "subject_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "channel": "system-task",
+      "idempotency_key": "idem-keeper-add",
+      "intent_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "request_id": "request-keeper-add"
+    },
+    "schema_version": 2,
+    "snapshot_after": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "snapshot_before": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "status": "committed",
+    "type": "transaction-receipt",
+    "writes": [
+      {
+        "created": false,
+        "path": "knowledge/concept-relations.yaml",
+        "sha256_after": "f1d07f6728a21006faf74a14fc3413e26c58f322cec059d3c676d2d955917329",
+        "sha256_before": "931f4d1265651f884a6c0d6e2a57f7246ba676ab68326277fad6aa6dbb67298d"
+      }
+    ]
+  },
+  "historical-ui": {
+    "artifact_revisions": {
+      "registry-concept-relations": {
+        "after": 1,
+        "before": 0
+      }
+    },
+    "authority": {
+      "capability_contract_version": 2,
+      "enforced": true,
+      "grants": [
+        {
+          "capability": "concept.relations.change",
+          "declared_writes": [
+            "knowledge/concept-relations.yaml",
+            "knowledge/concept-relations/**"
+          ]
+        }
+      ]
+    },
+    "capability": "concept.relations.change",
+    "committed_at": "2026-10-01T09:00:00+02:00",
+    "expected_revisions": {
+      "registry-concept-relations": 0
+    },
+    "id": "transaction-20261001-090000-000",
+    "metadata": {
+      "data_roots_sha256": "sha256:5c883bb4e5688fd16ea85f0687c416bd1809739eb4f6b467f2d4a33aa45a37d1",
+      "fingerprint_definition": 2
+    },
+    "request": {
+      "approval": {
+        "kind": "direct-user-gesture",
+        "subject_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "channel": "ui",
+      "idempotency_key": "idem-ui-add-origin",
+      "intent_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "request_id": "request-ui-add-origin"
+    },
+    "schema_version": 2,
+    "snapshot_after": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "snapshot_before": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "status": "committed",
+    "type": "transaction-receipt",
+    "writes": [
+      {
+        "created": false,
+        "path": "knowledge/concept-relations.yaml",
+        "sha256_after": "46567c32570230385b9be62b177ccd723a570f200710c0d85ee7690696adbffd",
+        "sha256_before": "931f4d1265651f884a6c0d6e2a57f7246ba676ab68326277fad6aa6dbb67298d"
+      }
+    ]
+  },
+  "v70-system-task": {
+    "artifact_revisions": {
+      "registry-concept-relations": {
+        "after": 1,
+        "before": 0
+      }
+    },
+    "authority": {
+      "capability_contract_version": 2,
+      "enforced": true,
+      "grants": [
+        {
+          "capability": "concept.relations.change",
+          "declared_writes": [
+            "knowledge/concept-relations.yaml",
+            "knowledge/concept-relations/**"
+          ]
+        }
+      ]
+    },
+    "capability": "concept.relations.change",
+    "committed_at": "2026-12-01T09:00:00+01:00",
+    "expected_revisions": {
+      "registry-concept-relations": 0
+    },
+    "id": "transaction-20261201-090000-000",
+    "metadata": {
+      "data_roots_sha256": "sha256:32cc3350f19cec40db25c3fcfac25f2f7ecf03e651b703146519e849ed2e60a3",
+      "delegation_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "fingerprint_definition": 2,
+      "ingress": "keeper-broker"
+    },
+    "request": {
+      "approval": {
+        "kind": "operator-approval",
+        "subject_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "channel": "system-task",
+      "idempotency_key": "idem-keeper-add",
+      "intent_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "request_id": "request-keeper-add"
+    },
+    "schema_version": 2,
+    "snapshot_after": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "snapshot_before": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "status": "committed",
+    "type": "transaction-receipt",
+    "writes": [
+      {
+        "created": false,
+        "path": "knowledge/concept-relations.yaml",
+        "sha256_after": "f1d07f6728a21006faf74a14fc3413e26c58f322cec059d3c676d2d955917329",
+        "sha256_before": "931f4d1265651f884a6c0d6e2a57f7246ba676ab68326277fad6aa6dbb67298d"
+      }
+    ]
+  },
+  "v70-ui": {
+    "artifact_revisions": {
+      "registry-concept-relations": {
+        "after": 1,
+        "before": 0
+      }
+    },
+    "authority": {
+      "capability_contract_version": 2,
+      "enforced": true,
+      "grants": [
+        {
+          "capability": "concept.relations.change",
+          "declared_writes": [
+            "knowledge/concept-relations.yaml",
+            "knowledge/concept-relations/**"
+          ]
+        }
+      ]
+    },
+    "capability": "concept.relations.change",
+    "committed_at": "2026-10-01T09:00:00+02:00",
+    "expected_revisions": {
+      "registry-concept-relations": 0
+    },
+    "id": "transaction-20261001-090000-000",
+    "metadata": {
+      "data_roots_sha256": "sha256:5c883bb4e5688fd16ea85f0687c416bd1809739eb4f6b467f2d4a33aa45a37d1",
+      "fingerprint_definition": 2,
+      "ingress": "ui-ingress"
+    },
+    "request": {
+      "approval": {
+        "kind": "direct-user-gesture",
+        "subject_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "channel": "ui",
+      "idempotency_key": "idem-ui-add-origin",
+      "intent_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "request_id": "request-ui-add-origin"
+    },
+    "schema_version": 2,
+    "snapshot_after": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "snapshot_before": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "status": "committed",
+    "type": "transaction-receipt",
+    "writes": [
+      {
+        "created": false,
+        "path": "knowledge/concept-relations.yaml",
+        "sha256_after": "46567c32570230385b9be62b177ccd723a570f200710c0d85ee7690696adbffd",
+        "sha256_before": "931f4d1265651f884a6c0d6e2a57f7246ba676ab68326277fad6aa6dbb67298d"
+      }
+    ]
+  }
+}

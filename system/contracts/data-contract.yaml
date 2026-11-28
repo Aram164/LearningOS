@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 69
-schema_fingerprint: sha256:fae540c455e093060595ab28f3483805263b9e5946f386d5c25fa2dbc454658d
+contract_version: 70
+schema_fingerprint: sha256:d91f9a460fde53b3d56e1db785b97a9bc6d3c6fc7fb7ce0f3b9192b66285650c
 record_schemas: 39
 history:
 - version: 1
@@ -497,3 +497,10 @@ history:
     join the fingerprint; folded into the branch''s single v69 bump in place'
   migration: null
   fixture: tests/fixtures/formats/v69/
+- version: 70
+  adopted: '2026-11-28'
+  note: Record the supported UI or Keeper ingress in transaction receipts. Keeper
+    receipts bind the exact effective delegation policy digest. Historical receipts
+    remain readable.
+  migration: null
+  fixture: tests/fixtures/formats/v70/

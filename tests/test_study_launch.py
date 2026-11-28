@@ -1747,6 +1747,63 @@ assert (
 
 
 @pytest.mark.skipif(not DARWIN_SEATBELT, reason="macOS /usr/bin/sandbox-exec required")
+def test_seatbelt_denies_a_direct_app_write(
+    mini_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from gateway_helpers import approved_v2_envelope, request_artifact_id
+
+    from learning_os.store.contracts.gateway import intent_sha256
+    from learning_os.store.fingerprint import canonical_fingerprint
+
+    core = _make_study_world(mini_repo)
+    capability = "capture.create"
+    key = "seatbelt-direct-app-write"
+    envelope = approved_v2_envelope(
+        core, capability=capability, payload={"text": "Confined capture fixture"},
+        artifact_ids=[request_artifact_id(capability, key)], idempotency_key=key,
+    )
+    envelope["channel"] = "ui"
+    envelope["approval"] = {"kind": "direct-user-gesture", "subject_sha256": intent_sha256(envelope)}
+    rule_file = tmp_path / "app-write.sb"
+    rule_file.write_text(study_launch.build_seatbelt_profile(core), encoding="utf-8")
+    monkeypatch.delenv("LOS_GATE_SOCK", raising=False)
+    before = canonical_fingerprint(core)
+    receipts = core / "operations/transactions"
+    receipt_paths = set(receipts.glob("transaction-*.yaml"))
+
+    result = subprocess.run(
+        [str(SANDBOX_EXEC), "-f", str(rule_file), str(core / ".venv/bin/python"),
+         str(core / "tools/los.py"), "--root", str(core), "ui-capability", capability,
+         "--payload-file", "-"],
+        cwd=core, input=json.dumps(envelope), capture_output=True, text=True, timeout=60,
+    )
+
+    assert result.returncode != 0
+    assert re.search(r"Operation not permitted|Permission denied", result.stdout + result.stderr)
+    assert canonical_fingerprint(core) == before
+    assert set(receipts.glob("transaction-*.yaml")) == receipt_paths
+
+
+@pytest.mark.skipif(not DARWIN_SEATBELT, reason="macOS /usr/bin/sandbox-exec required")
+def test_keeper_launcher_uses_broker_without_opening_learner_reading_memory(mini_repo: Path) -> None:
+    core = _make_study_world(mini_repo)
+    memory = core.parent / "reading-memory"
+    assert not memory.exists()
+    receipts = core / "operations/transactions"
+    before = {path.name: path.read_bytes() for path in receipts.glob("transaction-*.yaml")}
+    python = str(core / ".venv/bin/python")
+    result = subprocess.run(
+        [python, str(core / "tools/study_launch.py"), "--profile", "keeper", "--cmd", "--",
+         python, str(core / "tools/los.py"), "status", "--json"],
+        cwd=core, capture_output=True, text=True, timeout=60,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert Path(json.loads(result.stdout)["root"]).resolve() == core.resolve()
+    assert not memory.exists()
+    assert {path.name: path.read_bytes() for path in receipts.glob("transaction-*.yaml")} == before
+
+
+@pytest.mark.skipif(not DARWIN_SEATBELT, reason="macOS /usr/bin/sandbox-exec required")
 def test_study_launch_cwd_independence_from_core_parent_and_runtime_simulation(
     mini_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:

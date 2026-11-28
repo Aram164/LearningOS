@@ -11,6 +11,9 @@ import argparse
 
 from learning_os.store.contracts.gateway import APPROVAL_KINDS, GATEWAY_CHANNELS
 
+#: Channels a host shell cannot seal (2B): the app's and the Keeper's.
+HOST_CLI_REFUSED_CHANNELS = frozenset({"ui", "system-task"})
+
 SEAL_GUARDS_STDIN_ENV = "LOS_SEAL_GUARDS_STDIN"
 
 _SEAL_DOC = "Seal one GatewayEnvelopeV2 from caller-supplied intent (WORKFLOWS §25c)."
@@ -49,7 +52,8 @@ def build_seal_parser(description: str | None = None) -> argparse.ArgumentParser
     parser.add_argument(
         "--channel",
         default="operator",
-        help=f"one of: {', '.join(sorted(GATEWAY_CHANNELS))}",
+        help=(f"one of: {', '.join(sorted(GATEWAY_CHANNELS - HOST_CLI_REFUSED_CHANNELS))} "
+              "(the LearningOS app and Keeper runs send their own requests)"),
     )
     parser.add_argument(
         "--session-id",

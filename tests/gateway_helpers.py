@@ -92,14 +92,15 @@ def approved_v2_envelope(
     return envelope
 
 
-def run_v2_capability(root: Path, envelope: dict):
+def run_v2_capability(root: Path, envelope: dict, *, ingress_command: str | None = None):
+    command = ingress_command or ("ui-capability" if envelope.get("channel") == "ui" else "capability")
     return subprocess.run(
         [
             sys.executable,
             str(LOS),
             "--root",
             str(root),
-            "capability",
+            command,
             envelope["capability"],
             "--payload-file",
             "-",

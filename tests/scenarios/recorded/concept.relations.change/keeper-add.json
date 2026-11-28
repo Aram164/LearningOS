@@ -55,7 +55,9 @@
       "id": "TX1",
       "metadata": {
         "data_roots_sha256": "sha256:32cc3350f19cec40db25c3fcfac25f2f7ecf03e651b703146519e849ed2e60a3",
-        "fingerprint_definition": 2
+        "delegation_sha256": "sha256:3e6651b58b3c53c67d80640737873114baff785fd65b405f7523277ad56e97b2",
+        "fingerprint_definition": 2,
+        "ingress": "keeper-broker"
       },
       "request": {
         "approval": {

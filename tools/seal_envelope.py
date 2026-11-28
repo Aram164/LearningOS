@@ -41,12 +41,16 @@ from learning_os.adapters.study_policies import (
     requires_reviewed_seal,
 )
 from learning_os.app import handlers  # noqa: F401  (registration side effect)
+from learning_os.app.admission import ingress_refusal
 from learning_os.app.registry import REGISTRY
 from learning_os.domain.failures import WriteRefused
 from learning_os.store.contracts.gateway import (
     APPROVAL_KINDS,
     GATEWAY_CHANNELS,
     GATEWAY_SCHEMA_VERSION,
+    INGRESS_CLI,
+    INGRESS_KEEPER,
+    KEEPER_CAPABILITY,
     intent_sha256,
 )
 from learning_os.store.contracts.write_scopes import guard_tool_output_path
@@ -248,7 +252,8 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
                               key: str, request_id: str, channel: str,
                               approval_kind: str, snapshot: str | None,
                               check_out: str | None,
-                              preflight: bool = True) -> tuple[str, dict[str, int]]:
+                              preflight: bool = True,
+                              ingress: str = INGRESS_CLI) -> tuple[str, dict[str, int]]:
     """Derive the guard set for a registered operation through the pipeline.
 
     The same admission (``prepare_dispatch``), namespace-to-request
@@ -301,6 +306,7 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
         approval_kind=approval_kind,
         approval_subject_sha256="sha256:" + "0" * 64,
         expected_snapshot=None,  # set once the snapshot below is read
+        ingress=ingress,
     )
     with _operator_lock(root):
         # SPEC (co): one context, one walk. The context is built before
@@ -329,6 +335,7 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
             approval_kind=context.approval_kind,
             approval_subject_sha256=context.approval_subject_sha256,
             expected_snapshot=live_snapshot,
+            ingress=ingress,
         )
         ctx.gateway = context
         with gateway_request_context(context), verified_gateway_snapshot(
@@ -484,7 +491,8 @@ def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
                    channel: str, approval_kind: str, session_id: str | None,
                    request_id: str | None,
                    guards: tuple[str, dict[str, int]] | None = None,
-                   review: dict | None = None) -> tuple[Path, bool]:
+                   review: dict | None = None,
+                   ingress: str = INGRESS_CLI) -> tuple[Path, bool]:
     """Seal one operator write under ``key``; return the file to submit and
     whether it is a new attempt.
 
@@ -521,7 +529,7 @@ def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
         snapshot, revisions = guards
     else:
         snapshot, revisions = _derive_registered_guards(
-            root, check_out=None, preflight=False, **common)
+            root, check_out=None, preflight=False, ingress=ingress, **common)
     envelope = {
         "schema_version": GATEWAY_SCHEMA_VERSION,
         "request_id": request_id,
@@ -544,7 +552,8 @@ def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
 
 
 def _submit(root: Path, args: argparse.Namespace, payload: dict,
-            session_id: str | None, *, guards_record: dict | None = None) -> int:
+            session_id: str | None, *, guards_record: dict | None = None,
+            ingress: str = INGRESS_CLI) -> int:
     """Seal in process and hand the envelope to the gateway (agent-cost D1).
 
     The gateway reads the exact file this call sealed: a new attempt of its
@@ -586,7 +595,7 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
             root, capability=args.capability, payload=payload, key=args.key,
             channel=args.channel, approval_kind=args.approval_kind,
             session_id=session_id, request_id=args.request_id, guards=guards,
-            review=review)
+            review=review, ingress=ingress)
     except (OSError, ValueError, WriteRefused, TransactionFailure) as exc:
         print(f"seal_envelope: {exc}", file=sys.stderr)
         return 2
@@ -597,7 +606,7 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
         code = cmd_capability(argparse.Namespace(
             root=str(root), name=args.capability,
             payload_file="-",
-            replay_only=False, _parser_factory=los.build_parser))
+            replay_only=False, _parser_factory=los.build_parser), ingress=ingress)
     finally:
         sys.stdin = old_stdin
         if fresh:
@@ -704,7 +713,7 @@ def _dispatch_via_socket(
     return exit_code
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, *, ingress: str = INGRESS_CLI) -> int:
     raw_argv = list(sys.argv[1:] if argv is None else argv)
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -750,16 +759,6 @@ def main(argv: list[str] | None = None) -> int:
     if args.channel not in GATEWAY_CHANNELS:
         print(f"seal_envelope: unknown channel {args.channel!r}", file=sys.stderr)
         return 2
-    if args.channel == "ui":
-        # The `ui` channel is the app's own expression of "a human pressed a
-        # button", and admission admits a direct-user-gesture only from it
-        # (learning_os.app.admission.gesture_allowed). The app builds its
-        # envelopes in process, so nothing here is what the app uses; sealing
-        # one from the command line would let a shell claim the app's
-        # provenance. The channel stays in GATEWAY_CHANNELS for the app.
-        print("seal_envelope: the 'ui' channel is the application's own "
-              "provenance; the CLI cannot claim it", file=sys.stderr)
-        return 2
     sealed_session = args.session_id.strip() if args.session_id else None
     if args.session_id is not None and not sealed_session:
         print("seal_envelope: --session-id must name a session, not blank text",
@@ -791,8 +790,16 @@ def main(argv: list[str] | None = None) -> int:
                 return 2
 
     gate_sock = os.environ.get(GATE_SOCK_ENV)
-    if gate_sock:
+    if gate_sock and ingress == INGRESS_CLI:
         return _dispatch_via_socket(gate_sock, raw_argv, args)
+
+    # The record supplies a missing capability below. The broker checks it
+    # before launching this worker, and the sealer checks it before any work.
+    candidate = KEEPER_CAPABILITY if args.guards_from and args.capability is None else args.capability
+    refusal = ingress_refusal(ingress, args.channel, candidate, args.approval_kind)
+    if refusal:
+        print(f"seal_envelope: {refusal}", file=sys.stderr)
+        return 2
 
     record = None
     derived_payload = False
@@ -852,6 +859,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"seal_envelope: {' and '.join(missing)} required (a "
                   "--guards-from record can supply all three)", file=sys.stderr)
             return 2
+    if ingress == INGRESS_KEEPER and args.capability != KEEPER_CAPABILITY:
+        print(f"seal_envelope: the Atlas Keeper may write only {KEEPER_CAPABILITY}", file=sys.stderr)
+        return 2
     explicit_payload = args.payload if (args.guards_from and explicit_payload_given) else None
 
     try:
@@ -892,7 +902,7 @@ def main(argv: list[str] | None = None) -> int:
             return 2
 
     if args.submit:
-        return _submit(root, args, payload, sealed_session, guards_record=record)
+        return _submit(root, args, payload, sealed_session, guards_record=record, ingress=ingress)
 
     request_id = args.request_id or _fresh_request_id(args.key)
     if args.guards_from:
@@ -914,7 +924,7 @@ def main(argv: list[str] | None = None) -> int:
                 root, capability=args.capability, payload=payload,
                 key=args.key, request_id=request_id, channel=args.channel,
                 approval_kind=args.approval_kind, snapshot=args.snapshot,
-                check_out=args.check_out)
+                check_out=args.check_out, ingress=ingress)
         except (ValueError, OSError) as exc:
             print(f"seal_envelope: {exc}", file=sys.stderr)
             return 2

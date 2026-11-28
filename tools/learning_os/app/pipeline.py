@@ -16,6 +16,7 @@ from learning_os.app import handlers  # noqa: F401  (registration side effect)
 from learning_os.app.admission import (
     gesture_allowed,
     gesture_refusal,
+    ingress_refusal,
 )
 from learning_os.app.check import check_proposal
 from learning_os.app.commit import commit_proposal
@@ -68,6 +69,7 @@ from learning_os.domain.failures import (
 from learning_os.domain.failures import ReplayRecoveryError as _ReplayRecoveryError
 from learning_os.domain.transaction import TransactionResult
 from learning_os.store.contracts.gateway import (
+    INGRESS_CLI,
     current_gateway_request,
     gateway_request_context,
     verified_gateway_snapshot,
@@ -922,8 +924,9 @@ def _replay_failure_tag(exc: BaseException) -> str:
 
 
 def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
-                attempt, replay_only: bool, parser_factory=None) -> Outcome:
-    """Run one V2 gateway envelope through admission, replay, and dispatch."""
+                attempt, replay_only: bool, parser_factory=None,
+                ingress: str = INGRESS_CLI) -> Outcome:
+    """Run one V2 envelope through admission at the supplied entry point."""
     stdout: list[str] = []
     stderr: list[str] = []
     is_v2 = envelope.get("schema_version") == 2
@@ -972,9 +975,22 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             stage_attrs={"stage": "core.admission"},
             stdout=stdout, stderr=stderr,
         )
+    refusal = ingress_refusal(
+        ingress, envelope["channel"], requested, envelope["approval"]["kind"])
+    if refusal is not None:
+        # 2B: the ingress, not the envelope, decides which provenance a
+        # request may claim; this runs before approval and the snapshot check.
+        _audit_direct_refused(envelope.get("capability"), 2)
+        return _v2_error_outcome(
+            root, envelope, attempt,
+            exit_code=2,
+            error=error_object(UNCONFIRMED, refusal, retryable=False),
+            stage_attrs={"stage": "core.admission"},
+            stdout=stdout, stderr=stderr,
+        )
     payload = envelope.get("payload", {})
     try:
-        context = _context_from_v2(envelope)
+        context = _context_from_v2(envelope, ingress=ingress)
     except WriteRefused as exc:
         _audit_failure(envelope.get("capability"), exc)
         return _v2_error_outcome(

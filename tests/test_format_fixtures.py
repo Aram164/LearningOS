@@ -156,6 +156,16 @@ def test_frozen_reading_memory_still_validates(version, repo_root, tmp_path):
     assert reader.entries() and reader.entries(settled=True) and reader.all_cards()
 
 
+def test_frozen_ui_and_keeper_receipts_accept_historical_and_current_evidence(repo_root):
+    from learning_os.store.contracts.json_schema import transaction_receipt_errors
+
+    fixture = repo_root / "tests/fixtures/formats/v70/receipt-examples.json"
+    examples = json.loads(fixture.read_text(encoding="utf-8"))
+    for label, receipt in examples.items():
+        present, errors = transaction_receipt_errors(repo_root, receipt)
+        assert present and not errors, (label, errors)
+
+
 def test_fixture_is_data_only(repo_root):
     """system/ must come from the live tree, or the fixture would test nothing.
 

@@ -38,6 +38,9 @@ operations:
   cli.capability:
     cli_command: capability
     kind: command
+  cli.ui-capability:
+    cli_command: ui-capability
+    kind: command
   dossier.read:
     cli_command: dossier
     kind: porcelain

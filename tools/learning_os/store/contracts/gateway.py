@@ -11,6 +11,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 GATEWAY_SCHEMA_VERSION = 2
+INGRESS_CLI = "cli"
+INGRESS_UI = "ui-ingress"
+INGRESS_KEEPER = "keeper-broker"
+KEEPER_CAPABILITY = "concept.relations.change"
+KEEPER_CHANNEL = "system-task"
 GATEWAY_CHANNELS = frozenset({"ui", "codex", "operator", "system-task"})
 APPROVAL_KINDS = frozenset({
     "direct-user-gesture",
@@ -122,6 +127,9 @@ class GatewayRequestContext:
     # and additive: ``None`` preserves the environment-then-channel
     # resolution every existing caller relies on.
     session_id: str | None = None
+    # The process entry point that admitted this request (2B, CL-29/30): set
+    # by the gateway from the entry point, never read from the envelope.
+    ingress: str | None = None
 
 
 _CURRENT_REQUEST: contextvars.ContextVar[GatewayRequestContext | None] = (

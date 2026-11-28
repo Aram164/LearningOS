@@ -342,7 +342,7 @@ def review_evidence_error(root: Path, envelope: dict) -> str | None:
     return None
 
 
-def context_from_v2(envelope: dict) -> GatewayRequestContext:
+def context_from_v2(envelope: dict, *, ingress: str | None = None) -> GatewayRequestContext:
     subject_hash = intent_sha256(envelope)
     approval = envelope["approval"]
     if approval["subject_sha256"] != subject_hash:
@@ -361,4 +361,5 @@ def context_from_v2(envelope: dict) -> GatewayRequestContext:
         approval_subject_sha256=approval["subject_sha256"],
         expected_snapshot=envelope["expected_snapshot"],
         session_id=sealed_session or None,
+        ingress=ingress,
     )

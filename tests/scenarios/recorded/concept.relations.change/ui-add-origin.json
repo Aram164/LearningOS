@@ -55,7 +55,8 @@
       "id": "TX1",
       "metadata": {
         "data_roots_sha256": "sha256:5c883bb4e5688fd16ea85f0687c416bd1809739eb4f6b467f2d4a33aa45a37d1",
-        "fingerprint_definition": 2
+        "fingerprint_definition": 2,
+        "ingress": "ui-ingress"
       },
       "request": {
         "approval": {

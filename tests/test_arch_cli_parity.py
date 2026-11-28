@@ -20,6 +20,11 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 CLI_OPS_PATH = ROOT / "system/contracts/cli-operations.yaml"
+
+GATEWAY_TRANSPORTS = {
+    "cli.capability": "learning_os.adapters.capability.cmd_capability",
+    "cli.ui-capability": "learning_os.adapters.capability.cmd_ui_capability",
+}
 BASELINE_PATH = ROOT / "tests/architecture/cli-parity-baseline.json"
 CORPUS_PATH = ROOT / "tests/architecture/cli-parity-corpus.json"
 REQUESTS_DIR = ROOT / "system/schema/requests"
@@ -112,7 +117,9 @@ def test_cli_operations_lists_every_cli_primary():
     for name, entry in sorted(operations.items()):
         command = entry.get("cli_command")
         assert isinstance(command, str) and command, name
-        if name != "cli.capability":
+        if name in GATEWAY_TRANSPORTS:
+            assert _handler_for_subcommand(command) == GATEWAY_TRANSPORTS[name]
+        else:
             assert _handler_for_subcommand(command) == "learning_os.adapters.cli.invoke:" + name
             assert not name.startswith("cli."), name
         assert entry.get("kind") in {"query", "command", "porcelain", "tool"}, name
@@ -196,9 +203,8 @@ def test_the_declared_kind_is_the_kind_the_runtime_gives_the_command():
     for row in catalogue.verbs:
         operation = REGISTRY.get(row.operation)
         if operation is None:
-            # The one command outside the operation registry: it runs a
-            # reviewed envelope through its own adapter.
-            assert row.operation == "cli.capability", row.operation
+            # Gateway transports dispatch sealed envelopes outside the registry.
+            assert row.operation in GATEWAY_TRANSPORTS, row.operation
             continue
         assert row.kind == operation.kind, (
             f"{row.verb} declares kind {row.kind!r} and runs as "

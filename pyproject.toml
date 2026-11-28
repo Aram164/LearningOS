@@ -86,6 +86,7 @@ files = [
   "tools/learning_os/adapters/process_group.py",
   "tools/learning_os/adapters/seal_parser.py",
   "tools/learning_os/adapters/study_broker.py",
+  "tools/learning_os/adapters/keeper_ingress.py",
   "tools/learning_os/adapters/study_policies.py",
   "tools/learning_os/store/study_fence.py",
   "tools/learning_os/store/receipt_chain.py",

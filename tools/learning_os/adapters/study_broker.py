@@ -25,7 +25,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
-from learning_os.adapters import cli_parser
+from learning_os.adapters import cli_parser, keeper_ingress
 from learning_os.adapters.process_group import terminate_process_group
 from learning_os.adapters.seal_parser import (
     SEAL_GUARDS_STDIN_ENV,
@@ -33,16 +33,19 @@ from learning_os.adapters.seal_parser import (
     normalize_check_record,
 )
 from learning_os.adapters.study_policies import (
-    SESSION_COMMANDS as _SESSION_COMMANDS,
-)
-from learning_os.adapters.study_policies import (
+    KEEPER_ALLOWED_COMMANDS,
+    KEEPER_WRITE_CAPABILITIES,
     STUDY_ALLOWED_COMMANDS,
     STUDY_COMMANDS,
     STUDY_PREFLIGHT_COMMANDS,
     STUDY_READ_COMMANDS,
     STUDY_WRITE_CAPABILITIES,
 )
+from learning_os.adapters.study_policies import (
+    SESSION_COMMANDS as _SESSION_COMMANDS,
+)
 from learning_os.domain.failures import WriteRefused
+from learning_os.store.contracts.gateway import KEEPER_CHANNEL
 from learning_os.store.contracts.write_scopes import guard_tool_output_path
 from learning_os.store.materials.reading_cards import valid_session
 from learning_os.store.study_fence import (
@@ -82,18 +85,51 @@ def _validate_study_envelope_origin(
     approval_kind: object,
     label: str,
 ) -> BrokerResult | None:
-    """Reject UI or non-operator-approved envelopes across both broker write paths."""
+    """Reject app, Keeper or non-operator-approved envelopes on both study write paths.
+
+    Study writes keep their own provenance (`operator` or `codex`): the app's
+    `ui` and the Keeper's `system-task` are refused whatever the envelope
+    claims (2B: the broker derives authority from its launch profile).
+    """
     if not isinstance(channel, str) or not channel.strip():
         return _refuse(f"study broker: {label} requires a non-empty channel")
     if channel == "ui":
-        return _refuse(f"study broker: 'ui' channel is refused ({label})")
+        return _refuse(f"study broker: apply this request from the LearningOS app ({label})")
+    if channel == KEEPER_CHANNEL:
+        return _refuse(
+            f"study broker: 'system-task' is the Atlas Keeper's channel; a study "
+            f"session cannot claim it ({label})"
+        )
     if approval_kind != "operator-approval":
         return _refuse(
             f"study broker: {label} requires approval.kind == 'operator-approval', got {approval_kind!r}"
         )
     return None
 
+
+def _validate_keeper_envelope_origin(
+    *,
+    channel: object,
+    approval_kind: object,
+    label: str,
+) -> BrokerResult | None:
+    """A Keeper envelope carries exactly the Keeper's provenance (2B)."""
+    if channel != KEEPER_CHANNEL:
+        return _refuse(
+            f"study broker: a Keeper run writes only as {KEEPER_CHANNEL!r}, got {channel!r} ({label})"
+        )
+    if approval_kind != "operator-approval":
+        return _refuse(
+            f"study broker: {label} requires approval.kind == 'operator-approval', got {approval_kind!r}"
+        )
+    return None
+
+
 ALLOWED_HOOK_EVENTS: frozenset[str] = frozenset({"session-start", "stop"})
+
+#: Launch profiles (2B): `study` is a learner session; `keeper` is a
+#: confined Atlas Keeper run (ADR-024) with its own policy and channel.
+PROFILES = frozenset({"study", "keeper"})
 
 
 @dataclass(frozen=True)
@@ -355,9 +391,25 @@ class StudyBroker:
         runner: Runner | None = None,
         core_timeout_s: float = DEFAULT_CORE_TIMEOUT_S,
         lock_wait_s: float = DEFAULT_LOCK_WAIT_S,
+        profile: str = "study",
     ) -> None:
         if not valid_session(session_id):
             raise ValueError(f"invalid study session UUID: {session_id!r}")
+        if profile not in PROFILES:
+            raise ValueError(f"unknown broker profile: {profile!r}")
+        self.profile = profile
+        if profile == "keeper":
+            self._allowed_commands = KEEPER_ALLOWED_COMMANDS
+            self._allowed_capabilities = KEEPER_WRITE_CAPABILITIES
+            self._preflight_commands: dict[str, str] = {}
+            self._session_commands: frozenset[str] = frozenset()
+            self._validate_origin = _validate_keeper_envelope_origin
+        else:
+            self._allowed_commands = ALLOWED_LOS_COMMANDS
+            self._allowed_capabilities = ALLOWED_CAPABILITIES
+            self._preflight_commands = ALLOWED_PREFLIGHT_COMMANDS
+            self._session_commands = SESSION_COMMANDS
+            self._validate_origin = _validate_study_envelope_origin
         if core_timeout_s <= 0:
             raise ValueError(f"core_timeout_s must be positive, got {core_timeout_s!r}")
         self.core_root = Path(os.path.realpath(Path(core_root).resolve()))
@@ -452,6 +504,8 @@ class StudyBroker:
         }
         env.pop(GATE_SOCK_ENV, None)
         env.pop(STUDY_STAGED_MANIFEST_ENV, None)
+        # Only _run_keeper sets the Keeper handshake, per call.
+        env.pop(keeper_ingress.HANDSHAKE_ENV, None)
         for obs_key in [k for k in env if k.startswith("LOS_OBSERVATIONS")]:
             env.pop(obs_key, None)
         env["LOS_SESSION_ID"] = self.session_id
@@ -477,6 +531,35 @@ class StudyBroker:
         extra_env: dict[str, str] | None = None,
     ) -> BrokerResult:
         cmd = [str(self.python_executable), "-I", str(script), *argv]
+        return self._run_command(cmd, cwd=cwd, stdin_data=stdin_data, extra_env=extra_env)
+
+    def _run_keeper(
+        self,
+        tool: str,
+        argv: list[str],
+        *,
+        cwd: Path,
+        stdin_data: str | None = None,
+        extra_env: dict[str, str] | None = None,
+    ) -> BrokerResult:
+        """Run one Keeper write through the broker-internal ingress (2B)."""
+        token, digest = keeper_ingress.new_handshake()
+        cmd = [str(self.python_executable), "-I", "-m", keeper_ingress.MODULE]
+        return self._run_command(
+            cmd,
+            cwd=cwd,
+            stdin_data=keeper_ingress.request_text(token, tool, argv, stdin_data),
+            extra_env={**(extra_env or {}), keeper_ingress.HANDSHAKE_ENV: digest},
+        )
+
+    def _run_command(
+        self,
+        cmd: list[str],
+        *,
+        cwd: Path,
+        stdin_data: str | None,
+        extra_env: dict[str, str] | None,
+    ) -> BrokerResult:
         env = self._child_env(extra=extra_env)
         if not self._lock.acquire(timeout=self.lock_wait_s):
             return _refuse(
@@ -534,7 +617,9 @@ class StudyBroker:
                     return BrokerResult(exit_code=0, stdout=out, stderr=err)
                 return _refuse(err or "study broker: missing or invalid los subcommand")
             assert idx is not None
-            if subcmd not in ALLOWED_LOS_COMMANDS:
+            if subcmd == "ui-capability":
+                return _refuse("study broker: apply this request from the LearningOS app")
+            if subcmd not in self._allowed_commands:
                 hint = ""
                 if subcmd == "session-end":
                     hint = (
@@ -543,7 +628,7 @@ class StudyBroker:
                         "outside study mode)"
                     )
                 return _refuse(
-                    f"study broker: command {subcmd!r} is not allowed in study mode{hint}"
+                    f"study broker: command {subcmd!r} is not allowed in {self.profile} mode{hint}"
                 )
             rewritten = list(argv)
             target_cmd = subcmd
@@ -552,7 +637,9 @@ class StudyBroker:
             out = ""
             err = ""
             probe_err = ""
-            if subcmd == "material-span":
+            if subcmd == "material-span" and self.profile == "study":
+                # Private reading memory belongs to learner study sessions
+                # (ADR-021); a Keeper run quotes through the plain read.
                 probe = list(argv)
                 probe[idx] = "material-study-span"
                 probe_ns, probe_code, probe_out, probe_err = _parse_quiet(
@@ -568,7 +655,7 @@ class StudyBroker:
                 if code == 0:
                     return BrokerResult(exit_code=0, stdout=out, stderr=err)
                 return _refuse(err or f"study broker: invalid arguments for {target_cmd}")
-            if target_cmd == "material-span" and getattr(ns, "extract", False) is True:
+            if self.profile == "study" and target_cmd == "material-span" and getattr(ns, "extract", False) is True:
                 return _refuse(
                     probe_err or "study broker: invalid arguments for material-study-span"
                 )
@@ -580,15 +667,15 @@ class StudyBroker:
                 return _refuse(
                     f"study broker: --session cannot differ from active session {self.session_id}"
                 )
-            if target_cmd in SESSION_COMMANDS and given_session is None:
+            if target_cmd in self._session_commands and given_session is None:
                 rewritten.extend(["--session", self.session_id])
 
             child_stdin: str | None = None
             if target_cmd == "capability":
                 cap_name = getattr(ns, "name", None)
-                if not isinstance(cap_name, str) or cap_name not in ALLOWED_CAPABILITIES:
+                if not isinstance(cap_name, str) or cap_name not in self._allowed_capabilities:
                     return _refuse(
-                        f"study broker: capability {cap_name!r} is not allowed in study mode"
+                        f"study broker: capability {cap_name!r} is not allowed in {self.profile} mode"
                     )
                 pfile = getattr(ns, "payload_file", None)
                 if not isinstance(pfile, str) or not pfile:
@@ -610,7 +697,7 @@ class StudyBroker:
                     )
                 env_dict = _parse_json_dict(raw_env, label="capability envelope")
                 env_cap = env_dict.get("capability")
-                if env_cap != cap_name or env_cap not in ALLOWED_CAPABILITIES:
+                if env_cap != cap_name or env_cap not in self._allowed_capabilities:
                     return _refuse(
                         f"study broker: envelope capability {env_cap!r} does not match allowed {cap_name!r}"
                     )
@@ -620,7 +707,7 @@ class StudyBroker:
                         "study broker: envelope session_id cannot differ from active study session"
                     )
                 approval_obj = env_dict.get("approval")
-                origin_refusal = _validate_study_envelope_origin(
+                origin_refusal = self._validate_origin(
                     channel=env_dict.get("channel"),
                     approval_kind=(
                         approval_obj.get("kind") if isinstance(approval_obj, dict) else None
@@ -641,6 +728,14 @@ class StudyBroker:
                     )
                     stager.stage_payload_paths(env_dict.get("payload"))
                     manifest_env = stager.manifest_env()
+                    if self.profile == "keeper":
+                        return self._run_keeper(
+                            "capability",
+                            rewritten,
+                            cwd=cwd,
+                            stdin_data=raw_env,
+                            extra_env=manifest_env or None,
+                        )
                     return self._run_core(
                         self.core_root / "tools" / "los.py",
                         rewritten,
@@ -648,7 +743,7 @@ class StudyBroker:
                         stdin_data=raw_env,
                         extra_env=manifest_env or None,
                     )
-            elif target_cmd in ALLOWED_PREFLIGHT_COMMANDS:
+            elif target_cmd in self._preflight_commands:
                 # Preflights are strictly read-only diagnostics (`--check`), so they stay
                 # decoupled from `ALLOWED_CAPABILITIES` (e.g. `unit-plan-revise --check`
                 # supports `--report-out` mediation even though canonical plan writes refuse).
@@ -763,15 +858,33 @@ class StudyBroker:
                     return _refuse(
                         f"study broker: --session-id cannot differ from active session {self.session_id}"
                     )
-            origin_refusal = _validate_study_envelope_origin(
-                channel=getattr(ns, "channel", None),
-                approval_kind=getattr(ns, "approval_kind", None),
-                label="seal_envelope",
-            )
-            if origin_refusal is not None:
-                return origin_refusal
-
-            rewritten = list(argv)
+            if self.profile == "keeper":
+                # The broker stamps the Keeper's provenance from its launch
+                # profile (2B): a caller may omit both flags or repeat these
+                # exact values, and any other claim is refused.
+                for flag, wanted, value in (
+                    ("--channel", KEEPER_CHANNEL, getattr(ns, "channel", None)),
+                    ("--approval-kind", "operator-approval", getattr(ns, "approval_kind", None)),
+                ):
+                    given = any(_matches_option(token, flag, self._seal_parser) for token in argv)
+                    if given and value != wanted:
+                        return _refuse(
+                            f"study broker: a Keeper run seals {flag} {wanted} only, got {value!r}"
+                        )
+                rewritten = list(argv)
+                for flag in ("--channel", "--approval-kind"):
+                    rewritten = _rewrite_value_option(rewritten, flag, self._seal_parser, None)
+                rewritten.extend(["--channel", KEEPER_CHANNEL,
+                                  "--approval-kind", "operator-approval"])
+            else:
+                origin_refusal = self._validate_origin(
+                    channel=getattr(ns, "channel", None),
+                    approval_kind=getattr(ns, "approval_kind", None),
+                    label="seal_envelope",
+                )
+                if origin_refusal is not None:
+                    return origin_refusal
+                rewritten = list(argv)
             if ns.root is None:
                 rewritten = ["--root", str(self.core_root), *rewritten]
             if ns.out is not None:
@@ -829,7 +942,7 @@ class StudyBroker:
                     if not isinstance(normalized, dict):
                         return _refuse("study broker: invalid --guards-from record")
                     rec_cap_obj = normalized.get("capability")
-                    if not isinstance(rec_cap_obj, str) or rec_cap_obj not in ALLOWED_CAPABILITIES:
+                    if not isinstance(rec_cap_obj, str) or rec_cap_obj not in self._allowed_capabilities:
                         return _refuse(
                             f"study broker: --guards-from capability {rec_cap_obj!r} is not allowed"
                         )
@@ -842,9 +955,9 @@ class StudyBroker:
                     extra_env[SEAL_GUARDS_STDIN_ENV] = "1"
 
                 effective_cap = ns.capability or record_cap
-                if not isinstance(effective_cap, str) or effective_cap not in ALLOWED_CAPABILITIES:
+                if not isinstance(effective_cap, str) or effective_cap not in self._allowed_capabilities:
                     return _refuse(
-                        f"study broker: capability {effective_cap!r} is not allowed in study mode"
+                        f"study broker: capability {effective_cap!r} is not allowed in {self.profile} mode"
                     )
 
                 if ns.payload is not None:
@@ -888,13 +1001,8 @@ class StudyBroker:
                     run_argv = _rewrite_value_option(
                         rewritten, "--check-out", self._seal_parser, str(check_target)
                     )
-                    res = self._run_core(
-                        self.core_root / "tools" / "seal_envelope.py",
-                        run_argv,
-                        cwd=cwd,
-                        stdin_data=child_stdin,
-                        extra_env=run_env,
-                    )
+                    res = self._run_seal(run_argv, cwd=cwd, stdin_data=child_stdin,
+                                         extra_env=run_env)
                     captured = _read_capped_text(check_target)
                     return BrokerResult(
                         exit_code=res.exit_code,
@@ -903,15 +1011,29 @@ class StudyBroker:
                         check_out_text=captured,
                     )
 
-                return self._run_core(
-                    self.core_root / "tools" / "seal_envelope.py",
-                    rewritten,
-                    cwd=cwd,
-                    stdin_data=child_stdin,
-                    extra_env=run_env,
-                )
+                return self._run_seal(rewritten, cwd=cwd, stdin_data=child_stdin,
+                                      extra_env=run_env)
         except WriteRefused as exc:
             return _refuse(str(exc))
+
+    def _run_seal(
+        self,
+        argv: list[str],
+        *,
+        cwd: Path,
+        stdin_data: str | None,
+        extra_env: dict[str, str] | None,
+    ) -> BrokerResult:
+        if self.profile == "keeper":
+            return self._run_keeper("seal", argv, cwd=cwd, stdin_data=stdin_data,
+                                    extra_env=extra_env)
+        return self._run_core(
+            self.core_root / "tools" / "seal_envelope.py",
+            argv,
+            cwd=cwd,
+            stdin_data=stdin_data,
+            extra_env=extra_env,
+        )
 
     def _handle_study_hook(self, req: dict[str, object]) -> BrokerResult:
         event = req.get("event")
@@ -936,6 +1058,8 @@ class StudyBroker:
         if tool == "seal_envelope":
             return self._handle_seal(req)
         if tool == "study_hook":
+            if self.profile == "keeper":
+                return _refuse("study broker: reading-memory hooks are only available in study mode")
             return self._handle_study_hook(req)
         return _refuse(f"study broker: unsupported tool {tool!r}")
 

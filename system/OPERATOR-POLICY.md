@@ -56,7 +56,7 @@ Claude must present the proposed change before applying:
 - restructuring a user-authored note;
 - changing an existing note's role;
 - adding a concept relation inferred from prose, except through the Atlas
-  keeper route (ADR-024 amendment): `system-task` channel, active delegation,
+  keeper route (ADR-024 amendment): confined Keeper broker, active delegation,
   a verified quote, never over a row Aram pinned or authored;
 - adding or materially changing a contextual source evaluation;
 - merging duplicate concept identities;
