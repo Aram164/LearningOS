@@ -4044,6 +4044,7 @@ def _synthetic_effects(tmp_path: Path) -> tuple[Path, dict]:
             "effect": "cache",
             "destinations": ["generated/reports/demo.txt"],
             "reason": "Bounded test cache.",
+            "witness": "static-only",
         }
     }
     return tmp_path, effects
@@ -4130,7 +4131,7 @@ def test_writer_census_accepts_valid_scoped_and_contract_writers(tmp_path: Path)
     # Without its witness disposition the same writer fails (the negative half).
     bare = {**valid, "tools/material_summarize.py": {
         k: v for k, v in valid["tools/material_summarize.py"].items() if k != "witness"}}
-    assert any("needs `witness: runtime`" in f for f in scan_tools_census(
+    assert any("every writer carries an explicit disposition" in f for f in scan_tools_census(
         root, bare, [], tree_roots=_load_tree_roots()))
 
 
@@ -4266,7 +4267,8 @@ def test_same_declaration_detects_writer_destination_drift(tmp_path):
         "tools/report.py:\n"
         "  effect: cache\n"
         "  destinations: [generated/reports/**]\n"
-        "  reason: report fixture\n",
+        "  reason: report fixture\n"
+        "  witness: static-only\n",
         encoding="utf-8",
     )
     original = inventory.read_bytes()
@@ -4887,7 +4889,8 @@ def _declaration_failures(tmp_path: Path, rel: str, dest: str) -> list[str]:
     (root / rel).parent.mkdir(parents=True, exist_ok=True)
     (root / rel).write_text("def f():\n    return None\n", encoding="utf-8")
     _, failures = validate_effects_declarations(
-        {rel: {"effect": "operational", "destinations": [dest], "reason": "r"}}, root=root)
+        {rel: {"effect": "operational", "destinations": [dest], "reason": "r",
+               "witness": "static-only"}}, root=root)
     assert not any("target does not exist" in f for f in failures), failures
     return failures
 
@@ -4899,7 +4902,7 @@ def test_reentry_pattern_outside_both_grammars_is_rejected(tmp_path):
 
 
 @pytest.mark.parametrize("dest", [
-    "operations/transactions/transaction-*.yaml",
+    "operations/transactions/transaction-20260101-000000-001.yaml",
     "operations/transactions/**",
     "operations/migrations/projects-to-modules-v62/**",
     "archive/inbox/**",

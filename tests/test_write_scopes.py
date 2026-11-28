@@ -155,7 +155,7 @@ def test_guard_tool_output_path_refuses_protected_roots_and_symlinks(tmp_path: P
     with pytest.raises(WriteScopeError, match="producer"):
         guard_tool_output_path(gen, repo_root=repo)
     assert guard_tool_output_path(
-        gen, repo_root=repo, scopes=("generated/reports/**")) == gen
+        gen, repo_root=repo, scopes=("generated/reports/**",)) == gen
 
 
 def _case_insensitive(path: Path) -> bool:

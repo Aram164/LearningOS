@@ -549,19 +549,18 @@ def _read_draft_items(drafts: object) -> list[tuple[dict, dict, bytes]]:
     return prepared
 
 
-def _resolve_out_dir(root: Path, value: object) -> tuple[Path, bool]:
+def _validate_out_dir(root: Path, value: object) -> bool:
     """Validate the staging dir without changing a byte (2A+2D R1).
 
-    Returns ``(resolved, fresh)``: ``fresh`` selects a new claim (create
-    ``bodies/`` and the stage mark) while a marked re-preparation rebuilds
-    the owned ``bodies/``. Prep writes no canonical data, so staging lives
-    out-of-tree by contract, like every other draft. A non-empty directory
-    without a valid mark is refused, so prep never deletes files it did
-    not stage (2D, CL-16). The previous ``envelope.json`` is validated too:
-    a symlink or a non-file is refused before anything is restaged, and the
-    envelope destination passes the generic guard. Every check here is
-    read-only; mutation happens only in :func:`_restage_out_dir`, after all
-    drafts validate.
+    Returns ``fresh``: true selects a new claim (create ``bodies/`` and the
+    stage mark) while a marked re-preparation rebuilds the owned ``bodies/``.
+    Prep writes no canonical data, so staging lives out-of-tree by contract,
+    like every other draft. A non-empty directory without a valid mark is
+    refused, so prep never deletes files it did not stage (2D, CL-16). The
+    previous ``envelope.json`` is validated too: a symlink or a non-file is
+    refused before anything is restaged, and the envelope destination passes
+    the generic guard. Every check here is read-only; mutation happens only
+    in :func:`_restage_out_dir`, after all drafts validate.
     """
     if not isinstance(value, str) or not value or value == "-":
         raise WriteRefused(
@@ -612,16 +611,23 @@ def _resolve_out_dir(root: Path, value: object) -> tuple[Path, bool]:
     except WriteScopeError as exc:
         raise WriteRefused(
             f"cannot stage envelope into {resolved}: {exc}") from exc
-    return resolved, fresh
+    return fresh
 
 
-def _restage_out_dir(resolved: Path, fresh: bool) -> None:
+def _restage_out_dir(root: Path, value: object, fresh: bool) -> Path:
     """Claim the validated staging dir (2A+2D R1).
 
-    Runs only after every draft resolved: a first prep creates ``bodies/``
-    and the stage mark, while a marked re-preparation removes the previous
-    owned bodies so fewer notes leave no stale files behind.
+    Runs only after every draft resolved: the value is guarded again at the
+    mutation site, then a first prep creates ``bodies/`` and the stage mark,
+    while a marked re-preparation removes the previous owned bodies so fewer
+    notes leave no stale files behind. Guarding here as well as in
+    validation gives the static census a call it proves destinations from,
+    and closes the check-to-use window on the directory itself.
     """
+    try:
+        resolved = guard_tool_output_path(value, repo_root=root, allow_existing_dir=True)
+    except WriteScopeError as exc:
+        raise WriteRefused(f"cannot stage into {value}: {exc}") from exc
     bodies = resolved / "bodies"
     try:
         if fresh:
@@ -633,6 +639,7 @@ def _restage_out_dir(resolved: Path, fresh: bool) -> None:
             bodies.mkdir()
     except OSError as exc:
         raise WriteRefused(f"cannot stage into {resolved}: {exc}") from exc
+    return resolved
 
 
 #: Ownership mark of a prep-created staging dir (2D, CL-16).
@@ -679,7 +686,7 @@ def note_analysis_prepare(ctx: OpContext, req: dict) -> Result:
     # R1: validate the staging dir first; nothing is restaged until every
     # draft below resolves, so a refused re-preparation keeps the previous
     # staged bodies and envelope byte-identical.
-    out, fresh = _resolve_out_dir(root, req["out"])
+    fresh = _validate_out_dir(root, req["out"])
     repo = ctx.repo()
     snapshot = ctx.snapshot_id()
     staged: list[tuple[str, str, bytes, dict, bool]] = []
@@ -692,7 +699,12 @@ def note_analysis_prepare(ctx: OpContext, req: dict) -> Result:
                 f"draft {index} ({analysis['id']}): {exc}") from exc
         staged.append((note_id, path.relative_to(root).as_posix(),
                        body_bytes, analysis, content is not None))
-    # Build the whole proposal in memory before touching the staging dir.
+    # All drafts resolved: restage now. The restage returns the re-guarded
+    # staging path, which the static census proves destinations from.
+    out = _restage_out_dir(root, req["out"], fresh)
+    # Build the whole proposal in memory; the envelope goes through the
+    # bounded atomic helper, which refuses a symlinked leaf and replaces
+    # the file without following it (2A+2D R1).
     bodies: list[tuple[str, bytes]] = []
     bundle_notes = []
     report = []
@@ -718,10 +730,6 @@ def note_analysis_prepare(ctx: OpContext, req: dict) -> Result:
         "note.analysis.save_batch", {"bundle": {"notes": bundle_notes}},
         snapshot, revisions)
     envelope_text = json.dumps(envelope, indent=2, ensure_ascii=False) + "\n"
-    # All drafts resolved: restage now, then publish. The envelope goes
-    # through the bounded atomic helper, which refuses a symlinked leaf
-    # and replaces the file without following it (2A+2D R1).
-    _restage_out_dir(out, fresh)
     envelope_path = out / "envelope.json"
     try:
         for body_name, body_bytes in bodies:
