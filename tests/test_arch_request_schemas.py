@@ -104,7 +104,7 @@ def test_cli_binding_count_and_inventory_agree():
     aliases = _aliases()
     cases = {p.name[: -len(".yaml")] for p in CASES_DIR.glob("*.yaml")}
     with_cli = [op for op, data in primaries.items() if "x-los-cli-command" in data]
-    assert len(with_cli) == 101, len(with_cli)  # 100 prior + materials.manifest.sync
+    assert len(with_cli) == 102, len(with_cli)  # 101 prior + the app's envelope ingress
     assert len(with_cli) == len(primaries), (len(with_cli), len(primaries))
     assert len(aliases) == 0, len(aliases)
     union = set(primaries) | set(aliases)

@@ -1,0 +1,13 @@
+operation: cli.ui-capability
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: ui-add-origin
+    kind: success
+    transport: gateway
+    operation: concept.relations.change
+    channel: ui
+    approval_kind: direct-user-gesture
+    request: {change: {operations: [{action: add, new: {from: concept-expected-value, to: concept-variance, type: motivates}}]}}
+    artifact_ids: [registry-concept-relations]
+    expect: {site: null}

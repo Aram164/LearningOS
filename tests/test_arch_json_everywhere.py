@@ -428,9 +428,15 @@ def _assert_new_json_command_is_approved(sub: str, fname: str, live: dict) -> No
     """A command born with JSON is an approved addition, not a D16 conversion."""
     operation = fname.removesuffix(".schema.json")
     catalog = yaml.safe_load((ROOT / "system/contracts/capabilities.yaml").read_text())
-    section = "queries" if operation in catalog.get("queries", {}) else "commands"
-    required = {f"cli.{sub}", f"request_schemas.{fname}",
-                f"catalog.{section}.{operation}"}
+    required = {f"cli.{sub}", f"request_schemas.{fname}"}
+    if operation in catalog.get("queries", {}):
+        required.add(f"catalog.queries.{operation}")
+    elif operation in catalog.get("commands", {}):
+        required.add(f"catalog.commands.{operation}")
+    else:
+        cli_contract = yaml.safe_load((ROOT / "system/contracts/cli-operations.yaml").read_text())
+        cli_row = cli_contract["operations"].get(operation)
+        assert cli_row and cli_row.get("cli_command") == sub, (operation, sub)
     entries = yaml.safe_load(APPROVALS_PATH.read_text())["approvals"]
     approved = {row["key"]: row for row in entries
                 if row.get("change") == "added" and row.get("key") in required}

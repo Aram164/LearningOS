@@ -137,6 +137,10 @@ checks:
     approved_by: 'Aram 2026-10-08: i approve you decide the best course of action'
   A13-request-schemas: []
   A5-suggestions:
+  - signature: cli.ui-capability::*
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-11-25: dedicated LearningOS app ingress"
   - signature: cli.capability::*
     count: 1
     since: approved
@@ -160,6 +164,10 @@ checks:
       through completion; Codex narrows the inherited lineage star to its existing
       unresolved claim-owner pointer'
   A7-output:
+  - signature: cli.ui-capability::*
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-11-25: dedicated LearningOS app ingress"
   - signature: cli.capability::*
     count: 1
     since: approved
