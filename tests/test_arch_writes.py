@@ -45,11 +45,11 @@ Four layers, each answering one question (REENTRY §4, §5.1):
    ``TransactionService`` default-deny admission. They refuse unauthorized
    destinations in supported operations, whether or not the census saw them.
 4. The runtime writer gate (``test_runtime_writer_conformance_population`` in
-   ``tests/test_scenarios_zz_operational_owners.py``): every world write the
-   CI population executes (scenario cases, procedure transcripts, audit
-   windows) needs a resolved writer, a covering declaration and authority. An
-   unresolved writer, destination or evidence fails closed. Every writer that
-   reaches owned territory has a witness disposition (``witness: runtime``,
+   ``tests/test_scenarios_zz_operational_owners.py``): retained write events in
+   the supported audit inventory need a resolved writer, a covering declaration
+   and authority. An unresolved tool writer, destination or required evidence
+   fails closed. Every writer that reaches owned territory has a witness
+   disposition (``witness: runtime``,
    ``helper``, or a named deferral; §5.6).
 
 What the static census does not claim, and what covers it instead:
@@ -68,10 +68,12 @@ What the static census does not claim, and what covers it instead:
 - ``socket.bind`` of a filesystem socket: its one use, the study broker,
   passes ``guard_tool_output_path``.
 
-For all of these, the production guards protect every supported operation,
-and the runtime gate checks every write the CI population executes. Code that
-never runs, and whose destination cannot be resolved statically, rests on the
-guards alone (the 2A exit amendment, 27 November 2026).
+Production guards protect supported guarded operations. The runtime gate checks
+events emitted and captured in the CI scenario, transcript and audit-window
+population. For example, ``store.fs.rename_noreplace`` emits ``os.rename``
+before its native call.
+Native filesystem effects that emit no supported event are outside this
+runtime evidence. Prevention of unmediated native writes is a 2B concern.
 """
 
 from __future__ import annotations
@@ -590,6 +592,69 @@ def _declaration_authorities(rel: str) -> list[str]:
     return found
 
 
+@cache
+def _catalogue_boundaries() -> tuple[str, ...]:
+    territory = capability_catalog.owned_territory()
+    # A narrower capability scope inside a canonical region does not introduce
+    # a separate owner. A19 rows below are kept individually.
+    return tuple(p for p in territory if not any(
+        other != p and _pattern_contains(other, p) for other in territory
+    ))
+
+
+@cache
+def _subtree_boundaries(operand: str) -> tuple[str, ...]:
+    """Protected paths strictly below a directory operand, in its own namespace."""
+    patterns = {*_catalogue_boundaries(), *_ENGINE_REFUSED_TERRITORY,
+                *(glob for glob, _, _ in _operational_owner_rows())}
+    state = operand == "<STATE>" or operand.startswith("<STATE>/")
+    found = []
+    for pattern in sorted(patterns):
+        if state != pattern.startswith("<STATE>/"):
+            continue
+        parts = pattern.removesuffix("/**").split("/")
+        if not operand or any(
+            _patterns_overlap(operand, "/".join(parts[:i])) for i in range(1, len(parts))
+        ):
+            found.append(pattern)
+    return tuple(found)
+
+
+def _subtree_authority_problem(
+    writer: str, operand: str, destinations: tuple[str, ...], *, declaration: bool = False,
+) -> str | None:
+    boundaries = _subtree_boundaries(operand)
+    if not boundaries:
+        return None
+    affected = (operand if operand.endswith("/**") else f"{operand}/**") if operand else "**"
+    identity = _module_identity(writer)
+    owned_rows = tuple(
+        glob for glob, sink, owner in _operational_owner_rows()
+        if sink == "module" and owner and (identity == owner or identity.startswith(owner + "."))
+    )
+    if writer == _CANONICAL_ENGINE_MODULE:
+        refused = any(_patterns_overlap(affected, p) for p in _ENGINE_REFUSED_TERRITORY)
+        covers = any(_pattern_contains(p, affected) for p in destinations)
+        if declaration:
+            # Engine envelopes can contain multiple A19 rows. Authority for a
+            # directory effect is checked on the actual operand separately.
+            admitted = operand.endswith("/**") and not refused
+        else:
+            operational = {p for p, sink, _ in _operational_owner_rows() if sink != "excluded"}
+            admitted = covers and not refused and all(
+                any(_pattern_contains(row, p) for row in owned_rows)
+                for p in boundaries if p in operational
+            )
+    else:
+        exception = _RECORDED_CANONICAL_EXCEPTIONS.get(writer)
+        authorities = (*owned_rows, *(exception[1] if exception else ()))
+        admitted = (any(_pattern_contains(p, affected) for p in destinations)
+                    and any(_pattern_contains(p, affected) for p in authorities))
+    if admitted:
+        return None
+    return f"affects protected descendants {list(boundaries)} without whole-subtree authority"
+
+
 def _owned_territory_failures(
     rel: str, dest: str, effect: object, contract: object, data_roots: tuple[str, ...],
 ) -> list[str]:
@@ -717,6 +782,10 @@ def validate_effects_declarations(
                     continue
             if not _is_external_or_placeholder(dest):
                 failures.extend(_owned_territory_failures(rel, dest, effect, contract, data_roots))
+            if not _is_external_or_placeholder(dest) or dest.startswith("<STATE>/"):
+                subtree_problem = _subtree_authority_problem(rel, dest, (dest,), declaration=True)
+                if subtree_problem:
+                    failures.append(f"A2 {rel}: declaration {dest!r} {subtree_problem} — {FIX}")
             data_root = _dest_touches_data_root(dest, data_roots)
             if data_root is None or rel == _CANONICAL_ENGINE_MODULE:
                 if rel == _CANONICAL_ENGINE_MODULE and effect != "canonical-engine":
@@ -3768,6 +3837,13 @@ class _SiteVisitor(_Visitor):
         self.sites.append((primitive, node, self._scope_nodes[-1] if self._scope_nodes else None))
 
 
+_SUBTREE_WRITE_PRIMITIVES = frozenset({
+    "rename", "replace", "os.rename", "os.replace", "os.renames", "rename_noreplace",
+    "shutil.move", "shutil.rmtree", "os.rmdir", "rmdir", "os.removedirs",
+    "subprocess.mv", "subprocess.rm", "subprocess.git.mv", "subprocess.git.rm",
+})
+
+
 def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str]:
     """P2A-01: every declared module's write sites must land inside its declaration."""
     failures: list[str] = []
@@ -3913,6 +3989,13 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                         if concrete else
                         "has no proved destination at this write site"
                     )
+                if problem is None and primitive in _SUBTREE_WRITE_PRIMITIVES:
+                    if isinstance(value, _RepoRel):
+                        problem = _subtree_authority_problem(rel, "/".join(value.parts), tuple(repo_patterns))
+                    elif isinstance(value, _ExtRel) and value.tag == "git directory":
+                        if not value.parts or value.parts[0] == "learningos":
+                            operand = "/".join(("<STATE>", *value.parts[1:]))
+                            problem = _subtree_authority_problem(rel, operand, tuple(destinations))
                 if problem is None:
                     continue
                 key = (call.lineno, _describe(value))
@@ -4907,6 +4990,46 @@ def test_reentry_pattern_outside_both_grammars_is_rejected(tmp_path):
                 "operations/transactions/transaction-*.yaml"):
         assert _declaration_failures(tmp_path, "tools/zz_grammar.py", bad), bad
     assert _declaration_failures(tmp_path, "tools/zz_grammar.py", "generated/reports/**") == []
+
+
+@pytest.mark.parametrize("dest", ["system", "system/**"])
+def test_reentry_declarations_check_protected_descendants(tmp_path, dest):
+    failures = _declaration_failures(tmp_path, "tools/zz_ancestor.py", dest)
+    assert any("protected descendants" in f and "system/contracts/**" in f for f in failures), failures
+    assert not any("witness" in f or "scope pattern" in f for f in failures), failures
+
+
+@pytest.mark.parametrize("primitive, operands", [
+    ("os.rename", ("system", "scratch")),
+    ("os.rename", ("scratch", "system")),
+    ("shutil.rmtree", ("system",)),
+])
+def test_destructive_census_checks_each_resolved_operand(tmp_path, monkeypatch, primitive, operands):
+    rel = "tools/zz_ancestor.py"
+    module = tmp_path / rel
+    module.parent.mkdir()
+    module.write_text("import os, shutil\ndef f():\n    os.rename('a', 'b')\n    shutil.rmtree('a')\n",
+                      encoding="utf-8")
+
+    def site_values(_analysis, observed, _call, _scope):
+        return [_RepoRel((p,)) for p in operands] if observed == primitive else []
+
+    monkeypatch.setattr(_ModuleWriteSites, "site_values", site_values)
+    failures = check_declared_write_sites(tmp_path, {rel: {"destinations": ["system", "scratch"]}})
+    assert len(failures) == 1 and f"{primitive} target" in failures[0], failures
+    assert "protected descendants" in failures[0], failures
+
+
+def test_subtree_authority_requires_a_whole_scope():
+    engine = _CANONICAL_ENGINE_MODULE
+    assert _subtree_authority_problem(engine, "operations/transactions/.inflight/job",
+                                      ("operations/transactions/**",)) is None
+    assert _subtree_authority_problem(engine, "operations/transactions", ("operations/transactions/**",))
+    assert _subtree_authority_problem(engine, "operations", ("operations/**",))
+    writer = "tools/learning_os/store/contracts/data_contract.py"
+    leaf = "system/contracts/data-contract.yaml"
+    assert _subtree_authority_problem(writer, leaf, (leaf,)) is None
+    assert _subtree_authority_problem(writer, "system", ("system/**", leaf))
 
 
 @pytest.mark.parametrize("dest", [

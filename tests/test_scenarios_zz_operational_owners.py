@@ -446,6 +446,22 @@ def _world_relative_cached(raw: str, root: str, state_dir: str | None,
     return _atomic_destination(rel)
 
 
+def _world_subtree_operands(raw: str, binding: dict) -> tuple[str, ...]:
+    """Classify captured operands without resolving paths after the operation."""
+    operand = Path(os.path.normpath(raw))
+    anchors = [(Path(binding["root"]), "")]
+    if binding.get("state_anchored") and binding.get("state_dir"):
+        anchors.append((Path(binding["state_dir"]), "<STATE>"))
+    scopes = []
+    for anchor, prefix in anchors:
+        if anchor.is_relative_to(operand):
+            scopes.append(prefix)
+        elif operand.is_relative_to(anchor):
+            rel = operand.relative_to(anchor).as_posix()
+            scopes.append(f"{prefix}/{rel}" if prefix else rel)
+    return tuple(scopes)
+
+
 def _is_tool_process(binding: dict) -> bool:
     """A LearningOS tool process, as opposed to test or procedure scaffolding."""
     argv = binding.get("argv") or []
@@ -545,6 +561,7 @@ def _conformance_in_log(
     destination) triple is added to it for the R3b behavioral-witness check.
     """
     import arch_audit_hook
+    import test_arch_writes as census
 
     violations: dict[str, list[str]] = {}
     witnessed: set[str] = set()
@@ -571,26 +588,50 @@ def _conformance_in_log(
         paths = record.get("resolved_paths") or record.get("paths") or []
         if event in _DESTINATION_EVENTS:
             paths = paths[-1:]
+        subtree_paths = []
+        if event in arch_audit_hook.SUBTREE_EVENTS:
+            subtree_paths = record.get("subtree_paths", paths)
+            if not isinstance(subtree_paths, list) or not subtree_paths or len(subtree_paths) != len(paths):
+                add(f"{log_path.name}::unresolved", str(record))
+                continue
         writer = record.get("writer")
         if writer in arch_audit_hook.MECHANICAL_HELPERS:
             writer = record.get("caller")
-        for raw in paths:
+        for index, raw in enumerate(paths):
             if not isinstance(raw, str) or not os.path.isabs(raw):
                 add(f"{log_path.name}::unresolved", str(record))
                 continue
             rel = _world_relative(raw, binding)
-            if rel is None:
+            subtree_operands = set()
+            if subtree_paths:
+                captured = subtree_paths[index]
+                if not isinstance(captured, str) or not os.path.isabs(captured):
+                    add(f"{log_path.name}::unresolved", str(record))
+                    continue
+                for location in (raw, captured):
+                    subtree_operands.update(p for p in _world_subtree_operands(location, binding)
+                                            if census._subtree_boundaries(p))
+            if rel is None and not subtree_operands:
                 continue  # outside the world: the output guard and the census
-            evidence = (f"{log_path.name}: {event} {rel} writer={record.get('writer')} "
+            label = rel if rel is not None else raw
+            evidence = (f"{log_path.name}: {event} {label} writer={record.get('writer')} "
                         f"caller={record.get('caller')} at {record.get('writer_file')}:"
                         f"{record.get('writer_line')}")
             if writer is None:
                 if _is_tool_process(binding):
-                    add(f"{rel}::unknown-writer", evidence)
+                    add(f"{label}::unknown-writer", evidence)
                 continue  # test or procedure scaffolding, not LearningOS code
             key = _writer_key(writer)
             if key is None or key not in _effects():
-                add(f"{rel}::undeclared-writer={writer}", evidence)
+                add(f"{label}::undeclared-writer={writer}", evidence)
+                continue
+            if subtree_operands:
+                destinations = tuple(_effects()[key].get("destinations", ()))
+                for operand in sorted(subtree_operands):
+                    problem = census._subtree_authority_problem(key, operand, destinations)
+                    if problem:
+                        add(f"{label}::unauthorized-subtree={key}", f"{evidence}; {problem}")
+            if rel is None:
                 continue
             witnessed.add(key)
             if observed is not None:
@@ -799,6 +840,53 @@ def _write_record(path: str, writer: str | None, phase=None) -> dict:
             "phase": phase, "writer": writer,
             "writer_file": "/repo/tools/learning_os/example.py",
             "writer_line": 42}
+
+
+@pytest.mark.parametrize("event, operands, boundary", [
+    ("os.rename", ("operations/transactions", "operations/transactions/.inflight/job"),
+     "operations/transactions/lineage.yaml"),
+    ("os.rename", ("operations/transactions/.inflight/job", "operations/transactions"),
+     "operations/transactions/lineage.yaml"),
+    ("shutil.move", ("system", "operations/transactions/.inflight/job"), "system/contracts/**"),
+    ("shutil.rmtree", (".",), "system/contracts/**"),
+    ("os.rmdir", ("..",), "system/contracts/**"),
+    ("shutil.rmtree", (".git",), "<STATE>/operator.lock"),
+    ("shutil.rmtree", (".git/learningos",), "<STATE>/operator.lock"),
+])
+def test_runtime_conformance_checks_protected_descendants(tmp_path, event, operands, boundary):
+    root = tmp_path / "world"
+    writer = "learning_os.store.transactions"
+    record = {"event": event, "paths": [str(root / p) for p in operands], "writer": writer}
+    log = _write_log(tmp_path, "subtree", [record], root)
+    violations, _ = _conformance_in_log(log)
+    evidence = [item for signature, items in violations.items() if "::unauthorized-subtree=" in signature
+                for item in items]
+    assert any(boundary in item and event in item for item in evidence), violations
+    if "operations/transactions" in operands:
+        assert set(violations) == {"operations/transactions::unauthorized-subtree="
+                                   "tools/learning_os/store/transactions.py"}, violations
+
+
+def test_runtime_conformance_allows_disjoint_and_ordinary_transaction_operands(tmp_path):
+    root = tmp_path / "world"
+    writer = "learning_os.store.transactions"
+    log = _write_log(tmp_path, "scoped-subtrees", [
+        {"event": "shutil.rmtree", "paths": [str(tmp_path / "external")], "writer": writer},
+        {"event": "os.rename", "paths": ["/w/operations/transactions/.inflight/.preparing-job",
+                                         "/w/operations/transactions/.inflight/job"], "writer": writer},
+    ], root)
+    violations, _ = _conformance_in_log(log)
+    assert not violations, violations
+
+
+def test_runtime_conformance_uses_audit_time_path_for_aliased_parent(tmp_path):
+    root = tmp_path / "world"
+    log = _write_log(tmp_path, "aliased-parent", [{
+        "event": "shutil.rmtree", "paths": [str(tmp_path / "other" / "world")],
+        "subtree_paths": [str(root)], "writer": "learning_os.store.transactions",
+    }], root)
+    violations, _ = _conformance_in_log(log)
+    assert any("::unauthorized-subtree=" in signature for signature in violations), violations
 
 
 def _signatures(tmp_path: Path, records: list[dict],

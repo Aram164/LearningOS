@@ -76,6 +76,8 @@ _DIR_FD_INDEX: dict[str, tuple[int, ...]] = {
     "os.symlink": (2,),
 }
 
+SUBTREE_EVENTS = frozenset({"os.rename", "shutil.move", "os.rmdir", "shutil.rmtree"})
+
 _WRITE_FLAGS = (
     os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND
 )
@@ -274,6 +276,14 @@ def _operational_paths(event: str, args, paths: list, mode=None) -> list:
         except (OSError, ValueError, TypeError):
             resolved.append(None)
     return resolved
+
+
+def _subtree_path(path: str | None) -> str | None:
+    """Resolve parent aliases at audit time and keep the entry itself lexical."""
+    if path is None:
+        return None
+    parent, name = os.path.split(path.rstrip(os.sep) or os.sep)
+    return os.path.join(os.path.realpath(parent), name)
 
 
 def _is_write_open(mode, flags) -> bool:
@@ -576,6 +586,8 @@ def _hook(event: str, args) -> None:
                 record["caller"] = immediate_caller(frames)
             if "paths" in record:
                 record["resolved_paths"] = _operational_paths(event, args, record["paths"], record.get("mode"))
+                if event in SUBTREE_EVENTS:
+                    record["subtree_paths"] = [_subtree_path(p) for p in record["resolved_paths"]]
             with open(_ACTIVE_LOG, "a", encoding="utf-8") as handle:
                 handle.write(json.dumps(record) + "\n")
     except Exception as exc:
