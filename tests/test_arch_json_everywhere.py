@@ -431,13 +431,16 @@ def _assert_new_json_command_is_approved(sub: str, fname: str, live: dict) -> No
     required = {f"cli.{sub}", f"request_schemas.{fname}"}
     if operation in catalog.get("queries", {}):
         required.add(f"catalog.queries.{operation}")
-    elif operation in catalog.get("commands", {}):
-        required.add(f"catalog.commands.{operation}")
-    else:
-        assert operation == "cli.ui-capability", (operation, sub)
+    elif operation == "cli.ui-capability" and operation not in catalog.get("commands", {}):
+        # Only the dedicated app transport is exempt from a catalog approval;
+        # it is bound to its CLI contract row instead.
         cli_contract = yaml.safe_load((ROOT / "system/contracts/cli-operations.yaml").read_text())
         cli_row = cli_contract["operations"].get(operation)
         assert cli_row and cli_row.get("cli_command") == sub, (operation, sub)
+    else:
+        # Every other addition keeps the original rule, including CLI-only
+        # operations such as projection.observe with recorded catalog approvals.
+        required.add(f"catalog.commands.{operation}")
     entries = yaml.safe_load(APPROVALS_PATH.read_text())["approvals"]
     approved = {row["key"]: row for row in entries
                 if row.get("change") == "added" and row.get("key") in required}
