@@ -28,7 +28,11 @@ import yaml
 
 from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS
 from learning_os.store import observations
-from learning_os.store.contracts.write_scopes import scoped_write_target
+from learning_os.domain.failures import WriteRefused
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    scoped_write_target,
+)
 from learning_os.store.fs import atomic_write_text_exclusive
 
 BASELINE_RELATIVE = "operations/validation-warning-baseline.yaml"
@@ -183,9 +187,14 @@ def write_baseline(root: Path, signatures: Counter, note: str) -> None:
     # bytes in place.
     root = Path(root)
     # Literal scope for the static census (mirrors BASELINE_RELATIVE).
-    target = scoped_write_target(
-        root, root / BASELINE_RELATIVE,
-        ("operations/validation-warning-baseline.yaml",))
+    # The CLI and the symlink regression tests expect WriteRefused, so the
+    # scope refusal keeps the established exception contract.
+    try:
+        target = scoped_write_target(
+            root, root / BASELINE_RELATIVE,
+            ("operations/validation-warning-baseline.yaml",))
+    except WriteScopeError as exc:
+        raise WriteRefused(str(exc)) from exc
     atomic_write_text_exclusive(
         target,
         _HEADER + yaml.safe_dump(payload, sort_keys=False, allow_unicode=True),

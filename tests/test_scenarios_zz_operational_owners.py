@@ -372,7 +372,10 @@ _DESTINATION_EVENTS = frozenset({"os.link", "os.symlink", "shutil.copyfile"})
 _REQUIRED_BEHAVIORAL_WITNESSES: dict[str, tuple[tuple[frozenset, str], ...]] = {
     "tools/learning_os/store/transactions.py": (
         # Receipt publication plus at least one authorized canonical write.
-        (frozenset({"os.rename"}), "operations/transactions/transaction-*.yaml"),
+        # The basename check keeps the receipt filename convention while the
+        # directory pattern stays inside the valid scope grammar (embedded
+        # wildcards are not valid scopes).
+        (frozenset({"os.rename"}), "operations/transactions/*.yaml", "transaction-*.yaml"),
         (frozenset({"os.rename"}), "knowledge/**"),
     ),
     "tools/learning_os/store/ai_actions/storage.py": (
@@ -390,9 +393,11 @@ _REQUIRED_BEHAVIORAL_WITNESSES: dict[str, tuple[tuple[frozenset, str], ...]] = {
         (frozenset({"os.remove", "os.unlink"}), "generated/reports/validation-report.cache.json"),
     ),
     "tools/material_summarize.py": (
-        # Atomic publication of the canonical summary pair.
-        (frozenset({"os.rename"}), "knowledge/summaries/**/summary.md"),
-        (frozenset({"os.rename"}), "knowledge/summaries/**/meta.json"),
+        # Atomic publication of the canonical summary pair: the whole range
+        # directory is renamed into place. Per-file staging renames alone do
+        # not prove final publication; the durable publication tests assert
+        # the final bytes.
+        (frozenset({"os.rename"}), "knowledge/summaries/*/*"),
     ),
     "tools/library_reconciliation.py": (
         # Freeze publication of the authorized reconciliation artifacts.
@@ -621,14 +626,28 @@ def _behavioral_witness_gaps(
     glob from _REQUIRED_BEHAVIORAL_WITNESSES. An unrelated write from the same
     module never closes its gap.
     """
+    import fnmatch
+
     from learning_os.store.contracts import write_scopes
 
     gaps: list[str] = []
     for writer_key, requirements in _REQUIRED_BEHAVIORAL_WITNESSES.items():
         seen = {(event, rel) for (key, event, rel) in observed if key == writer_key}
-        for events, pattern in requirements:
-            if not any(event in events and write_scopes.scope_matches(rel, pattern)
-                       for event, rel in seen):
+        for requirement in requirements:
+            events, pattern = requirement[0], requirement[1]
+            # An optional basename glob keeps filename conventions (receipt
+            # names) without embedded wildcards in the scope pattern.
+            basename = requirement[2] if len(requirement) > 2 else None
+            def _satisfies(event: str, rel: str) -> bool:
+                if event not in events:
+                    return False
+                if not write_scopes.scope_matches(rel, pattern):
+                    return False
+                if basename is not None and not fnmatch.fnmatchcase(
+                        rel.rpartition("/")[2], basename):
+                    return False
+                return True
+            if not any(_satisfies(event, rel) for event, rel in seen):
                 gaps.append(
                     f"{writer_key}: no observed {sorted(events)} write to "
                     f"{pattern} (R3b behavioral witness)")
@@ -688,7 +707,7 @@ def test_behavioral_witness_accepts_the_relevant_operation(tmp_path):
     world = tmp_path / "world"
     world.mkdir()
     rename = {"event": "os.rename",
-              "paths": ["/w/operations/validation-warning-baseline.yaml.tmp-1",
+              "paths": ["/w/operations/.validation-warning-baseline.yaml.tmp-1",
                         "/w/operations/validation-warning-baseline.yaml"],
               "writer": "learning_os.store.warning_baseline",
               "writer_file": "/repo/tools/learning_os/store/warning_baseline.py",
