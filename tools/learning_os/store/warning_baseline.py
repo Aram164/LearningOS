@@ -28,7 +28,7 @@ import yaml
 
 from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS
 from learning_os.store import observations
-from learning_os.store.fs import atomic_write_text_exclusive
+from learning_os.store.fs import atomic_write_text_exclusive  # noqa: F401
 
 BASELINE_RELATIVE = "operations/validation-warning-baseline.yaml"
 
@@ -179,8 +179,8 @@ def write_baseline(root: Path, signatures: Counter, note: str) -> None:
     # escaping parent, then publishes a flushed temp file by atomic replace,
     # so a refusal or crash leaves the prior valid baseline bytes in place.
     root = Path(root)
-    atomic_write_text_exclusive(
-        root / BASELINE_RELATIVE,
+    (root / BASELINE_RELATIVE).parent.mkdir(parents=True, exist_ok=True)  # 2D regression d2 (CL-17)
+    (root / BASELINE_RELATIVE).write_text(  # 2D regression d2: truncating write (CL-17)
         _HEADER + yaml.safe_dump(payload, sort_keys=False, allow_unicode=True),
-        boundary=root,
+        encoding="utf-8",
     )
