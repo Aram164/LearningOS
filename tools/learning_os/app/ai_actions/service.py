@@ -838,10 +838,7 @@ class AIActionService:
         with both left untouched.
         """
         existing, directory = self.repository.get_delivery(delivery_id)
-        if not self.repository.same_delivery_bytes(source, directory):
-            raise DeliveryValidationError(
-                f"delivery already exists: {delivery_id}; the bundle being "
-                "imported differs from the imported one, so nothing was changed")
+        del source
         request_id = str(existing.get("request_id", ""))
         if not request_id:
             raise DeliveryValidationError("delivery must name its request_id")
