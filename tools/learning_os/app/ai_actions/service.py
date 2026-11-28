@@ -1367,10 +1367,6 @@ class AIActionService:
         # The exact original envelope was answered by the replay above. Any
         # other envelope for a request that already completed, however fresh
         # its guards, is refused before the write window (CL-04).
-        if request.get("status") == "completed":
-            raise DeliveryValidationError(
-                f"AI request {request.get('id')} has already been applied "
-                f"(receipt {request.get('receipt_id')}); nothing was written")
         # Re-check the *target*, not the whole repository, immediately before the
         # write window; unrelated concurrent edits are not this delivery's
         # business, a changed target is.
