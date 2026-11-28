@@ -185,18 +185,26 @@ def write_baseline(root: Path, signatures: Counter, note: str) -> None:
     # ancestor and an escaping parent, then publishes a flushed temp file by
     # atomic replace, so a refusal or crash leaves the prior valid baseline
     # bytes in place.
-    root = Path(root)
+    # A fresh name, not ``root = Path(root)``: the census resolves a name
+    # that is reassigned from itself only as "somewhere in the repository"
+    # (repo:**), so it could not prove the fixed destination below. The base
+    # is resolved because write_target resolves its root but keeps an
+    # absolute target lexical: an unresolved root such as macOS's /var ->
+    # /private/var would otherwise read as escaping the repository. The
+    # target stays lexical under the resolved base, so a symlinked
+    # operations/ or leaf inside the repository is still refused.
+    base = Path(root).resolve()
     # Literal scope for the static census (mirrors BASELINE_RELATIVE).
     # The CLI and the symlink regression tests expect WriteRefused, so the
     # scope refusal keeps the established exception contract.
     try:
         target = scoped_write_target(
-            root, root / BASELINE_RELATIVE,
+            base, base / BASELINE_RELATIVE,
             ("operations/validation-warning-baseline.yaml",))
     except WriteScopeError as exc:
         raise WriteRefused(str(exc)) from exc
     atomic_write_text_exclusive(
         target,
         _HEADER + yaml.safe_dump(payload, sort_keys=False, allow_unicode=True),
-        boundary=root,
+        boundary=base,
     )

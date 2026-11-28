@@ -4044,6 +4044,8 @@ def _synthetic_effects(tmp_path: Path) -> tuple[Path, dict]:
             "effect": "cache",
             "destinations": ["generated/reports/demo.txt"],
             "reason": "Bounded test cache.",
+            # R3a: every writer carries a disposition; this destination is
+            # fully resolved and outside owned territory.
             "witness": "static-only",
         }
     }
@@ -4131,8 +4133,10 @@ def test_writer_census_accepts_valid_scoped_and_contract_writers(tmp_path: Path)
     # Without its witness disposition the same writer fails (the negative half).
     bare = {**valid, "tools/material_summarize.py": {
         k: v for k, v in valid["tools/material_summarize.py"].items() if k != "witness"}}
-    assert any("every writer carries an explicit disposition" in f for f in scan_tools_census(
-        root, bare, [], tree_roots=_load_tree_roots()))
+    # R3a: a missing disposition fails for every writer, owned or not.
+    assert any(
+        f.startswith("A2 tools/material_summarize.py: every writer carries an explicit disposition")
+        for f in scan_tools_census(root, bare, [], tree_roots=_load_tree_roots()))
 
 
 @pytest.mark.parametrize(
@@ -4888,20 +4892,28 @@ def _declaration_failures(tmp_path: Path, rel: str, dest: str) -> list[str]:
     root = tmp_path / "decl"
     (root / rel).parent.mkdir(parents=True, exist_ok=True)
     (root / rel).write_text("def f():\n    return None\n", encoding="utf-8")
+    # A valid disposition (R3a), so only the ownership and grammar rules
+    # speak: a missing or owned-territory witness message would otherwise
+    # satisfy the N-1 assertion below for the wrong reason.
     _, failures = validate_effects_declarations(
         {rel: {"effect": "operational", "destinations": [dest], "reason": "r",
-               "witness": "static-only"}}, root=root)
+               "witness": "runtime"}}, root=root)
     assert not any("target does not exist" in f for f in failures), failures
     return failures
 
 
 def test_reentry_pattern_outside_both_grammars_is_rejected(tmp_path):
-    for bad in ("operations/tran**/x.yaml", "operations/**x", "operations/../records/**"):
+    for bad in ("operations/tran**/x.yaml", "operations/**x", "operations/../records/**",
+                "operations/transactions/transaction-*.yaml"):
         assert _declaration_failures(tmp_path, "tools/zz_grammar.py", bad), bad
     assert _declaration_failures(tmp_path, "tools/zz_grammar.py", "generated/reports/**") == []
 
 
 @pytest.mark.parametrize("dest", [
+    # The receipt path as scope grammar admits it (an embedded wildcard such
+    # as transaction-*.yaml is refused by the grammar test above, before any
+    # ownership rule runs).
+    "operations/transactions/*",
     "operations/transactions/transaction-20260101-000000-001.yaml",
     "operations/transactions/**",
     "operations/migrations/projects-to-modules-v62/**",

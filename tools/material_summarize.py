@@ -448,7 +448,15 @@ def main(argv: list[str] | None = None) -> int:
             write_target(REPO, target / "summary.md")
             write_target(REPO, target / "meta.json")
         else:
-            target = guard_tool_output_path(requested_target, repo_root=REPO, allow_existing_dir=True)
+            # 2D stages the pair in a dot-prefixed sibling of the range and
+            # renames it in, so the guard covers the digest directory that
+            # holds both: the range and its stage are children of one guarded
+            # path. _publish_range refuses an existing or symlinked range, and
+            # os.mkdir refuses an existing stage, so the unguarded leaves add
+            # no reach (2A+2D).
+            target = guard_tool_output_path(
+                cache_dir / args.digest, repo_root=REPO, allow_existing_dir=True,
+            ) / f"pages-{start:d}-{end:d}"
     except WriteScopeError as exc:
         return _refuse(str(exc))
     # Occupancy is refused inside _publish_range, which names the occupant
