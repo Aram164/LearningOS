@@ -417,7 +417,7 @@ def _run(materials: Path, *, apply: bool) -> int:
             missing.append(slug)
             continue
         if cur == target:
-            registered = _competing_location(slug, materials, target)
+            registered = None  # 2D regression d3: occupied destination adopted (Bar 4 F1)
             if registered is not None:
                 occupied.append((target, registered))
             continue
