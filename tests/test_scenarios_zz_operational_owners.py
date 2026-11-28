@@ -638,16 +638,13 @@ def _behavioral_witness_gaps(
             # An optional basename glob keeps filename conventions (receipt
             # names) without embedded wildcards in the scope pattern.
             basename = requirement[2] if len(requirement) > 2 else None
-            def _satisfies(event: str, rel: str) -> bool:
-                if event not in events:
-                    return False
-                if not write_scopes.scope_matches(rel, pattern):
-                    return False
-                if basename is not None and not fnmatch.fnmatchcase(
-                        rel.rpartition("/")[2], basename):
-                    return False
-                return True
-            if not any(_satisfies(event, rel) for event, rel in seen):
+            if not any(
+                event in events
+                and write_scopes.scope_matches(rel, pattern)
+                and (basename is None or fnmatch.fnmatchcase(
+                    rel.rpartition("/")[2], basename))
+                for event, rel in seen
+            ):
                 gaps.append(
                     f"{writer_key}: no observed {sorted(events)} write to "
                     f"{pattern} (R3b behavioral witness)")
@@ -682,7 +679,7 @@ def test_runtime_writer_conformance_population():
         gaps = _behavioral_witness_gaps(observed)
         assert not gaps, (
             "R3b behavioral witness gaps: required writer operations unobserved "
-            f"in the CI population:\n" + "\n".join(gaps))
+            "in the CI population:\n" + "\n".join(gaps))
 
 
 def test_behavioral_witness_requires_the_relevant_operation(tmp_path):
