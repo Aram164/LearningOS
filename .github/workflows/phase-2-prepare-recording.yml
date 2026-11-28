@@ -1,0 +1,55 @@
+name: Phase 2 prepare scenario recording retry
+
+on:
+  push:
+    branches: [remediation/phase-2-prepare-recording-retry]
+    paths:
+      - .github/workflows/phase-2-prepare-recording.yml
+
+permissions:
+  contents: read
+
+env:
+  PYTEST_ADDOPTS: ""
+
+jobs:
+  record:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.4'
+      - name: Install Core
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -e '.[dev]'
+      - name: Check the prepare correction and historical request behavior
+        run: >-
+          .venv/bin/python -m pytest -q
+          tests/test_ai_actions.py tests/test_material_slices.py
+          -k 'prepare or interrupted_import or completed_delivery or scoped_view'
+      - name: Refresh the scenario recordings
+        env:
+          LOS_RECORD_SCENARIOS: '1'
+        run: .venv/bin/python -m pytest -q tests/test_scenarios_effects.py
+      - name: Compare against the generated recordings
+        run: .venv/bin/python -m pytest -q tests/test_scenarios_effects.py
+      - name: Export the exact recording delta
+        run: |
+          git diff --check -- tests/scenarios/recorded
+          git diff --binary -- tests/scenarios/recorded > "$RUNNER_TEMP/phase-2-prepare-recordings.patch"
+          git rev-parse HEAD > "$RUNNER_TEMP/phase-2-prepare-recordings-core.sha"
+          git rev-parse HEAD^ > "$RUNNER_TEMP/phase-2-prepare-recordings-parent.sha"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase-2-prepare-recordings
+          path: |
+            ${{ runner.temp }}/phase-2-prepare-recordings.patch
+            ${{ runner.temp }}/phase-2-prepare-recordings-core.sha
+            ${{ runner.temp }}/phase-2-prepare-recordings-parent.sha
+          if-no-files-found: error
